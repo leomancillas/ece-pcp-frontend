@@ -220,6 +220,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-close:hover{background:var(--bg)}
 .modal-body{padding:18px 22px}
 .modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--border);background:var(--bg)}
+.draft-banner{display:flex;align-items:center;gap:8px;background:#FFFBEB;border:1px solid #F6C90E;border-radius:8px;padding:8px 14px;margin:0 22px 14px;font-size:12px;color:#7D6008}
+.draft-banner b{color:#5D4606}
+.draft-banner-actions{margin-left:auto;display:flex;gap:8px}
+.draft-banner-btn{background:none;border:1px solid #D4AC0D;border-radius:5px;padding:2px 10px;font-size:11px;font-weight:600;cursor:pointer;color:#7D6008}
+.draft-banner-btn:hover{background:#FEF9C3}
 .btn-secondary{padding:9px 18px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
 .btn-save{padding:9px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
 .btn-save:hover{background:var(--primary-dark)}
@@ -975,43 +980,50 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- Consulta / SOAP -->
 <div class="modal-overlay" id="modal-consulta">
   <div class="modal wide">
-    <div class="modal-header"><h3>📋 Nueva consulta</h3><button class="modal-close" onclick="closeModal('modal-consulta')">×</button></div>
+    <div class="modal-header"><h3>📋 Nueva consulta</h3><span id="c-draft-indicator" style="font-size:11px;color:var(--text-muted);display:none">✎ borrador guardado</span><button class="modal-close" onclick="discardConsultaDraft()">×</button></div>
+    <div id="c-draft-banner" class="draft-banner" style="display:none">
+      📄 <span><b>Borrador recuperado</b> — tienes una consulta sin guardar del paciente anterior</span>
+      <div class="draft-banner-actions">
+        <button class="draft-banner-btn" onclick="clearConsultaDraft()">Descartar</button>
+        <button class="draft-banner-btn" style="background:#FEF9C3" onclick="hideDraftBanner()">Continuar con borrador ✓</button>
+      </div>
+    </div>
     <div class="modal-body">
       <div class="form-row cols-2">
-        <div class="form-group"><label>Fecha</label><input type="date" id="c-fecha" /></div>
-        <div class="form-group"><label>Motivo de consulta</label><input type="text" id="c-motivo" placeholder="ej. Control de peso, inicio de tratamiento" /></div>
+        <div class="form-group"><label>Fecha</label><input type="date" id="c-fecha" oninput="autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>Motivo de consulta</label><input type="text" id="c-motivo" placeholder="ej. Control de peso, inicio de tratamiento" oninput="autoSaveConsultaDraft()" /></div>
       </div>
       <div class="section-title-sm">Signos vitales y antropometría</div>
       <div class="form-row cols-3">
-        <div class="form-group"><label>Peso (kg)</label><input type="number" id="c-peso" step="0.1" oninput="calcConsulta()" /></div>
-        <div class="form-group"><label>Talla (cm)</label><input type="number" id="c-talla" step="0.1" oninput="calcConsulta()" /></div>
-        <div class="form-group"><label>Cintura (cm)</label><input type="number" id="c-cintura" step="0.1" /></div>
+        <div class="form-group"><label>Peso (kg)</label><input type="number" id="c-peso" step="0.1" oninput="calcConsulta();autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>Talla (cm)</label><input type="number" id="c-talla" step="0.1" oninput="calcConsulta();autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>Cintura (cm)</label><input type="number" id="c-cintura" step="0.1" oninput="autoSaveConsultaDraft()" /></div>
       </div>
       <div class="form-row cols-4">
-        <div class="form-group"><label>PA sistólica</label><input type="number" id="c-pas" /></div>
-        <div class="form-group"><label>PA diastólica</label><input type="number" id="c-pad" /></div>
-        <div class="form-group"><label>FC (lpm)</label><input type="number" id="c-fc" /></div>
-        <div class="form-group"><label>Glucosa capilar</label><input type="number" id="c-glucosa" /></div>
+        <div class="form-group"><label>PA sistólica</label><input type="number" id="c-pas" oninput="autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>PA diastólica</label><input type="number" id="c-pad" oninput="autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>FC (lpm)</label><input type="number" id="c-fc" oninput="autoSaveConsultaDraft()" /></div>
+        <div class="form-group"><label>Glucosa capilar</label><input type="number" id="c-glucosa" oninput="autoSaveConsultaDraft()" /></div>
       </div>
       <div id="c-calcs" style="display:none">
         <div class="calc-result"><span class="calc-label">IMC calculado</span><span class="calc-value" id="c-bmi-val">—</span><span class="calc-value text-sm" id="c-bmi-cat" style="color:var(--text-muted)"></span></div>
       </div>
       <div class="section-title-sm">Nota SOAP</div>
-      <div class="form-group"><label>S — Subjetivo (síntomas, motivo)</label><textarea id="c-s" rows="2"></textarea></div>
-      <div class="form-group"><label>O — Objetivo (hallazgos, vitales)</label><textarea id="c-o" rows="2"></textarea></div>
-      <div class="form-group"><label>A — Evaluación (diagnóstico, estadio)</label><textarea id="c-a" rows="2"></textarea></div>
-      <div class="form-group"><label>P — Plan (intervenciones, fármacos, seguimiento)</label><textarea id="c-p" rows="2"></textarea></div>
+      <div class="form-group"><label>S — Subjetivo (síntomas, motivo)</label><textarea id="c-s" rows="2" oninput="autoSaveConsultaDraft()"></textarea></div>
+      <div class="form-group"><label>O — Objetivo (hallazgos, vitales)</label><textarea id="c-o" rows="2" oninput="autoSaveConsultaDraft()"></textarea></div>
+      <div class="form-group"><label>A — Evaluación (diagnóstico, estadio)</label><textarea id="c-a" rows="2" oninput="autoSaveConsultaDraft()"></textarea></div>
+      <div class="form-group"><label>P — Plan (intervenciones, fármacos, seguimiento) <span style="font-size:11px;color:var(--text-muted)">Ctrl+Enter para guardar</span></label><textarea id="c-p" rows="2" oninput="autoSaveConsultaDraft()" onkeydown="if(event.ctrlKey&&event.key==='Enter')saveConsulta()"></textarea></div>
       <div class="section-title-sm">5As completadas en esta consulta</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-ask" /> Ask — pregunté sobre el peso</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-advise" /> Advise — discutí el riesgo</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assess" /> Assess — evalué disposición</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assist" /> Assist — ofrecí intervención</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-arrange" /> Arrange — programé seguimiento</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-ask" onchange="autoSaveConsultaDraft()" /> Ask — pregunté sobre el peso</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-advise" onchange="autoSaveConsultaDraft()" /> Advise — discutí el riesgo</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assess" onchange="autoSaveConsultaDraft()" /> Assess — evalué disposición</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assist" onchange="autoSaveConsultaDraft()" /> Assist — ofrecí intervención</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-arrange" onchange="autoSaveConsultaDraft()" /> Arrange — programé seguimiento</label>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeModal('modal-consulta')">Cancelar</button>
+      <button class="btn-secondary" onclick="discardConsultaDraft()">Cancelar</button>
       <button class="btn-save" onclick="saveConsulta()">💾 Guardar consulta</button>
     </div>
   </div>
@@ -1296,8 +1308,106 @@ function openModal(id) {
   const today = new Date().toISOString().split('T')[0];
   $(id).querySelectorAll('input[type="date"]').forEach(inp => { if (!inp.value) inp.value = today; });
   if (id === 'modal-search') { $('search-input').value = ''; loadRecentPCP(); }
+  if (id === 'modal-consulta') restoreConsultaDraft();
 }
 function closeModal(id) { $(id).classList.remove('open'); }
+
+// ─── CONSULTA AUTO-DRAFT ─────────────────────────────────────────
+const consultaDraftKey = () => `ece_pcp_cdraft_${currentUser?.id}_${currentPatient?.id}`;
+
+function autoSaveConsultaDraft() {
+  if (!currentPatient) return;
+  const draft = {
+    fecha:   $('c-fecha').value,
+    motivo:  $('c-motivo').value,
+    peso:    $('c-peso').value,
+    talla:   $('c-talla').value,
+    cintura: $('c-cintura').value,
+    pas:     $('c-pas').value,
+    pad:     $('c-pad').value,
+    fc:      $('c-fc').value,
+    glucosa: $('c-glucosa').value,
+    s:       $('c-s').value,
+    o:       $('c-o').value,
+    a:       $('c-a').value,
+    p:       $('c-p').value,
+    ask:     $('5a-c-ask').checked,
+    advise:  $('5a-c-advise').checked,
+    assess:  $('5a-c-assess').checked,
+    assist:  $('5a-c-assist').checked,
+    arrange: $('5a-c-arrange').checked,
+    savedAt: Date.now(),
+  };
+  localStorage.setItem(consultaDraftKey(), JSON.stringify(draft));
+  const ind = $('c-draft-indicator');
+  if (ind) { ind.style.display = 'inline'; ind.textContent = '✎ borrador guardado'; }
+}
+
+function restoreConsultaDraft() {
+  if (!currentPatient) return;
+  const raw = localStorage.getItem(consultaDraftKey());
+  if (!raw) { $('c-draft-banner') && ($('c-draft-banner').style.display = 'none'); return; }
+  const d = JSON.parse(raw);
+  // Check if draft has meaningful content
+  const hasContent = d.motivo || d.s || d.o || d.a || d.p || d.peso;
+  if (!hasContent) { localStorage.removeItem(consultaDraftKey()); return; }
+  // Restore values
+  if (d.fecha)   $('c-fecha').value   = d.fecha;
+  if (d.motivo)  $('c-motivo').value  = d.motivo;
+  if (d.peso)    $('c-peso').value    = d.peso;
+  if (d.talla)   $('c-talla').value   = d.talla;
+  if (d.cintura) $('c-cintura').value = d.cintura;
+  if (d.pas)     $('c-pas').value     = d.pas;
+  if (d.pad)     $('c-pad').value     = d.pad;
+  if (d.fc)      $('c-fc').value      = d.fc;
+  if (d.glucosa) $('c-glucosa').value = d.glucosa;
+  if (d.s)       $('c-s').value       = d.s;
+  if (d.o)       $('c-o').value       = d.o;
+  if (d.a)       $('c-a').value       = d.a;
+  if (d.p)       $('c-p').value       = d.p;
+  $('5a-c-ask').checked     = !!d.ask;
+  $('5a-c-advise').checked  = !!d.advise;
+  $('5a-c-assess').checked  = !!d.assess;
+  $('5a-c-assist').checked  = !!d.assist;
+  $('5a-c-arrange').checked = !!d.arrange;
+  calcConsulta();
+  // Show banner
+  const mins = Math.round((Date.now() - d.savedAt) / 60000);
+  const ago = mins < 1 ? 'hace un momento' : mins < 60 ? `hace ${mins} min` : `hace ${Math.round(mins/60)}h`;
+  $('c-draft-banner').querySelector('span').innerHTML =
+    `<b>Borrador recuperado</b> — consulta sin guardar (${ago})`;
+  $('c-draft-banner').style.display = 'flex';
+  $('c-draft-indicator').style.display = 'inline';
+}
+
+function clearConsultaDraft() {
+  if (!currentPatient) return;
+  localStorage.removeItem(consultaDraftKey());
+  ['c-motivo','c-peso','c-talla','c-cintura','c-pas','c-pad','c-fc','c-glucosa','c-s','c-o','c-a','c-p']
+    .forEach(id => { if ($(id)) $(id).value = ''; });
+  ['5a-c-ask','5a-c-advise','5a-c-assess','5a-c-assist','5a-c-arrange']
+    .forEach(id => { $(id).checked = false; });
+  $('c-draft-banner').style.display = 'none';
+  $('c-draft-indicator').style.display = 'none';
+  calcConsulta();
+}
+
+function hideDraftBanner() {
+  $('c-draft-banner').style.display = 'none';
+}
+
+function discardConsultaDraft() {
+  const raw = localStorage.getItem(consultaDraftKey());
+  if (raw) {
+    const d = JSON.parse(raw);
+    const hasContent = d.motivo || d.s || d.o || d.a || d.p || d.peso;
+    if (hasContent && !confirm('¿Descartar la consulta en curso? Los datos no guardados se perderán.')) return;
+    localStorage.removeItem(consultaDraftKey());
+  }
+  closeModal('modal-consulta');
+  $('c-draft-banner') && ($('c-draft-banner').style.display = 'none');
+  $('c-draft-indicator') && ($('c-draft-indicator').style.display = 'none');
+}
 
 async function apiFetch(path, opts={}) {
   const res = await fetch(API + path, { headers: authHdr(), ...opts });
@@ -2090,7 +2200,7 @@ function saveConsulta() {
     fecha:   $('c-fecha').value || new Date().toISOString().split('T')[0],
     motivo:  $('c-motivo').value,
     peso, talla, bmi,
-    cintura: null,
+    cintura: parseFloat($('c-cintura').value) || null,
     pas:     parseFloat($('c-pas').value) || null,
     pad:     parseFloat($('c-pad').value) || null,
     fc:      parseFloat($('c-fc').value) || null,
@@ -2109,19 +2219,23 @@ function saveConsulta() {
     id: Date.now(),
   };
   if (peso) {
-    pcpData.measurements.push({ fecha: entry.fecha, peso, talla, bmi, cintura: null, pas: entry.pas, pad: entry.pad, id: entry.id });
+    pcpData.measurements.push({ fecha: entry.fecha, peso, talla, bmi, cintura: entry.cintura, pas: entry.pas, pad: entry.pad, id: entry.id });
   }
   pcpData.consultas.push(entry);
   savePCPData();
+  // Clear draft — data is safely stored
+  localStorage.removeItem(consultaDraftKey());
+  $('c-draft-banner') && ($('c-draft-banner').style.display = 'none');
+  $('c-draft-indicator') && ($('c-draft-indicator').style.display = 'none');
   renderDashboard();
   renderConsultaView();
   renderTratamientoView();
   renderFarmacosView();
   renderSeguimientoView();
   closeModal('modal-consulta');
-  showToast('Consulta guardada correctamente');
+  showToast('Consulta guardada correctamente ✓');
   earnPoints(3, 'consulta registrada');
-  ['c-motivo','c-s','c-o','c-a','c-p'].forEach(id=>$(id).value='');
+  ['c-motivo','c-peso','c-talla','c-cintura','c-pas','c-pad','c-fc','c-glucosa','c-s','c-o','c-a','c-p'].forEach(id=>{ if($(id)) $(id).value=''; });
   ['5a-c-ask','5a-c-advise','5a-c-assess','5a-c-assist','5a-c-arrange'].forEach(id=>{$(id).checked=false;});
 }
 
