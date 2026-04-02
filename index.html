@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ECE PCP — Obesidad en el Primer Nivel</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary:#1B6CA8; --primary-dark:#154E7A; --primary-light:#EBF4FB;
+  --green:#1D8348; --green-light:#EAFAF1;
+  --orange:#CA6F1E; --orange-light:#FEF5E7;
+  --red:#C0392B; --red-light:#FDEDEC;
+  --purple:#6C3483; --purple-light:#F5EEF8;
+  --edu:#7D3C98;
+  --border:#DDE3EA; --bg:#F4F6F9; --surface:#FFF;
+  --text:#1C2B3A; --text-muted:#6B7C8D;
+  --success:#1D8348; --warn:#CA6F1E; --danger:#C0392B;
+  --shadow:0 2px 8px rgba(0,0,0,.08);
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* ── AUTH ── */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1B6CA8 0%,#154E7A 60%,#0D3354 100%)}
+.auth-card{background:#fff;border-radius:16px;padding:40px 44px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.auth-logo-icon{width:44px;height:44px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px}
+.auth-logo-text{font-size:20px;font-weight:700;color:var(--text)}
+.auth-logo-sub{font-size:12px;color:var(--text-muted)}
+.auth-card h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.auth-card p{color:var(--text-muted);font-size:13px;margin-bottom:24px}
+.auth-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:12px;outline:none;transition:border .15s}
+.auth-input:focus{border-color:var(--primary)}
+.auth-btn{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
+.auth-btn:hover{background:var(--primary-dark)}
+.auth-error{color:var(--danger);font-size:12px;margin-top:8px;display:none}
+
+/* ── APP SHELL ── */
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{height:52px;background:var(--primary);display:flex;align-items:center;padding:0 18px;gap:12px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.topbar-brand{color:#fff;font-weight:700;font-size:16px;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.topbar-brand-sub{font-size:11px;font-weight:400;opacity:.75;margin-left:2px}
+.topbar-patient{flex:1;display:flex;align-items:center;gap:10px;margin-left:16px}
+.topbar-pt-info{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.13);border-radius:7px;padding:5px 12px;cursor:pointer;transition:background .15s}
+.topbar-pt-info:hover{background:rgba(255,255,255,.22)}
+.topbar-pt-name{color:#fff;font-weight:600;font-size:14px}
+.topbar-pt-meta{color:rgba(255,255,255,.78);font-size:12px}
+.eoss-badge{background:rgba(255,255,255,.2);color:#fff;border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700}
+.eoss-badge.e0{background:#27AE60}.eoss-badge.e1{background:#F39C12}.eoss-badge.e2{background:#E67E22}.eoss-badge.e3{background:#E74C3C}.eoss-badge.e4{background:#8E1A0E}
+.topbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.topbar-cme{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border-radius:7px;padding:5px 10px;cursor:pointer}
+.topbar-cme:hover{background:rgba(255,255,255,.22)}
+.cme-pts{color:#FFD700;font-weight:700;font-size:13px}
+.cme-label{color:rgba(255,255,255,.8);font-size:11px}
+.topbar-user{color:rgba(255,255,255,.85);font-size:12px;cursor:pointer;padding:5px 8px;border-radius:6px}
+.topbar-user:hover{background:rgba(255,255,255,.15)}
+.btn-new-pt{background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.35);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-new-pt:hover{background:rgba(255,255,255,.28)}
+
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:210px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sidebar-section{padding:10px 8px 4px;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;margin:1px 6px;cursor:pointer;color:var(--text-muted);font-size:13px;font-weight:500;transition:all .15s;position:relative}
+.sidebar-item:hover{background:var(--bg);color:var(--text)}
+.sidebar-item.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+.sidebar-item.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--primary);border-radius:0 3px 3px 0}
+.sidebar-icon{font-size:16px;width:20px;text-align:center}
+.sidebar-badge{margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700}
+.sidebar-edu{background:var(--purple-light)!important;color:var(--purple)!important}
+.sidebar-edu.active{background:var(--purple-light)!important;color:var(--purple)!important}
+.sidebar-edu.active::before{background:var(--purple)!important}
+.sidebar-footer{margin-top:auto;padding:12px 8px;border-top:1px solid var(--border)}
+.sidebar-level{background:var(--primary-light);border-radius:8px;padding:10px 12px}
+.sidebar-level-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.sidebar-level-name{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.progress-bar-wrap{background:#E8EFF6;border-radius:10px;height:6px}
+.progress-bar-fill{background:var(--primary);border-radius:10px;height:6px;transition:width .4s}
+
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;overflow-y:auto;padding:20px}
+.module-view{display:none}
+.module-view.visible{display:block}
+.module-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.module-icon-lg{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0}
+.module-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.btn-add{border:none;border-radius:7px;padding:7px 14px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;background:var(--primary);transition:opacity .15s}
+.btn-add:hover{opacity:.88}
+
+/* ── GRID LAYOUTS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.stat-value{font-size:22px;font-weight:700;color:var(--text)}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:2px}
+.stat-delta{font-size:11px;margin-top:4px;color:var(--text-muted)}
+.stat-delta.pos{color:var(--success)}.stat-delta.neg{color:var(--danger)}.stat-delta.warn{color:var(--warn)}
+.module-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.module-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+
+/* ── SECTION CARDS ── */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.section-card.full{grid-column:1/-1}
+.section-card-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg)}
+.section-card-title{font-size:13px;font-weight:600;color:var(--text)}
+.section-card-body{padding:14px 16px}
+.section-card-body.no-pad{padding:0}
+
+/* ── PEARL CARDS (educational) ── */
+.pearl-card{background:linear-gradient(135deg,#F5EEF8,#EBF4FB);border:1px solid #D2B4DE;border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;position:relative}
+.pearl-card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pearl-icon{font-size:18px}
+.pearl-title{font-size:13px;font-weight:700;color:var(--purple)}
+.pearl-source{font-size:10px;color:var(--text-muted);margin-left:auto}
+.pearl-body{font-size:13px;color:var(--text);line-height:1.6}
+.pearl-body b{color:var(--purple)}
+.pearl-close{position:absolute;top:10px;right:12px;background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px}
+
+/* ── ALGO DECISION TREE ── */
+.algo-tree{display:flex;flex-direction:column;gap:0}
+.algo-node{border-radius:10px;padding:14px 18px;margin:4px 0;position:relative;cursor:default}
+.algo-node.question{background:#EBF4FB;border:2px solid var(--primary)}
+.algo-node.action-green{background:var(--green-light);border:2px solid var(--green)}
+.algo-node.action-orange{background:var(--orange-light);border:2px solid var(--orange)}
+.algo-node.action-red{background:var(--red-light);border:2px solid var(--red)}
+.algo-node.active-path{box-shadow:0 0 0 3px rgba(27,108,168,.3)}
+.algo-node-title{font-weight:700;font-size:14px;margin-bottom:4px}
+.algo-node-body{font-size:12px;color:var(--text-muted);line-height:1.5}
+.algo-arrow{text-align:center;font-size:20px;color:var(--text-muted);line-height:1}
+.algo-branches{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0}
+.algo-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.7);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;margin-top:6px}
+
+/* ── 5As FRAMEWORK ── */
+.fivedas-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.fivea-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;box-shadow:var(--shadow)}
+.fivea-letter{font-size:28px;font-weight:800;color:var(--primary)}
+.fivea-name{font-size:11px;font-weight:700;color:var(--text);margin:2px 0}
+.fivea-desc{font-size:10px;color:var(--text-muted);line-height:1.4}
+.fivea-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);margin:6px auto 0;display:flex;align-items:center;justify-content:center;font-size:11px}
+.fivea-check.done{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── ESCALONES ── */
+.escalones{display:flex;flex-direction:column;gap:8px}
+.escalon{border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:all .2s}
+.escalon.active{box-shadow:0 0 0 3px rgba(27,108,168,.25)}
+.escalon-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;color:#fff}
+.escalon-1{background:var(--green-light);border:2px solid var(--green)}
+.escalon-1 .escalon-num{background:var(--green)}
+.escalon-2{background:var(--orange-light);border:2px solid var(--orange)}
+.escalon-2 .escalon-num{background:var(--orange)}
+.escalon-3{background:var(--red-light);border:2px solid var(--red)}
+.escalon-3 .escalon-num{background:var(--red)}
+.escalon-body{flex:1}
+.escalon-title{font-weight:700;font-size:13px}
+.escalon-criteria{font-size:11px;color:var(--text-muted);margin-top:3px}
+.escalon-tag{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;color:#fff}
+
+/* ── TABLES ── */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:var(--bg);font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.data-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#FAFBFC}
+.table-empty{color:var(--text-muted);text-align:center;padding:20px!important;font-size:13px}
+
+/* ── PILLS & BADGES ── */
+.pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.pill.green{background:#D5F5E3;color:#1D8348}.pill.yellow{background:#FEF9E7;color:#9A7D0A}.pill.red{background:#FDEDEC;color:#C0392B}.pill.blue{background:#EBF4FB;color:#1B6CA8}.pill.purple{background:#F5EEF8;color:#6C3483}.pill.gray{background:#F0F0F0;color:#666}
+
+/* ── BIOMETRIC ROWS ── */
+.biometric-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.biometric-row:last-child{border-bottom:none}
+.bio-label{font-size:12px;color:var(--text-muted)}
+.bio-value{font-size:13px;font-weight:600;color:var(--text)}
+.bio-value.ok{color:var(--success)}.bio-value.warn{color:var(--warn)}.bio-value.danger{color:var(--danger)}
+
+/* ── TIMELINE ── */
+.tl-entry{display:flex;gap:0;margin-bottom:8px;overflow:hidden;border-radius:8px;border:1px solid var(--border);background:var(--surface)}
+.tl-stripe{width:4px;flex-shrink:0}
+.tl-content{padding:10px 14px;flex:1}
+.tl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.tl-spec-tag{font-size:10px;font-weight:700;color:#fff;padding:2px 7px;border-radius:10px}
+.tl-date{font-size:11px;color:var(--text-muted)}
+.tl-text{font-size:13px;font-weight:500}
+.tl-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.tl-empty{color:var(--text-muted);text-align:center;padding:24px;font-size:13px}
+
+/* ── REFERRAL CARD ── */
+.referral-criteria{background:var(--red-light);border:1px solid #F5B7B1;border-radius:8px;padding:12px 16px;margin-bottom:10px}
+.referral-criteria-title{font-size:12px;font-weight:700;color:var(--danger);margin-bottom:6px}
+.referral-criteria li{font-size:12px;color:var(--text);margin-left:18px;line-height:1.8}
+
+/* ── CME MODULE ── */
+.cme-module-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px}
+.cme-module-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background .15s}
+.cme-module-header:hover{background:var(--bg)}
+.cme-mod-icon{font-size:20px}
+.cme-mod-info{flex:1}
+.cme-mod-title{font-weight:700;font-size:13px}
+.cme-mod-sub{font-size:11px;color:var(--text-muted)}
+.cme-mod-pts{font-size:12px;font-weight:700;color:var(--purple);background:var(--purple-light);border-radius:6px;padding:3px 8px}
+.cme-mod-status{font-size:18px;margin-left:8px}
+.cme-module-body{border-top:1px solid var(--border);padding:14px 16px;background:var(--bg);display:none}
+.cme-module-body.open{display:block}
+.cme-pearl-item{background:var(--surface);border-radius:8px;border:1px solid var(--border);padding:12px 14px;margin-bottom:8px}
+.cme-pearl-item-title{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px}
+.cme-pearl-item-body{font-size:12px;color:var(--text);line-height:1.6}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:14px;width:520px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal.wide{width:740px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-header h3{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted);padding:2px 6px;border-radius:6px}
+.modal-close:hover{background:var(--bg)}
+.modal-body{padding:18px 22px}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;border-top:1px solid var(--border);background:var(--bg)}
+.btn-secondary{padding:9px 18px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-save{padding:9px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:var(--primary-dark)}
+.btn-danger{padding:9px 18px;background:var(--danger);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);outline:none;transition:border .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary)}
+.form-row{display:flex;gap:12px}
+.form-row.cols-2>*{flex:1}.form-row.cols-3>*{flex:1}.form-row.cols-4>*{flex:1}
+.calc-result{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:7px;padding:7px 12px;margin-bottom:8px;font-size:12px}
+.calc-label{color:var(--text-muted)}.calc-value{font-weight:700;color:var(--text)}
+.calc-value.ok{color:var(--success)}.calc-value.warn{color:var(--warn)}.calc-value.danger{color:var(--danger)}
+.section-title-sm{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin:14px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px}
+.alert-box{border-radius:8px;padding:12px 16px;font-size:13px;margin-bottom:14px;display:none}
+.alert-box.red{background:var(--red-light);border:1px solid #F5B7B1;color:var(--danger)}.alert-box.orange{background:var(--orange-light);border:1px solid #F5CBA7;color:var(--orange)}.alert-box.green{background:var(--green-light);border:1px solid #A9DFBF;color:var(--green)}
+
+/* ── PATIENT SEARCH ── */
+.patient-list{max-height:320px;overflow-y:auto}
+.patient-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s}
+.patient-item:hover{background:var(--primary-light)}
+.patient-avatar{width:38px;height:38px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.patient-info-name{font-weight:600;font-size:13px}
+.patient-info-meta{font-size:11px;color:var(--text-muted)}
+
+/* ── NO PATIENT ── */
+#no-patient{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;color:var(--text-muted);text-align:center}
+#no-patient h3{font-size:18px;font-weight:600;color:var(--text);margin-top:8px}
+#no-patient p{font-size:13px;max-width:360px;line-height:1.6}
+.no-pt-icon{font-size:52px}
+.btn-search-big{margin-top:8px;padding:12px 28px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--shadow)}
+
+/* ── TOAST ── */
+#toast-container{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:2000}
+.toast{display:flex;align-items:center;gap:10px;background:#1C2B3A;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.25);min-width:260px}
+.toast.success{border-left:4px solid var(--success)}.toast.error{border-left:4px solid var(--danger)}.toast.warn{border-left:4px solid var(--warn)}.toast.edu{border-left:4px solid var(--purple)}
+
+/* ── LOADING ── */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.7);z-index:3000;align-items:center;justify-content:center}
+.loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── VITALS GRID ── */
+.vitals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.vital-item{background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)}
+.vital-value{font-size:20px;font-weight:700}
+.vital-unit{font-size:11px;color:var(--text-muted)}
+.vital-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.vital-value.ok{color:var(--success)}.vital-value.warn{color:var(--warn)}.vital-value.danger{color:var(--danger)}
+
+/* ── MISC ── */
+.text-muted{color:var(--text-muted)}.text-sm{font-size:12px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px}
+.highlight-box{background:var(--primary-light);border:1px solid #AED6F1;border-radius:8px;padding:12px 16px;font-size:13px;margin-bottom:12px}
+.highlight-box b{color:var(--primary)}
+.soap-section{background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:8px;border-left:3px solid var(--primary)}
+.soap-label{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--primary);margin-bottom:4px}
+.soap-text{font-size:13px;line-height:1.6}
+.referral-card{background:var(--red-light);border:1.5px solid #F5B7B1;border-radius:10px;padding:16px;margin-bottom:12px}
+.referral-card-title{font-size:14px;font-weight:700;color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+
+<!-- ─── AUTH SCREEN ────────────────────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🩺</div>
+      <div>
+        <div class="auth-logo-text">ECE PCP</div>
+        <div class="auth-logo-sub">Obesidad en el Primer Nivel</div>
+      </div>
+    </div>
+    <h2>Bienvenido</h2>
+    <p>Accede con tus credenciales de la plataforma ECE</p>
+    <input class="auth-input" id="auth-email" type="email" placeholder="Correo electrónico" />
+    <input class="auth-input" id="auth-pass" type="password" placeholder="Contraseña"
+      onkeydown="if(event.key==='Enter') login()" />
+    <button class="auth-btn" onclick="login()">Iniciar sesión</button>
+    <div class="auth-error" id="auth-error">Credenciales incorrectas. Intenta de nuevo.</div>
+  </div>
+</div>
+
+<!-- ─── APP SHELL ─────────────────────────────────────────────── -->
+<div id="app">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      🩺 ECE PCP <span class="topbar-brand-sub">Primer Nivel · Obesidad</span>
+    </div>
+    <div class="topbar-patient">
+      <div class="topbar-pt-info" onclick="openModal('modal-search')">
+        <span id="header-patient-info" style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.9);font-size:13px">
+          <span style="opacity:.7">👤 Buscar o seleccionar paciente</span>
+        </span>
+      </div>
+      <button class="btn-new-pt" onclick="openModal('modal-new-patient')">+ Nuevo paciente</button>
+    </div>
+    <div class="topbar-actions">
+      <div class="topbar-cme" onclick="switchView('cme')">
+        <span class="cme-pts" id="cme-pts-display">0</span>
+        <span class="cme-label">pts CME</span>
+        <span style="font-size:13px">🎓</span>
+      </div>
+      <div class="topbar-user" onclick="logout()" id="topbar-username">— Salir</div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div style="height:8px"></div>
+      <div class="sidebar-section">Expediente</div>
+      <div class="sidebar-item active" data-view="dashboard" onclick="switchView('dashboard')">
+        <span class="sidebar-icon">🏠</span> Dashboard
+      </div>
+      <div class="sidebar-item" data-view="consulta" onclick="switchView('consulta')">
+        <span class="sidebar-icon">📋</span> Consulta
+      </div>
+      <div class="sidebar-item" data-view="evaluacion" onclick="switchView('evaluacion')">
+        <span class="sidebar-icon">⚖️</span> Evaluación EOSS
+      </div>
+      <div class="sidebar-item" data-view="tratamiento" onclick="switchView('tratamiento')">
+        <span class="sidebar-icon">🎯</span> Algoritmo terapéutico
+      </div>
+      <div class="sidebar-item" data-view="farmacos" onclick="switchView('farmacos')">
+        <span class="sidebar-icon">💊</span> Farmacoterapia
+      </div>
+      <div class="sidebar-item" data-view="seguimiento" onclick="switchView('seguimiento')">
+        <span class="sidebar-icon">📊</span> Seguimiento
+      </div>
+      <div class="sidebar-section" style="margin-top:8px">Educación</div>
+      <div class="sidebar-item sidebar-edu" data-view="cme" onclick="switchView('cme')">
+        <span class="sidebar-icon">🎓</span> Módulos CME
+      </div>
+      <div class="sidebar-item sidebar-edu" data-view="referencia" onclick="switchView('referencia')">
+        <span class="sidebar-icon">📚</span> Referencia rápida
+      </div>
+      <div class="sidebar-footer">
+        <div class="sidebar-level">
+          <div class="sidebar-level-label">Tu nivel</div>
+          <div class="sidebar-level-name" id="sidebar-level-name">Aprendiz</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="sidebar-level-bar" style="width:0%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="sidebar-level-pts">0 / 50 pts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+      <!-- No patient placeholder -->
+      <div id="no-patient">
+        <div class="no-pt-icon">🩺</div>
+        <h3>Selecciona un paciente para comenzar</h3>
+        <p>Busca un paciente existente o registra uno nuevo para abrir su expediente de obesidad.</p>
+        <button class="btn-search-big" onclick="openModal('modal-search')">🔍 Buscar paciente</button>
+      </div>
+
+      <!-- ─── VIEW: DASHBOARD ───────────────────────────────── -->
+      <div id="view-dashboard" class="module-view">
+        <!-- Pearl of the day -->
+        <div class="pearl-card" id="pearl-of-day" style="display:none">
+          <div class="pearl-card-header">
+            <span class="pearl-icon">💎</span>
+            <span class="pearl-title" id="pod-title">Perla del día</span>
+            <span class="pearl-source" id="pod-source"></span>
+            <button class="pearl-close" onclick="$('pearl-of-day').style.display='none'">×</button>
+          </div>
+          <div class="pearl-body" id="pod-body"></div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" id="dash-peso">—</div>
+            <div class="stat-label">Peso actual (kg)</div>
+            <div class="stat-delta" id="dash-peso-delta"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="dash-bmi">—</div>
+            <div class="stat-label">IMC (kg/m²)</div>
+            <div class="stat-delta" id="dash-bmi-cat"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value"><span id="dash-eoss-val">?</span></div>
+            <div class="stat-label">EOSS</div>
+            <div class="stat-delta" id="dash-eoss-label"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="dash-twl">—</div>
+            <div class="stat-label">%TWL desde inicio</div>
+            <div class="stat-delta" id="dash-twl-sub"></div>
+          </div>
+        </div>
+
+        <!-- Alert zone -->
+        <div id="dash-alert-zone" style="margin-bottom:14px"></div>
+
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">📊 Evolución de peso</span>
+            </div>
+            <div class="section-card-body" style="height:170px">
+              <canvas id="chartDash"></canvas>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">❤️ Últimos vitales</span>
+            </div>
+            <div class="section-card-body" id="dash-vitals-body">
+              <div class="text-muted text-sm text-center" style="padding:12px">Sin consulta registrada</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">🎯 Paso siguiente recomendado</span>
+            </div>
+            <div class="section-card-body" id="dash-next-step">
+              <div class="text-muted text-sm">Completa la evaluación EOSS para ver recomendaciones.</div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header">
+              <span class="section-card-title">📅 Historial de consultas</span>
+            </div>
+            <div class="section-card-body no-pad">
+              <div id="dash-timeline" style="max-height:160px;overflow-y:auto">
+                <div class="tl-empty">Sin consultas registradas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: CONSULTA ────────────────────────────────── -->
+      <div id="view-consulta" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:var(--primary)">📋</div>
+          <div><h2>Consulta</h2><div class="module-sub">Vitales · SOAP · 5As · Plan</div></div>
+          <div style="margin-left:auto">
+            <button class="btn-add" onclick="openModal('modal-consulta')">+ Nueva consulta</button>
+          </div>
+        </div>
+
+        <!-- 5As Framework -->
+        <div class="section-card" style="margin-bottom:14px">
+          <div class="section-card-header">
+            <span class="section-card-title">🅰️ Marco de las 5As — Consulta de obesidad</span>
+            <span class="text-sm text-muted">Última consulta: <span id="5as-last-date">—</span></span>
+          </div>
+          <div class="section-card-body">
+            <div class="fivedas-grid" id="fiveas-grid">
+              <div class="fivea-card"><div class="fivea-letter" style="color:#1B6CA8">A</div><div class="fivea-name">ASK</div><div class="fivea-desc">Pregunta con permiso sobre el peso</div><div class="fivea-check" id="5a-ask">✓</div></div>
+              <div class="fivea-card"><div class="fivea-letter" style="color:#27AE60">A</div><div class="fivea-name">ADVISE</div><div class="fivea-desc">Discute el riesgo para la salud</div><div class="fivea-check" id="5a-advise"></div></div>
+              <div class="fivea-card"><div class="fivea-letter" style="color:#E67E22">A</div><div class="fivea-name">ASSESS</div><div class="fivea-desc">Evalúa disposición al cambio</div><div class="fivea-check" id="5a-assess"></div></div>
+              <div class="fivea-card"><div class="fivea-letter" style="color:#8E44AD">A</div><div class="fivea-name">ASSIST</div><div class="fivea-desc">Ofrece intervención adecuada</div><div class="fivea-check" id="5a-assist"></div></div>
+              <div class="fivea-card"><div class="fivea-letter" style="color:#C0392B">A</div><div class="fivea-name">ARRANGE</div><div class="fivea-desc">Programa seguimiento</div><div class="fivea-check" id="5a-arrange"></div></div>
+            </div>
+            <div class="pearl-card" style="margin-bottom:0;margin-top:4px">
+              <div class="pearl-card-header"><span class="pearl-icon">💎</span><span class="pearl-title">¿Por qué las 5As?</span><span class="pearl-source">Obesity Canada, 2020</span></div>
+              <div class="pearl-body">El modelo de las 5As aumenta la tasa de intervención exitosa en obesidad de <b>16% a 58%</b> en atención primaria. La clave es siempre <b>pedir permiso</b> antes de hablar del peso — esto reduce la resistencia y preserva la alianza terapéutica.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">❤️ Vitales</span></div>
+            <div class="section-card-body" id="consulta-vitals-body">
+              <div class="text-muted text-sm text-center" style="padding:12px">Sin consulta registrada</div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">📝 Última nota SOAP</span></div>
+            <div class="section-card-body" id="consulta-soap-body">
+              <div class="text-muted text-sm text-center" style="padding:12px">Sin nota SOAP registrada</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-top:0">
+          <div class="section-card-header"><span class="section-card-title">📅 Historial de consultas</span></div>
+          <div class="section-card-body no-pad">
+            <table class="data-table"><thead><tr><th>Fecha</th><th>Peso</th><th>PA</th><th>Motivo</th><th>5As</th><th>Plan</th></tr></thead>
+            <tbody id="tbody-consultas"><tr><td colspan="6" class="table-empty">Sin consultas</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: EVALUACIÓN EOSS ─────────────────────────── -->
+      <div id="view-evaluacion" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:#E67E22">⚖️</div>
+          <div><h2>Evaluación EOSS</h2><div class="module-sub">Edmonton Obesity Staging System · Comorbilidades · Riesgo CV</div></div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn-add" style="background:#E67E22" onclick="openModal('modal-eoss')">+ Estadificar</button>
+            <button class="btn-add" style="background:#C0392B" onclick="openModal('modal-comorbilidades')">+ Comorbilidades</button>
+          </div>
+        </div>
+
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">📊 EOSS actual</span></div>
+            <div class="section-card-body" id="eoss-current-body">
+              <div class="text-muted text-sm text-center" style="padding:16px">Sin estadificación registrada</div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">🏥 Comorbilidades activas</span></div>
+            <div class="section-card-body" id="comorbilidades-body">
+              <div class="text-muted text-sm text-center" style="padding:16px">Sin comorbilidades registradas</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pearl-card">
+          <div class="pearl-card-header"><span class="pearl-icon">💎</span><span class="pearl-title">EOSS cambia el manejo, no el IMC</span><span class="pearl-source">Sharma & Kushner, 2020</span></div>
+          <div class="pearl-body">Dos pacientes con el mismo IMC de 32 pueden requerir intervenciones completamente distintas. Un paciente EOSS 0-1 puede beneficiarse solo de cambios en estilo de vida, mientras que un paciente EOSS 2+ requiere tratamiento farmacológico activo, independientemente del IMC. <b>El IMC clasifica, el EOSS decide el tratamiento.</b></div>
+        </div>
+
+        <!-- EOSS Stage Reference -->
+        <div class="section-card">
+          <div class="section-card-header"><span class="section-card-title">📖 Guía rápida EOSS</span></div>
+          <div class="section-card-body no-pad">
+            <table class="data-table">
+              <thead><tr><th>Estadio</th><th>Descripción</th><th>Tratamiento recomendado</th></tr></thead>
+              <tbody>
+                <tr><td><span class="pill green">EOSS 0</span></td><td>Sin factores de riesgo ni síntomas</td><td>Prevención, estilo de vida</td></tr>
+                <tr><td><span class="pill yellow">EOSS 1</span></td><td>Factores de riesgo sub-umbral, síntomas leves</td><td>Estilo de vida estructurado</td></tr>
+                <tr><td><span class="pill" style="background:#FEF0E7;color:#CA6F1E">EOSS 2</span></td><td>Comorbilidades establecidas (DM2, HTA, dislipidemia)</td><td><b>Farmacoterapia + estilo de vida</b></td></tr>
+                <tr><td><span class="pill red">EOSS 3</span></td><td>Daño orgánico significativo</td><td>Farmacoterapia intensiva ± referir cirugía</td></tr>
+                <tr><td><span class="pill" style="background:#F9EBEA;color:#8E1A0E">EOSS 4</span></td><td>Enfermedad en etapa terminal</td><td>Paliativo + equipo multidisciplinario</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: ALGORITMO TERAPÉUTICO ──────────────────── -->
+      <div id="view-tratamiento" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:var(--green)">🎯</div>
+          <div><h2>Algoritmo terapéutico</h2><div class="module-sub">Escalones · Decisión clínica · ¿Cuándo referir?</div></div>
+        </div>
+
+        <div class="module-grid">
+          <div>
+            <!-- Decision tree — auto-populated -->
+            <div class="section-card" style="margin-bottom:14px">
+              <div class="section-card-header"><span class="section-card-title">🔀 Decisión para este paciente</span></div>
+              <div class="section-card-body" id="algo-decision-body">
+                <div class="text-muted text-sm text-center" style="padding:16px">Selecciona un paciente con EOSS registrado para ver la recomendación personalizada.</div>
+              </div>
+            </div>
+
+            <!-- Referral criteria -->
+            <div class="section-card">
+              <div class="section-card-header"><span class="section-card-title">🏥 Criterios de referencia a especialista</span></div>
+              <div class="section-card-body">
+                <div class="referral-criteria">
+                  <div class="referral-criteria-title">⚠️ Referir a endocrinología / medicina de la obesidad si:</div>
+                  <ul class="referral-criteria">
+                    <li>IMC ≥ 40 sin respuesta a tratamiento</li>
+                    <li>IMC ≥ 35 + comorbilidad no controlada</li>
+                    <li>EOSS 3 o EOSS 4</li>
+                    <li>Sospecha de causa secundaria (hipotiroidismo, Cushing, insulinoma)</li>
+                    <li>Necesidad de GLP-1 agonista y sin experiencia en prescripción</li>
+                    <li>Fracaso de ≥ 2 fármacos anti-obesidad</li>
+                  </ul>
+                </div>
+                <div class="referral-criteria" style="background:var(--red-light);border-color:#F5B7B1">
+                  <div class="referral-criteria-title">🔴 Referir a cirugía bariátrica si:</div>
+                  <ul class="referral-criteria">
+                    <li>IMC ≥ 40 (sin comorbilidades)</li>
+                    <li>IMC ≥ 35 + DM2, HTA, SAOS severo, o dislipidemia</li>
+                    <li>Fracaso documentado de tratamiento no quirúrgico ≥ 1 año</li>
+                    <li>Candidato quirúrgico sin contraindicaciones absolutas</li>
+                  </ul>
+                </div>
+                <button class="btn-add" style="width:100%;background:var(--danger)" onclick="openModal('modal-referral')">📄 Generar carta de referencia</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <!-- Escalones terapéuticos -->
+            <div class="section-card">
+              <div class="section-card-header"><span class="section-card-title">🪜 Escalones terapéuticos</span></div>
+              <div class="section-card-body">
+                <div class="escalones">
+                  <div class="escalon escalon-1" id="escalon-1">
+                    <div class="escalon-num">1</div>
+                    <div class="escalon-body">
+                      <div class="escalon-title">Estilo de vida intensivo</div>
+                      <div class="escalon-criteria">Dieta hipocalórica · Actividad física ≥150 min/sem · Psicología conductual</div>
+                      <div class="escalon-criteria" style="margin-top:4px">Indicado: <b>TODOS</b> los pacientes con obesidad</div>
+                    </div>
+                    <span class="escalon-tag" style="background:var(--green)">Siempre</span>
+                  </div>
+                  <div class="escalon escalon-2" id="escalon-2">
+                    <div class="escalon-num">2</div>
+                    <div class="escalon-body">
+                      <div class="escalon-title">Farmacoterapia anti-obesidad</div>
+                      <div class="escalon-criteria">GLP-1 agonistas · Dual GIP+GLP-1 · Orlistat · Combinaciones</div>
+                      <div class="escalon-criteria" style="margin-top:4px">Indicado: IMC ≥ 30, o IMC ≥ 27 + comorbilidad, o EOSS ≥ 2</div>
+                    </div>
+                    <span class="escalon-tag" style="background:var(--orange)" id="escalon-2-tag">Evaluar</span>
+                  </div>
+                  <div class="escalon escalon-3" id="escalon-3">
+                    <div class="escalon-num">3</div>
+                    <div class="escalon-body">
+                      <div class="escalon-title">Cirugía bariátrica / metabólica</div>
+                      <div class="escalon-criteria">Bypass gástrico · Manga gástrica · OAGB</div>
+                      <div class="escalon-criteria" style="margin-top:4px">Indicado: IMC ≥ 40, o IMC ≥ 35 + comorbilidad, fracaso tratamiento</div>
+                    </div>
+                    <span class="escalon-tag" style="background:var(--red)" id="escalon-3-tag">Referir</span>
+                  </div>
+                </div>
+
+                <div class="pearl-card" style="margin-top:14px;margin-bottom:0">
+                  <div class="pearl-card-header"><span class="pearl-icon">💎</span><span class="pearl-title">El escalón 1 nunca es suficiente en EOSS 2+</span><span class="pearl-source">AACE/ACE, 2024</span></div>
+                  <div class="pearl-body">La modificación de estilo de vida sola produce una pérdida media de <b>3-5%</b> del peso corporal a largo plazo. Los fármacos GLP-1 añaden <b>10-20%</b> adicional. En EOSS 2+, esperar solo con dieta y ejercicio perpetúa el daño a órgano blanco.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: FARMACOTERAPIA ───────────────────────────── -->
+      <div id="view-farmacos" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:var(--purple)">💊</div>
+          <div><h2>Farmacoterapia anti-obesidad</h2><div class="module-sub">GLP-1 · Dual GIP+GLP-1 · Orlistat · Monitoreo</div></div>
+          <div style="margin-left:auto">
+            <button class="btn-add" style="background:var(--purple)" onclick="openModal('modal-medication')">+ Agregar fármaco</button>
+          </div>
+        </div>
+
+        <div id="farma-alert" class="alert-box orange" style="display:none"></div>
+
+        <div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card"><div class="stat-value" id="farma-n-meds">0</div><div class="stat-label">Fármacos activos</div></div>
+          <div class="stat-card"><div class="stat-value" id="farma-twl-exp">—</div><div class="stat-label">%TWL esperado</div><div class="stat-delta">Con tratamiento actual</div></div>
+          <div class="stat-card"><div class="stat-value" id="farma-twl-real">—</div><div class="stat-label">%TWL real</div><div class="stat-delta" id="farma-twl-real-sub"></div></div>
+        </div>
+
+        <div class="section-card" style="margin-bottom:14px">
+          <div class="section-card-header"><span class="section-card-title">💊 Medicamentos activos</span></div>
+          <div class="section-card-body no-pad">
+            <table class="data-table">
+              <thead><tr><th>Fármaco</th><th>Clase</th><th>Dosis</th><th>Inicio</th><th>%TWL esperado</th><th>Monitoreo</th><th>Estado</th></tr></thead>
+              <tbody id="tbody-medications"><tr><td colspan="7" class="table-empty">Sin fármacos registrados</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header"><span class="section-card-title">📖 Guía rápida de fármacos anti-obesidad</span></div>
+          <div class="section-card-body no-pad">
+            <table class="data-table">
+              <thead><tr><th>Fármaco</th><th>Mecanismo</th><th>%TWL</th><th>Contraindicaciones clave</th><th>Monitoreo</th></tr></thead>
+              <tbody>
+                <tr><td><b>Semaglutida 2.4mg</b></td><td>GLP-1 agonista SC semanal</td><td><span class="pill green">15-20%</span></td><td>Pancreatitis, CEF personal/familiar, embarazo</td><td>FC, PA, HbA1c, náuseas</td></tr>
+                <tr><td><b>Tirzepatida 15mg</b></td><td>GIP+GLP-1 dual SC semanal</td><td><span class="pill green">20-22%</span></td><td>Pancreatitis, CEF, embarazo</td><td>Amilasa, lipasa, FC</td></tr>
+                <tr><td><b>Liraglutida 3mg</b></td><td>GLP-1 agonista SC diario</td><td><span class="pill yellow">5-8%</span></td><td>CEF, pancreatitis</td><td>FC, PA</td></tr>
+                <tr><td><b>Orlistat 120mg</b></td><td>Inhibidor lipasa pancreática</td><td><span class="pill yellow">3-5%</span></td><td>Malabsorción, embarazo</td><td>Vit. liposolubles, esteatorrea</td></tr>
+                <tr><td><b>Bupropión/Naltrexona</b></td><td>Antidepresivo + antiopioide</td><td><span class="pill yellow">5-7%</span></td><td>HTA no controlada, epilepsia</td><td>PA, ánimo, náuseas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pearl-card" style="margin-top:14px">
+          <div class="pearl-card-header"><span class="pearl-icon">💎</span><span class="pearl-title">Respuesta mínima en semana 12 — regla práctica</span><span class="pearl-source">NICE TA, 2022</span></div>
+          <div class="pearl-body">Evalúa eficacia a las <b>12 semanas</b>. Si el paciente no ha perdido ≥ 5% del peso inicial con el fármaco a dosis plena, reconsidera la adherencia y eventualmente cambia de agente. Esta regla aplica especialmente para GLP-1 — no continúes sin respuesta.</div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: SEGUIMIENTO ─────────────────────────────── -->
+      <div id="view-seguimiento" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:#1A5276">📊</div>
+          <div><h2>Seguimiento longitudinal</h2><div class="module-sub">Evolución de peso · Control metabólico · Metas</div></div>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn-add" style="background:#1A5276" onclick="openModal('modal-measurement')">+ Peso / medidas</button>
+            <button class="btn-add" style="background:#117A65" onclick="openModal('modal-labs')">+ Labs</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-value" id="seg-peso-actual">—</div><div class="stat-label">Peso actual (kg)</div><div class="stat-delta" id="seg-delta-peso"></div></div>
+          <div class="stat-card"><div class="stat-value" id="seg-bmi-actual">—</div><div class="stat-label">IMC</div><div class="stat-delta" id="seg-bmi-cat"></div></div>
+          <div class="stat-card"><div class="stat-value" id="seg-twl">—</div><div class="stat-label">%TWL</div><div class="stat-delta" id="seg-twl-meta"></div></div>
+          <div class="stat-card"><div class="stat-value" id="seg-hba1c">—</div><div class="stat-label">HbA1c</div><div class="stat-delta" id="seg-hba1c-sub"></div></div>
+        </div>
+
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">📈 Evolución de peso</span></div>
+            <div class="section-card-body" style="height:200px"><canvas id="chartSeg"></canvas></div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">🧪 Últimos laboratorios</span></div>
+            <div class="section-card-body" id="seg-labs-body">
+              <div class="text-muted text-sm text-center" style="padding:16px">Sin laboratorios registrados</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" style="margin-top:0">
+          <div class="section-card-header"><span class="section-card-title">📋 Historial de mediciones</span></div>
+          <div class="section-card-body no-pad">
+            <table class="data-table"><thead><tr><th>Fecha</th><th>Peso (kg)</th><th>IMC</th><th>Cintura (cm)</th><th>%TWL</th><th>PA</th></tr></thead>
+            <tbody id="tbody-measurements"><tr><td colspan="6" class="table-empty">Sin mediciones</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: CME ─────────────────────────────────────── -->
+      <div id="view-cme" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:var(--edu)">🎓</div>
+          <div><h2>Educación Médica Continua</h2><div class="module-sub">Aprende mientras atiendes · Perlas clínicas · Competencias</div></div>
+        </div>
+
+        <!-- Progress -->
+        <div class="section-card" style="margin-bottom:16px">
+          <div class="section-card-body">
+            <div style="display:flex;align-items:center;gap:20px">
+              <div style="text-align:center;min-width:80px">
+                <div style="font-size:36px;font-weight:800;color:var(--purple)" id="cme-pts-big">0</div>
+                <div style="font-size:11px;color:var(--text-muted)">PUNTOS CME</div>
+              </div>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                  <span style="font-weight:700;font-size:14px" id="cme-level-name">Aprendiz</span>
+                  <span style="font-size:12px;color:var(--text-muted)" id="cme-level-next"></span>
+                </div>
+                <div class="progress-bar-wrap" style="height:10px"><div class="progress-bar-fill" id="cme-level-bar" style="width:0%;background:var(--purple)"></div></div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="cme-level-desc">Completa consultas y evaluaciones para ganar puntos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cme-module-card">
+          <div class="cme-module-header" onclick="toggleCME('cme-m1')">
+            <span class="cme-mod-icon">🧬</span>
+            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 1: Fisiopatología de la obesidad</div><div class="cme-mod-sub">Causas, mecanismos hormonales y genéticos · 5 perlas</div></div>
+            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
+          </div>
+          <div class="cme-module-body" id="cme-m1">
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🧬 La obesidad NO es falta de voluntad</div><div class="cme-pearl-item-body">La obesidad es una enfermedad crónica compleja regulada por más de 250 genes y 8 ejes hormonales. La leptina, ghrelina, insulina y péptidos intestinales regulan el hambre independientemente de la voluntad. El estigma del peso daña la relación médico-paciente y empeora los resultados clínicos. <b>Aborda la obesidad como cualquier otra enfermedad crónica: con empatía y sin juicios.</b></div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🔄 El set point y la trampa biológica</div><div class="cme-pearl-item-body">Después de perder peso, el cuerpo activa mecanismos compensatorios: baja la tasa metabólica basal hasta un 15%, aumenta el apetito y reduce la saciedad. Este es el mecanismo principal del rebote. Los fármacos GLP-1 interrumpen este ciclo al actuar directamente sobre los centros hipotalámicos del hambre.</div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🏃 Tejido adiposo como órgano endocrino</div><div class="cme-pearl-item-body">El tejido adiposo visceral secreta adipoquinas proinflamatorias (TNF-α, IL-6, resistina) que perpetúan resistencia a la insulina, disfunción endotelial y riesgo cardiovascular. La circunferencia de cintura ≥ 80 cm (mujeres) / ≥ 90 cm (hombres) es un marcador de riesgo metabólico independiente del IMC.</div></div>
+          </div>
+        </div>
+
+        <div class="cme-module-card">
+          <div class="cme-module-header" onclick="toggleCME('cme-m2')">
+            <span class="cme-mod-icon">💊</span>
+            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 2: Farmacoterapia en primer nivel</div><div class="cme-mod-sub">GLP-1, tirzepatida, orlistat · Inicio y monitoreo · 6 perlas</div></div>
+            <span class="cme-mod-pts">+15 pts</span><span class="cme-mod-status">📖</span>
+          </div>
+          <div class="cme-module-body" id="cme-m2">
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">💉 Semaglutida: la nueva era del tratamiento</div><div class="cme-pearl-item-body">STEP 1 (n=1961): Semaglutida 2.4 mg SC semanal logró <b>-14.9% del peso corporal</b> vs -2.4% con placebo a 68 semanas. 86% de pacientes perdió ≥5%. Es el tratamiento farmacológico más efectivo disponible fuera de cirugía. Disponible en México bajo prescripción médica.</div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🔺 Esquema de escalada — clave para tolerabilidad</div><div class="cme-pearl-item-body">La náusea es el efecto adverso más común de GLP-1 (40-44%). Se minimiza con escalada lenta: <b>Semaglutida: 0.25 mg × 4 sem → 0.5 mg × 4 sem → 1 mg × 4 sem → 1.7 mg × 4 sem → 2.4 mg.</b> Administrar con alimento, hidratación adecuada y reducir porciones.</div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">⚠️ Contraindicación absoluta: CEF</div><div class="cme-pearl-item-body">Carcinoma de células C del tiroides (CEF) — antecedente personal o familiar es contraindicación absoluta para cualquier GLP-1/GIP agonista. Siempre pregunta sobre historia familiar de cáncer de tiroides antes de prescribir. MEN2A/2B también contraindica.</div></div>
+          </div>
+        </div>
+
+        <div class="cme-module-card">
+          <div class="cme-module-header" onclick="toggleCME('cme-m3')">
+            <span class="cme-mod-icon">🗣️</span>
+            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 3: Comunicación médico-paciente en obesidad</div><div class="cme-mod-sub">Estigma, motivación, 5As · 4 perlas</div></div>
+            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
+          </div>
+          <div class="cme-module-body" id="cme-m3">
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🗣️ Lenguaje que no estigmatiza</div><div class="cme-pearl-item-body">Evita: "obeso", "gordo", "problema de peso". Usa: <b>"paciente que vive con obesidad"</b>, "IMC elevado", "peso excesivo". El lenguaje de persona-primero reduce la vergüenza y aumenta el engagement con el tratamiento. Estudios muestran que 65% de pacientes con obesidad evita ir al médico por miedo al estigma.</div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🎯 Metas de peso realistas</div><div class="cme-pearl-item-body">Muchos pacientes esperan perder 30-40% de su peso. Las metas clínicas son: <b>5-10% = mejora metabólica significativa, 10-15% = remisión de DM2 posible, >15% = mejoría de SAOS y función hepática.</b> Ajustar expectativas con datos reales mejora la adherencia a largo plazo.</div></div>
+          </div>
+        </div>
+
+        <div class="cme-module-card">
+          <div class="cme-module-header" onclick="toggleCME('cme-m4')">
+            <span class="cme-mod-icon">📏</span>
+            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 4: EOSS y estratificación de riesgo</div><div class="cme-mod-sub">Edmonton Obesity Staging System · Comorbilidades · 5 perlas</div></div>
+            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
+          </div>
+          <div class="cme-module-body" id="cme-m4">
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">📊 EOSS predice mortalidad mejor que el IMC</div><div class="cme-pearl-item-body">En un estudio de 8,143 pacientes, EOSS predijo mortalidad independientemente del IMC. Pacientes EOSS 0-1 con IMC ≥ 35 tuvieron <b>menor</b> riesgo de muerte que pacientes EOSS 2-4 con IMC 25-29. El IMC solo clasifica el tamaño; el EOSS mide el daño.</div></div>
+            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🏥 EOSS 2: el punto de inflexión terapéutico</div><div class="cme-pearl-item-body">EOSS 2 indica comorbilidades establecidas (DM2, HTA, dislipidemia, ERGE, osteoartritis, SAOS moderado). Este es el momento de iniciar farmacoterapia activa. <b>No esperar "a que el paciente esté listo" — el daño a órgano blanco progresa.</b></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── VIEW: REFERENCIA RÁPIDA ───────────────────────── -->
+      <div id="view-referencia" class="module-view">
+        <div class="module-header">
+          <div class="module-icon-lg" style="background:var(--edu)">📚</div>
+          <div><h2>Referencia rápida</h2><div class="module-sub">Puntos de corte · Fórmulas · Guías de práctica clínica</div></div>
+        </div>
+        <div class="module-grid">
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">⚖️ Clasificación IMC (OMS)</span></div>
+            <div class="section-card-body no-pad">
+              <table class="data-table">
+                <thead><tr><th>IMC (kg/m²)</th><th>Clasificación</th><th>Riesgo metabólico</th></tr></thead>
+                <tbody>
+                  <tr><td>&lt; 18.5</td><td>Bajo peso</td><td>Aumentado</td></tr>
+                  <tr><td>18.5 – 24.9</td><td>Normal</td><td>Normal</td></tr>
+                  <tr><td>25 – 29.9</td><td><span class="pill yellow">Sobrepeso</span></td><td>Aumentado</td></tr>
+                  <tr><td>30 – 34.9</td><td><span class="pill" style="background:#FEF0E7;color:#CA6F1E">Obesidad G-I</span></td><td>Alto</td></tr>
+                  <tr><td>35 – 39.9</td><td><span class="pill red">Obesidad G-II</span></td><td>Muy alto</td></tr>
+                  <tr><td>≥ 40</td><td><span class="pill" style="background:#F9EBEA;color:#8E1A0E">Obesidad G-III</span></td><td>Extremo</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">📐 Circunferencia de cintura — Puntos de corte</span></div>
+            <div class="section-card-body no-pad">
+              <table class="data-table">
+                <thead><tr><th>Sexo</th><th>Riesgo aumentado</th><th>Riesgo alto</th></tr></thead>
+                <tbody>
+                  <tr><td>Mujeres</td><td>≥ 80 cm</td><td>≥ 88 cm</td></tr>
+                  <tr><td>Hombres</td><td>≥ 90 cm</td><td>≥ 102 cm</td></tr>
+                  <tr><td colspan="3" style="font-size:11px;color:var(--text-muted);padding-top:6px">Para población latinoamericana usar puntos de corte OMS: M ≥90 / F ≥80</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">🧮 Fórmulas clave</span></div>
+            <div class="section-card-body">
+              <div class="calc-result"><span class="calc-label">IMC</span><span class="calc-value">Peso (kg) / Talla² (m)</span></div>
+              <div class="calc-result"><span class="calc-label">ICC</span><span class="calc-value">Cintura / Cadera</span></div>
+              <div class="calc-result"><span class="calc-label">ICT</span><span class="calc-value">Cintura / Talla</span></div>
+              <div class="calc-result"><span class="calc-label">%TWL</span><span class="calc-value">(Peso_i − Peso_f) / Peso_i × 100</span></div>
+              <div class="calc-result"><span class="calc-label">HOMA-IR</span><span class="calc-value">Glucosa (mg/dL) × Insulina (μU/mL) / 405</span></div>
+              <div class="calc-result"><span class="calc-label">TMB Mifflin</span><span class="calc-value">10P + 6.25T − 5E ± 5 (H: +5, M: −161)</span></div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><span class="section-card-title">📋 Metas de control metabólico</span></div>
+            <div class="section-card-body no-pad">
+              <table class="data-table">
+                <thead><tr><th>Parámetro</th><th>Meta</th><th>Alarma</th></tr></thead>
+                <tbody>
+                  <tr><td>HbA1c (DM2)</td><td>&lt; 7%</td><td>≥ 9%</td></tr>
+                  <tr><td>Glucosa en ayuno</td><td>70-130 mg/dL</td><td>≥ 200 mg/dL</td></tr>
+                  <tr><td>PA sistólica</td><td>&lt; 130 mmHg</td><td>≥ 160 mmHg</td></tr>
+                  <tr><td>LDL</td><td>&lt; 100 mg/dL</td><td>≥ 190 mg/dL</td></tr>
+                  <tr><td>Triglicéridos</td><td>&lt; 150 mg/dL</td><td>≥ 500 mg/dL</td></tr>
+                  <tr><td>%TWL eficaz</td><td>≥ 5% a 3 meses</td><td>&lt; 5% a 3 meses</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- ─── MODALS ──────────────────────────────────────────────────── -->
+
+<!-- Patient Search -->
+<div class="modal-overlay" id="modal-search">
+  <div class="modal">
+    <div class="modal-header"><h3>🔍 Buscar paciente</h3><button class="modal-close" onclick="closeModal('modal-search')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <input type="text" id="search-input" placeholder="Nombre, apellido o expediente..." oninput="searchPatients(this.value)" />
+      </div>
+      <div class="patient-list" id="patient-list"><div class="text-muted text-sm text-center" style="padding:20px">Escribe para buscar...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- New Patient -->
+<div class="modal-overlay" id="modal-new-patient">
+  <div class="modal">
+    <div class="modal-header"><h3>👤 Nuevo paciente</h3><button class="modal-close" onclick="closeModal('modal-new-patient')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Nombre(s)</label><input type="text" id="np2-nombre" /></div>
+        <div class="form-group"><label>Apellido paterno</label><input type="text" id="np2-apat" /></div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Apellido materno</label><input type="text" id="np2-amat" /></div>
+        <div class="form-group"><label>Fecha de nacimiento</label><input type="date" id="np2-dob" /></div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Sexo</label>
+          <select id="np2-sex"><option value="F">Femenino</option><option value="M">Masculino</option></select>
+        </div>
+        <div class="form-group"><label>Talla (cm)</label><input type="number" id="np2-talla" step="0.1" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-new-patient')">Cancelar</button>
+      <button class="btn-save" onclick="saveNewPatient()">💾 Registrar paciente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Consulta / SOAP -->
+<div class="modal-overlay" id="modal-consulta">
+  <div class="modal wide">
+    <div class="modal-header"><h3>📋 Nueva consulta</h3><button class="modal-close" onclick="closeModal('modal-consulta')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Fecha</label><input type="date" id="c-fecha" /></div>
+        <div class="form-group"><label>Motivo de consulta</label><input type="text" id="c-motivo" placeholder="ej. Control de peso, inicio de tratamiento" /></div>
+      </div>
+      <div class="section-title-sm">Signos vitales y antropometría</div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Peso (kg)</label><input type="number" id="c-peso" step="0.1" oninput="calcConsulta()" /></div>
+        <div class="form-group"><label>Talla (cm)</label><input type="number" id="c-talla" step="0.1" oninput="calcConsulta()" /></div>
+        <div class="form-group"><label>Cintura (cm)</label><input type="number" id="c-cintura" step="0.1" /></div>
+      </div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label>PA sistólica</label><input type="number" id="c-pas" /></div>
+        <div class="form-group"><label>PA diastólica</label><input type="number" id="c-pad" /></div>
+        <div class="form-group"><label>FC (lpm)</label><input type="number" id="c-fc" /></div>
+        <div class="form-group"><label>Glucosa capilar</label><input type="number" id="c-glucosa" /></div>
+      </div>
+      <div id="c-calcs" style="display:none">
+        <div class="calc-result"><span class="calc-label">IMC calculado</span><span class="calc-value" id="c-bmi-val">—</span><span class="calc-value text-sm" id="c-bmi-cat" style="color:var(--text-muted)"></span></div>
+      </div>
+      <div class="section-title-sm">Nota SOAP</div>
+      <div class="form-group"><label>S — Subjetivo (síntomas, motivo)</label><textarea id="c-s" rows="2"></textarea></div>
+      <div class="form-group"><label>O — Objetivo (hallazgos, vitales)</label><textarea id="c-o" rows="2"></textarea></div>
+      <div class="form-group"><label>A — Evaluación (diagnóstico, estadio)</label><textarea id="c-a" rows="2"></textarea></div>
+      <div class="form-group"><label>P — Plan (intervenciones, fármacos, seguimiento)</label><textarea id="c-p" rows="2"></textarea></div>
+      <div class="section-title-sm">5As completadas en esta consulta</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-ask" /> Ask — pregunté sobre el peso</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-advise" /> Advise — discutí el riesgo</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assess" /> Assess — evalué disposición</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-assist" /> Assist — ofrecí intervención</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" id="5a-c-arrange" /> Arrange — programé seguimiento</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-consulta')">Cancelar</button>
+      <button class="btn-save" onclick="saveConsulta()">💾 Guardar consulta</button>
+    </div>
+  </div>
+</div>
+
+<!-- EOSS Staging -->
+<div class="modal-overlay" id="modal-eoss">
+  <div class="modal">
+    <div class="modal-header"><h3>⚖️ Estadificación EOSS</h3><button class="modal-close" onclick="closeModal('modal-eoss')">×</button></div>
+    <div class="modal-body">
+      <div class="highlight-box" style="margin-bottom:16px">Selecciona el estadio EOSS que mejor describe al paciente. <b>El estadio más alto aplica.</b></div>
+      <div id="eoss-options">
+        <div class="algo-node question" id="eoss-opt-0" onclick="selectEOSSModal(0)" style="cursor:pointer;margin-bottom:8px">
+          <div class="algo-node-title">EOSS 0 — Sin factores de riesgo</div>
+          <div class="algo-node-body">Sin comorbilidades, síntomas ni limitación funcional relacionados con la obesidad</div>
+        </div>
+        <div class="algo-node question" id="eoss-opt-1" onclick="selectEOSSModal(1)" style="cursor:pointer;margin-bottom:8px">
+          <div class="algo-node-title">EOSS 1 — Factores subumbrales</div>
+          <div class="algo-node-body">Prediabetes, pre-HTA, dislipidemia leve, síntomas leves (disnea de esfuerzo, ERGE, dolor articular ocasional)</div>
+        </div>
+        <div class="algo-node question" id="eoss-opt-2" onclick="selectEOSSModal(2)" style="cursor:pointer;margin-bottom:8px">
+          <div class="algo-node-title">EOSS 2 — Comorbilidades establecidas</div>
+          <div class="algo-node-body">DM2, HTA, dislipidemia, SAOS moderado, osteoartritis, limitación funcional moderada, impacto en calidad de vida</div>
+        </div>
+        <div class="algo-node question" id="eoss-opt-3" onclick="selectEOSSModal(3)" style="cursor:pointer;margin-bottom:8px">
+          <div class="algo-node-title">EOSS 3 — Daño orgánico significativo</div>
+          <div class="algo-node-body">ICC, ERC (TFG&lt;60), ECAC, discapacidad mayor, depresión severa refractaria, SAOS severo</div>
+        </div>
+        <div class="algo-node question" id="eoss-opt-4" onclick="selectEOSSModal(4)" style="cursor:pointer">
+          <div class="algo-node-title">EOSS 4 — Etapa terminal</div>
+          <div class="algo-node-body">Comorbilidades en etapa terminal, discapacidad severa e irreversible</div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px"><label>Notas clínicas</label><textarea id="eoss-modal-notes" rows="2"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-eoss')">Cancelar</button>
+      <button class="btn-save" onclick="saveEOSS()">💾 Guardar estadio</button>
+    </div>
+  </div>
+</div>
+
+<!-- Comorbilidades -->
+<div class="modal-overlay" id="modal-comorbilidades">
+  <div class="modal">
+    <div class="modal-header"><h3>🏥 Comorbilidades</h3><button class="modal-close" onclick="closeModal('modal-comorbilidades')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Comorbilidad</label>
+        <select id="comb-nombre">
+          <option value="DM2">Diabetes Mellitus tipo 2</option>
+          <option value="HTA">Hipertensión arterial</option>
+          <option value="Dislipidemia">Dislipidemia</option>
+          <option value="SAOS">Síndrome de apnea obstructiva del sueño</option>
+          <option value="HGNA">Hígado graso no alcohólico (HGNA/MASLD)</option>
+          <option value="Osteoartritis">Osteoartritis</option>
+          <option value="ERGE">ERGE</option>
+          <option value="Prediabetes">Prediabetes</option>
+          <option value="SHO">Síndrome de hipoventilación por obesidad</option>
+          <option value="PCOS">Síndrome de ovario poliquístico (PCOS)</option>
+          <option value="Depresion">Depresión</option>
+          <option value="Otra">Otra</option>
+        </select>
+      </div>
+      <div class="form-group" id="comb-otra-group" style="display:none"><label>Especifica</label><input type="text" id="comb-otra-texto" /></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Control</label>
+          <select id="comb-control">
+            <option value="Controlada">Controlada</option>
+            <option value="Parcial">Control parcial</option>
+            <option value="No controlada">No controlada</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Semáforo</label>
+          <select id="comb-semaforo">
+            <option value="green">🟢 Verde — Bien controlada</option>
+            <option value="yellow">🟡 Amarillo — Control parcial</option>
+            <option value="red">🔴 Rojo — No controlada</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Notas</label><textarea id="comb-notas" rows="2"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-comorbilidades')">Cancelar</button>
+      <button class="btn-save" onclick="saveComorbilidad()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Medication -->
+<div class="modal-overlay" id="modal-medication">
+  <div class="modal">
+    <div class="modal-header"><h3>💊 Agregar fármaco anti-obesidad</h3><button class="modal-close" onclick="closeModal('modal-medication')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Fármaco</label>
+        <select id="med2-nombre" onchange="updateMed2Info()">
+          <option value="">— Selecciona —</option>
+          <option value="semaglutide">Semaglutida (Ozempic/Wegovy) — GLP-1</option>
+          <option value="tirzepatide">Tirzepatida (Mounjaro) — GIP+GLP-1</option>
+          <option value="liraglutide">Liraglutida 3mg (Saxenda) — GLP-1</option>
+          <option value="orlistat">Orlistat 120mg — Inhibidor lipasa</option>
+          <option value="bupropion_naltrexone">Bupropión/Naltrexona — Contrave</option>
+        </select>
+      </div>
+      <div id="med2-info-box" style="display:none" class="highlight-box"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Dosis inicial</label><input type="text" id="med2-dosis" placeholder="ej. 0.25 mg SC semanal" /></div>
+        <div class="form-group"><label>Fecha de inicio</label><input type="date" id="med2-inicio" /></div>
+      </div>
+      <div class="form-group"><label>Indicación / notas</label><textarea id="med2-notas" rows="2"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-medication')">Cancelar</button>
+      <button class="btn-save" onclick="saveMedication2()">💾 Guardar fármaco</button>
+    </div>
+  </div>
+</div>
+
+<!-- Measurement -->
+<div class="modal-overlay" id="modal-measurement">
+  <div class="modal">
+    <div class="modal-header"><h3>⚖️ Peso y medidas</h3><button class="modal-close" onclick="closeModal('modal-measurement')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Fecha</label><input type="date" id="meas-fecha" /></div>
+        <div class="form-group"><label>Peso (kg)</label><input type="number" id="meas-peso" step="0.1" oninput="calcMeas()" /></div>
+        <div class="form-group"><label>Talla (cm)</label><input type="number" id="meas-talla" step="0.1" oninput="calcMeas()" /></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Cintura (cm)</label><input type="number" id="meas-cintura" step="0.1" /></div>
+        <div class="form-group"><label>PA sistólica</label><input type="number" id="meas-pas" /></div>
+        <div class="form-group"><label>PA diastólica</label><input type="number" id="meas-pad" /></div>
+      </div>
+      <div id="meas-calcs" style="display:none">
+        <div class="calc-result"><span class="calc-label">IMC</span><span class="calc-value" id="meas-bmi">—</span><span class="calc-value text-sm" id="meas-bmi-cat" style="color:var(--text-muted)"></span></div>
+        <div class="calc-result" id="meas-twl-row" style="display:none"><span class="calc-label">%TWL desde inicio</span><span class="calc-value" id="meas-twl-val">—</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-measurement')">Cancelar</button>
+      <button class="btn-save" onclick="saveMeasurement2()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Labs -->
+<div class="modal-overlay" id="modal-labs">
+  <div class="modal wide">
+    <div class="modal-header"><h3>🧪 Laboratorios</h3><button class="modal-close" onclick="closeModal('modal-labs')">×</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Fecha</label><input type="date" id="lab2-fecha" style="width:200px"/></div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Glucosa en ayuno (mg/dL)</label><input type="number" id="lab2-glucosa" oninput="calcHOMA2()" /></div>
+        <div class="form-group"><label>Insulina (μU/mL)</label><input type="number" id="lab2-insulina" oninput="calcHOMA2()" /></div>
+        <div class="form-group"><label>HbA1c (%)</label><input type="number" id="lab2-hba1c" step="0.1" /></div>
+      </div>
+      <div id="lab2-homa-result" style="display:none" class="calc-result">
+        <span class="calc-label">HOMA-IR</span><span class="calc-value" id="lab2-homa-val">—</span>
+        <span class="text-sm text-muted">(normal &lt;2.5)</span>
+      </div>
+      <div class="form-row cols-4">
+        <div class="form-group"><label>Col. total</label><input type="number" id="lab2-coltotal" /></div>
+        <div class="form-group"><label>LDL</label><input type="number" id="lab2-ldl" /></div>
+        <div class="form-group"><label>HDL</label><input type="number" id="lab2-hdl" /></div>
+        <div class="form-group"><label>Triglicéridos</label><input type="number" id="lab2-tg" /></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>ALT (U/L)</label><input type="number" id="lab2-alt" /></div>
+        <div class="form-group"><label>TSH (mUI/L)</label><input type="number" id="lab2-tsh" step="0.01" /></div>
+        <div class="form-group"><label>Creatinina (mg/dL)</label><input type="number" id="lab2-creatinina" step="0.01" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-labs')">Cancelar</button>
+      <button class="btn-save" onclick="saveLabs2()">💾 Guardar laboratorios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Referral Letter -->
+<div class="modal-overlay" id="modal-referral">
+  <div class="modal wide">
+    <div class="modal-header"><h3>📄 Carta de referencia</h3><button class="modal-close" onclick="closeModal('modal-referral')">×</button></div>
+    <div class="modal-body">
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Referir a</label>
+          <select id="ref-destino">
+            <option value="endocrinologia">Endocrinología / Medicina de la Obesidad</option>
+            <option value="bariatrica">Cirugía Bariátrica</option>
+            <option value="nutricion">Nutriología Clínica</option>
+            <option value="psicologia">Psicología / Psiquiatría</option>
+            <option value="rehabilitacion">Medicina de Rehabilitación</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Grado de urgencia</label>
+          <select id="ref-urgencia">
+            <option value="Electiva">Electiva (1-3 meses)</option>
+            <option value="Prioritaria">Prioritaria (2-4 semanas)</option>
+            <option value="Urgente">Urgente (esta semana)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Motivo de referencia</label><textarea id="ref-motivo" rows="3"></textarea></div>
+      <div class="form-group"><label>Tratamientos previos / fracasos</label><textarea id="ref-previo" rows="2"></textarea></div>
+      <div id="ref-preview" class="highlight-box" style="margin-top:8px;display:none;white-space:pre-wrap;font-size:12px;font-family:monospace"></div>
+      <button class="btn-add" style="width:100%;margin-top:8px" onclick="previewReferral()">👁️ Vista previa</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-referral')">Cancelar</button>
+      <button class="btn-save" onclick="saveReferral()">💾 Guardar referencia</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
+<!-- Toasts -->
+<div id="toast-container"></div>
+
+<!-- ─── JAVASCRIPT ────────────────────────────────────────────── -->
+<script>
+'use strict';
+
+// ─── CONFIG ──────────────────────────────────────────────────────
+const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000'
+  : 'https://ece-metacore-api-production.up.railway.app';
+
+// ─── STATE ───────────────────────────────────────────────────────
+let currentUser = null;
+let currentPatient = null;
+let pcpData = {};
+let selectedEOSSModal = null;
+let cmePoints = 0;
+
+const CME_LEVELS = [
+  { name:'Aprendiz',     min:0,   max:50,  color:'#888' },
+  { name:'Practicante',  min:50,  max:150, color:'var(--orange)' },
+  { name:'Competente',   min:150, max:350, color:'var(--primary)' },
+  { name:'Experto',      min:350, max:700, color:'var(--green)' },
+  { name:'Maestro',      min:700, max:1200,color:'var(--purple)' },
+];
+
+const MED2_INFO = {
+  semaglutide:          { clase:'GLP-1 agonista', twl:'15-20%', via:'SC semanal', escalada:'0.25→0.5→1→1.7→2.4 mg (cada 4 sem)', mon:'Náuseas, FC, PA, CEF familiar' },
+  tirzepatide:          { clase:'GIP+GLP-1 dual', twl:'20-22%', via:'SC semanal', escalada:'2.5→5→7.5→10→12.5→15 mg (cada 4 sem)', mon:'Amilasa, lipasa, FC, CEF familiar' },
+  liraglutide:          { clase:'GLP-1 agonista', twl:'5-8%', via:'SC diario', escalada:'0.6→1.2→1.8→2.4→3 mg (sem a sem)', mon:'FC, PA, pancreatitis' },
+  orlistat:             { clase:'Inhibidor lipasa', twl:'3-5%', via:'VO 3×/día con comida', escalada:'120 mg con cada comida principal', mon:'Esteatorrea, vit. liposolubles' },
+  bupropion_naltrexone: { clase:'Antidepresivo/Antiopioide', twl:'5-7%', via:'VO BID', escalada:'1 tab/día × 1 sem → 1 BID → 2 AM + 1 PM → 2 BID', mon:'PA, FC, ánimo, convulsiones' },
+};
+
+const EOSS_SHORT = {
+  0:'Sin factores de riesgo ni síntomas',
+  1:'Factores de riesgo subumbrales / síntomas leves',
+  2:'Comorbilidades establecidas (DM2, HTA, dislipidemia)',
+  3:'Daño orgánico significativo',
+  4:'Enfermedad en etapa terminal',
+};
+
+const STORE_KEY = pid => `ece_pcp_${pid}`;
+
+// ─── HELPERS ─────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const token = () => localStorage.getItem('ece_token');
+const authHdr = () => ({ 'Content-Type':'application/json', Authorization:'Bearer '+token() });
+
+function showLoading()  { $('loading-overlay').classList.add('show'); }
+function hideLoading()  { $('loading-overlay').classList.remove('show'); }
+
+function showToast(msg, type='success', ms=3400) {
+  const c = $('toast-container');
+  const t = document.createElement('div');
+  const icon = type==='success'?'✅':type==='error'?'❌':type==='edu'?'🎓':'⚠️';
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, ms);
+}
+
+function openModal(id) {
+  $(id).classList.add('open');
+  const today = new Date().toISOString().split('T')[0];
+  $(id).querySelectorAll('input[type="date"]').forEach(inp => { if (!inp.value) inp.value = today; });
+  if (id === 'modal-search') { $('search-input').value = ''; loadRecentPCP(); }
+}
+function closeModal(id) { $(id).classList.remove('open'); }
+
+async function apiFetch(path, opts={}) {
+  const res = await fetch(API + path, { headers: authHdr(), ...opts });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || res.statusText); }
+  return res.json();
+}
+
+// ─── CME SYSTEM ──────────────────────────────────────────────────
+function earnPoints(pts, reason) {
+  cmePoints += pts;
+  const userKey = currentUser ? 'ece_pcp_cme_' + currentUser.id : 'ece_pcp_cme_guest';
+  localStorage.setItem(userKey, cmePoints);
+  renderCMEProgress();
+  showToast(`+${pts} pts CME — ${reason}`, 'edu', 4000);
+}
+
+function loadCMEPoints() {
+  if (!currentUser) return;
+  const key = 'ece_pcp_cme_' + currentUser.id;
+  cmePoints = parseInt(localStorage.getItem(key) || '0');
+  renderCMEProgress();
+}
+
+function renderCMEProgress() {
+  const level = CME_LEVELS.reduce((best, l) => cmePoints >= l.min ? l : best, CME_LEVELS[0]);
+  const nextLevel = CME_LEVELS.find(l => l.min > level.min) || level;
+  const pct = nextLevel.min > level.min
+    ? Math.min(100, ((cmePoints - level.min) / (nextLevel.min - level.min)) * 100)
+    : 100;
+
+  $('cme-pts-display').textContent = cmePoints;
+  if ($('cme-pts-big')) $('cme-pts-big').textContent = cmePoints;
+  if ($('sidebar-level-name')) $('sidebar-level-name').textContent = level.name;
+  if ($('sidebar-level-bar')) $('sidebar-level-bar').style.width = pct + '%';
+  if ($('sidebar-level-pts')) $('sidebar-level-pts').textContent = `${cmePoints} / ${nextLevel.min} pts`;
+  if ($('cme-level-name')) $('cme-level-name').textContent = level.name;
+  if ($('cme-level-next')) $('cme-level-next').textContent = nextLevel !== level ? `Siguiente: ${nextLevel.name} (${nextLevel.min} pts)` : '¡Nivel máximo!';
+  if ($('cme-level-bar')) { $('cme-level-bar').style.width = pct + '%'; $('cme-level-bar').style.background = level.color; }
+  if ($('cme-level-desc')) $('cme-level-desc').textContent = `Has atendido pacientes y completado actividades educativas`;
+}
+
+function toggleCME(id) {
+  const el = $(id);
+  el.classList.toggle('open');
+}
+
+// ─── EDUCATIONAL PEARLS ──────────────────────────────────────────
+const DAILY_PEARLS = [
+  { title:'La obesidad es una enfermedad, no una elección', source:'AACE/ACE Position Statement 2024', body:'La obesidad está regulada por más de 250 genes y 8 ejes hormonales. El cuerpo "defiende" el peso elevado como si fuera su set point. El tratamiento farmacológico y quirúrgico interfiere con estos mecanismos — la voluntad sola no puede.' },
+  { title:'Pregunta antes de hablar del peso', source:'5As Framework, Obesity Canada 2020', body:'Antes de abordar el tema del peso, pide permiso: <b>"¿Está bien si hablamos de su peso hoy?"</b>. Esta simple frase aumenta la receptividad del paciente y preserva la alianza terapéutica. El 65% de los pacientes con obesidad evita al médico por miedo al juicio.' },
+  { title:'5% de pérdida = beneficio clínico real', source:'Look AHEAD Trial, NEJM 2013', body:'Perder el 5% del peso corporal mejora HbA1c, PA, triglicéridos y función hepática en pacientes con DM2. No necesitas esperar al "objetivo ideal" — comunica al paciente que <b>cada 5% importa</b>.' },
+  { title:'Revisa el tiroides antes de prescribir GLP-1', source:'FDA Black Box Warning', body:'Carcinoma tiroideo familiar (CEF) y MEN2A/2B son contraindicaciones absolutas para todos los GLP-1 y GIP agonistas. Siempre pregunta: "¿Alguien en su familia ha tenido cáncer de tiroides?" antes de prescribir.' },
+  { title:'SAOS y obesidad — un círculo vicioso', source:'CHEST 2021', body:'La obesidad causa SAOS por depósito de grasa faríngea; el SAOS aumenta resistencia a la insulina y favorece el aumento de peso. <b>Pregunta en cada consulta sobre ronquidos y somnolencia diurna.</b> El STOP-BANG es una herramienta de tamizaje de 8 preguntas que puedes aplicar en 2 minutos.' },
+];
+
+function showDailyPearl() {
+  const idx = new Date().getDate() % DAILY_PEARLS.length;
+  const p = DAILY_PEARLS[idx];
+  $('pod-title').textContent = p.title;
+  $('pod-source').textContent = p.source;
+  $('pod-body').innerHTML = p.body;
+  $('pearl-of-day').style.display = 'block';
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────
+async function login() {
+  const email = $('auth-email').value.trim();
+  const pass  = $('auth-pass').value;
+  if (!email || !pass) { showAuthError('Completa ambos campos'); return; }
+  showLoading();
+  try {
+    const res = await fetch(API + '/api/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email, password: pass }),
+    });
+    if (!res.ok) throw new Error('Credenciales incorrectas');
+    const data = await res.json();
+    localStorage.setItem('ece_token', data.token);
+    localStorage.setItem('ece_user', JSON.stringify(data.user));
+    currentUser = data.user;
+    showApp();
+  } catch(e) {
+    showAuthError(e.message);
+  } finally { hideLoading(); }
+}
+
+function showAuthError(msg) {
+  const el = $('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function showApp() {
+  $('auth-screen').style.display = 'none';
+  $('app').style.display = 'flex';
+  const u = currentUser;
+  if (u) {
+    const name = u.nombre ? u.nombre.split(' ')[0] : u.email;
+    $('topbar-username').textContent = `${name} · Salir`;
+  }
+  loadCMEPoints();
+  showDailyPearl();
+  switchView('dashboard');
+}
+
+function logout() {
+  localStorage.removeItem('ece_token');
+  localStorage.removeItem('ece_user');
+  currentUser = null; currentPatient = null; pcpData = {};
+  $('app').style.display = 'none';
+  $('auth-screen').style.display = 'flex';
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────
+(function boot() {
+  const t = localStorage.getItem('ece_token');
+  const u = localStorage.getItem('ece_user');
+  if (t && u) {
+    currentUser = JSON.parse(u);
+    showApp();
+  }
+})();
+
+// ─── PATIENT MANAGEMENT ──────────────────────────────────────────
+async function loadRecentPCP() {
+  try {
+    const res = await apiFetch('/api/patients?limit=20');
+    const pts = Array.isArray(res) ? res : (res?.patients || []);
+    renderPatientList(pts);
+  } catch(e) { console.warn('loadRecentPCP:', e); }
+}
+
+async function searchPatients(q) {
+  if (!q || q.length < 2) { loadRecentPCP(); return; }
+  try {
+    const res = await apiFetch(`/api/patients?search=${encodeURIComponent(q)}&limit=20`);
+    const pts = Array.isArray(res) ? res : (res?.patients || []);
+    renderPatientList(pts);
+  } catch(e) {}
+}
+
+function renderPatientList(pts) {
+  const el = $('patient-list');
+  if (!pts.length) { el.innerHTML='<div class="text-muted text-sm text-center" style="padding:20px">Sin resultados</div>'; return; }
+  el.innerHTML = pts.map(p => {
+    const name = `${p.nombre||''} ${p.apellido_paterno||''} ${p.apellido_materno||''}`.trim();
+    const ini = name.charAt(0).toUpperCase();
+    const pkey = STORE_KEY(p.id);
+    const d = JSON.parse(localStorage.getItem(pkey) || '{}');
+    const eossTag = d.eoss !== undefined && d.eoss !== null ? `<span class="pill blue">EOSS ${d.eoss}</span>` : '';
+    return `<div class="patient-item" onclick="selectPatient(${p.id})">
+      <div class="patient-avatar">${ini}</div>
+      <div><div class="patient-info-name">${name} ${eossTag}</div>
+      <div class="patient-info-meta">${p.edad ? p.edad+' años · ' : ''}${p.sexo==='M'?'Masculino':'Femenino'}${p.expediente?' · Exp. '+p.expediente:''}</div></div>
+    </div>`;
+  }).join('');
+}
+
+async function selectPatient(id) {
+  closeModal('modal-search');
+  showLoading();
+  try {
+    const p = await apiFetch(`/api/patients/${id}`);
+    currentPatient = p;
+    loadPCPData(p);
+    renderPatientHeader();
+    $('no-patient').style.display = 'none';
+    switchView('dashboard');
+  } catch(e) { showToast('Error al cargar: '+e.message, 'error'); }
+  finally { hideLoading(); }
+}
+
+async function saveNewPatient() {
+  const nombre = $('np2-nombre').value.trim();
+  const apat   = $('np2-apat').value.trim();
+  if (!nombre || !apat) { showToast('Nombre y apellido son obligatorios', 'warn'); return; }
+  showLoading();
+  try {
+    const dob = $('np2-dob').value;
+    const body = {
+      nombre, apellido_paterno: apat,
+      apellido_materno: $('np2-amat').value,
+      fecha_nacimiento: dob || null,
+      sexo: $('np2-sex').value,
+      talla_cm: parseFloat($('np2-talla').value) || null,
+    };
+    const p = await apiFetch('/api/patients', { method:'POST', body: JSON.stringify(body) });
+    closeModal('modal-new-patient');
+    ['np2-nombre','np2-apat','np2-amat','np2-talla'].forEach(id=>$(id).value='');
+    await selectPatient(p.id || p.patient?.id);
+    showToast('Paciente registrado correctamente');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+  finally { hideLoading(); }
+}
+
+function renderPatientHeader() {
+  if (!currentPatient) return;
+  const p = currentPatient;
+  const name = `${p.nombre} ${p.apellido_paterno||''} ${p.apellido_materno||''}`.trim();
+  const eoss = pcpData.eoss !== null && pcpData.eoss !== undefined ? pcpData.eoss : '?';
+  $('header-patient-info').innerHTML = `
+    <span class="topbar-pt-name">${name}</span>
+    <span class="topbar-pt-meta">${p.edad ? p.edad+' años' : ''} ${p.sexo ? '· '+(p.sexo==='M'?'M':'F') : ''}</span>
+    <span class="eoss-badge e${eoss}">EOSS ${eoss}</span>`;
+}
+
+// ─── PCP DATA ─────────────────────────────────────────────────────
+function loadPCPData(p) {
+  const raw = localStorage.getItem(STORE_KEY(p.id));
+  const def = {
+    consultas: [], measurements: [], labs: [],
+    medications: [], comorbilidades: [],
+    eoss: null, eossNotes: '',
+    referrals: [],
+  };
+  pcpData = raw ? Object.assign({}, def, JSON.parse(raw)) : def;
+  renderDashboard();
+  renderConsultaView();
+  renderEvaluacionView();
+  renderTratamientoView();
+  renderFarmacosView();
+  renderSeguimientoView();
+}
+
+function savePCPData() {
+  if (!currentPatient) return;
+  localStorage.setItem(STORE_KEY(currentPatient.id), JSON.stringify(pcpData));
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────
+function switchView(view) {
+  if (!currentPatient && view !== 'dashboard' && view !== 'cme' && view !== 'referencia') {
+    showToast('Selecciona un paciente primero', 'warn'); return;
+  }
+  document.querySelectorAll('.module-view').forEach(v => v.classList.remove('visible'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  const el = $('view-' + view);
+  if (el) el.classList.add('visible');
+  const si = document.querySelector(`.sidebar-item[data-view="${view}"]`);
+  if (si) si.classList.add('active');
+  if (!currentPatient) $('no-patient').style.display = 'flex';
+  else $('no-patient').style.display = 'none';
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────────
+function renderDashboard() {
+  if (!currentPatient) return;
+  const measurements = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const latest = measurements[0];
+  const first  = measurements[measurements.length-1];
+
+  if (latest) {
+    $('dash-peso').textContent = latest.peso + ' kg';
+    if (latest.bmi) {
+      $('dash-bmi').textContent = latest.bmi;
+      $('dash-bmi-cat').textContent = bmiCat(parseFloat(latest.bmi));
+    }
+    if (first && first.peso !== latest.peso) {
+      const twl = calcTWL(first.peso, latest.peso);
+      $('dash-twl').textContent = twl + '%';
+      $('dash-twl-sub').textContent = parseFloat(twl) < 0 ? 'pérdida desde inicio' : 'sin pérdida';
+      $('dash-twl-sub').className = 'stat-delta ' + (parseFloat(twl) < -5 ? 'pos' : parseFloat(twl) < 0 ? '' : 'neg');
+    }
+  }
+
+  // EOSS
+  const eoss = pcpData.eoss;
+  const eossColors = {0:'var(--green)',1:'var(--orange)',2:'#E67E22',3:'var(--danger)',4:'#8E1A0E'};
+  $('dash-eoss-val').textContent = eoss !== null && eoss !== undefined ? eoss : '?';
+  $('dash-eoss-label').textContent = eoss !== null && eoss !== undefined ? EOSS_SHORT[eoss] : 'Sin estadificación';
+  $('dash-eoss-val').style.color = eoss !== null ? eossColors[eoss] : 'var(--text-muted)';
+
+  // Weight chart
+  renderWeightChart('chartDash', measurements.slice().reverse());
+
+  // Vitals from last consulta
+  const sortedConsultas = pcpData.consultas.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const lastC = sortedConsultas[0];
+  const vitalsEl = $('dash-vitals-body');
+  if (lastC && vitalsEl) {
+    vitalsEl.innerHTML = `
+      ${lastC.pas ? `<div class="biometric-row"><span class="bio-label">Presión arterial</span><span class="bio-value ${lastC.pas>=140||lastC.pad>=90?'danger':lastC.pas>=130?'warn':''}">${lastC.pas}/${lastC.pad} mmHg</span></div>` : ''}
+      ${lastC.fc ? `<div class="biometric-row"><span class="bio-label">Frecuencia cardíaca</span><span class="bio-value">${lastC.fc} lpm</span></div>` : ''}
+      ${lastC.glucosa ? `<div class="biometric-row"><span class="bio-label">Glucosa capilar</span><span class="bio-value ${lastC.glucosa>=200?'danger':lastC.glucosa>=126?'warn':''}">${lastC.glucosa} mg/dL</span></div>` : ''}
+      <div class="biometric-row text-sm text-muted"><span>Consulta</span><span>${new Date(lastC.fecha).toLocaleDateString('es-MX')}</span></div>`;
+  }
+
+  // Alert zone
+  renderAlertZone();
+
+  // Next step recommendation
+  renderNextStep();
+
+  // Timeline
+  renderPCPTimeline();
+}
+
+function renderAlertZone() {
+  const alerts = [];
+  const labs = pcpData.labs.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const l = labs[0];
+  if (l) {
+    if (l.hba1c && l.hba1c >= 9) alerts.push({ type:'red', msg:`⚠️ HbA1c ${l.hba1c}% — Control glucémico deficiente. Revisar tratamiento de DM2 y considerar referencia.` });
+    if (l.tg && l.tg >= 500) alerts.push({ type:'red', msg:`⚠️ Triglicéridos ${l.tg} mg/dL — Riesgo de pancreatitis aguda. Iniciar fibrato urgente.` });
+    if (l.ldl && l.ldl >= 190) alerts.push({ type:'orange', msg:`⚠️ LDL ${l.ldl} mg/dL — Considerar hipercolesterolemia familiar. Iniciar estatina de alta intensidad.` });
+  }
+  const sortedC = pcpData.consultas.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  if (sortedC[0]?.pas >= 160) alerts.push({ type:'red', msg:`⚠️ PA ${sortedC[0].pas}/${sortedC[0].pad} mmHg en última consulta — HTA grado 3. Ajustar antihipertensivos.` });
+
+  const el = $('dash-alert-zone');
+  if (!el) return;
+  el.innerHTML = alerts.map(a => `<div class="alert-box ${a.type}" style="display:block">${a.msg}</div>`).join('');
+}
+
+function renderNextStep() {
+  const el = $('dash-next-step');
+  if (!el || !currentPatient) return;
+  const eoss = pcpData.eoss;
+  const meds = pcpData.medications.length;
+  const consultas = pcpData.consultas.length;
+  const measurements = pcpData.measurements.length;
+  const labs = pcpData.labs.length;
+
+  let steps = [];
+  if (eoss === null) steps.push({ icon:'⚖️', text:'Estadifica el paciente con EOSS', action:"switchView('evaluacion')", color:'var(--orange)' });
+  if (!measurements) steps.push({ icon:'⚖️', text:'Registra peso y medidas basales', action:"openModal('modal-measurement')", color:'var(--primary)' });
+  if (!labs) steps.push({ icon:'🧪', text:'Solicita laboratorios: glucosa, HbA1c, lípidos', action:"openModal('modal-labs')", color:'#117A65' });
+  if (eoss !== null && eoss >= 2 && !meds) steps.push({ icon:'💊', text:'EOSS 2+ sin farmacoterapia — Considera GLP-1 agonista', action:"switchView('farmacos')", color:'var(--purple)' });
+  if (meds > 0 && measurements >= 2) {
+    const sorted = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+    if (sorted.length >= 2) {
+      const twl = parseFloat(calcTWL(sorted[sorted.length-1].peso, sorted[0].peso));
+      if (twl > -5) steps.push({ icon:'📊', text:'%TWL < 5% — Evalúa adherencia y eficacia del tratamiento', action:"switchView('seguimiento')", color:'var(--orange)' });
+    }
+  }
+  if (consultas === 0) steps.push({ icon:'📋', text:'Registra la primera consulta con vitales y SOAP', action:"openModal('modal-consulta')", color:'var(--primary)' });
+
+  if (!steps.length) {
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:8px;color:var(--success);font-weight:600"><span style="font-size:20px">✅</span> Expediente actualizado — Todo en orden</div>`;
+    return;
+  }
+  el.innerHTML = steps.slice(0,3).map(s => `
+    <div onclick="${s.action}" style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg);border-radius:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid ${s.color};transition:background .15s" onmouseover="this.style.background='var(--primary-light)'" onmouseout="this.style.background='var(--bg)'">
+      <span style="font-size:18px">${s.icon}</span>
+      <span style="font-size:13px;font-weight:500">${s.text}</span>
+      <span style="margin-left:auto;font-size:12px;color:var(--text-muted)">→</span>
+    </div>`).join('');
+}
+
+function renderPCPTimeline() {
+  const entries = [];
+  pcpData.consultas.forEach(c => entries.push({ date:c.fecha, color:'var(--primary)', tag:'consulta',
+    title:`Consulta: ${c.motivo||'General'} · Peso ${c.peso||'—'} kg`, sub: c.pas ? `PA ${c.pas}/${c.pad} mmHg`:'' }));
+  pcpData.measurements.forEach(m => entries.push({ date:m.fecha, color:'#1A5276', tag:'medición',
+    title:`Peso: ${m.peso} kg · IMC ${m.bmi||'—'}`, sub: `Cintura ${m.cintura||'—'} cm` }));
+  pcpData.labs.forEach(l => entries.push({ date:l.fecha, color:'var(--green)', tag:'labs',
+    title:`Labs: HbA1c ${l.hba1c||'—'}% · Glucosa ${l.glucosa||'—'}`, sub:'' }));
+  pcpData.medications.forEach(m => entries.push({ date:m.inicio, color:'var(--purple)', tag:'fármaco',
+    title:`Inicio ${m.nombre}`, sub:`${m.dosis}` }));
+  entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const el = $('dash-timeline');
+  if (!entries.length) { el.innerHTML='<div class="tl-empty">Sin registros aún</div>'; return; }
+  el.innerHTML = entries.slice(0,12).map(e=>`
+    <div class="tl-entry">
+      <div class="tl-stripe" style="background:${e.color}"></div>
+      <div class="tl-content">
+        <div class="tl-header"><span class="tl-spec-tag" style="background:${e.color}">${e.tag}</span><span class="tl-date">${new Date(e.date).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}</span></div>
+        <div class="tl-text">${e.title}</div>${e.sub?`<div class="tl-sub">${e.sub}</div>`:''}
+      </div></div>`).join('');
+}
+
+// ─── CONSULTA VIEW ───────────────────────────────────────────────
+function renderConsultaView() {
+  if (!currentPatient) return;
+  const sorted = pcpData.consultas.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const last = sorted[0];
+
+  // 5As from last consulta
+  if (last) {
+    $('5as-last-date').textContent = new Date(last.fecha).toLocaleDateString('es-MX');
+    const fas = last.fiveAs || {};
+    ['ask','advise','assess','assist','arrange'].forEach(a => {
+      const el = $('5a-'+a);
+      if (el) { el.classList.toggle('done', !!fas[a]); if (fas[a]) el.textContent='✓'; else el.textContent=''; }
+    });
+    // Vitals
+    const vitEl = $('consulta-vitals-body');
+    if (vitEl) {
+      vitEl.innerHTML = `
+        ${last.peso ? `<div class="biometric-row"><span class="bio-label">Peso</span><span class="bio-value">${last.peso} kg</span></div>` : ''}
+        ${last.pas ? `<div class="biometric-row"><span class="bio-label">PA</span><span class="bio-value ${last.pas>=140?'danger':last.pas>=130?'warn':''}">${last.pas}/${last.pad} mmHg</span></div>` : ''}
+        ${last.fc ? `<div class="biometric-row"><span class="bio-label">FC</span><span class="bio-value">${last.fc} lpm</span></div>` : ''}
+        ${last.glucosa ? `<div class="biometric-row"><span class="bio-label">Glucosa capilar</span><span class="bio-value ${last.glucosa>=200?'danger':last.glucosa>=126?'warn':''}">${last.glucosa} mg/dL</span></div>` : ''}`;
+    }
+    // SOAP
+    const soapEl = $('consulta-soap-body');
+    if (soapEl && (last.s || last.a)) {
+      soapEl.innerHTML = `
+        ${last.s ? `<div class="soap-section" style="border-color:var(--primary)"><div class="soap-label">S — Subjetivo</div><div class="soap-text">${last.s}</div></div>` : ''}
+        ${last.o ? `<div class="soap-section" style="border-color:var(--green)"><div class="soap-label">O — Objetivo</div><div class="soap-text">${last.o}</div></div>` : ''}
+        ${last.a ? `<div class="soap-section" style="border-color:var(--orange)"><div class="soap-label">A — Evaluación</div><div class="soap-text">${last.a}</div></div>` : ''}
+        ${last.plan ? `<div class="soap-section" style="border-color:var(--purple)"><div class="soap-label">P — Plan</div><div class="soap-text">${last.plan}</div></div>` : ''}`;
+    }
+  }
+
+  // History table
+  $('tbody-consultas').innerHTML = sorted.length
+    ? sorted.map(c => {
+        const fas = c.fiveAs || {};
+        const fasCount = ['ask','advise','assess','assist','arrange'].filter(a=>fas[a]).length;
+        return `<tr>
+          <td>${new Date(c.fecha).toLocaleDateString('es-MX')}</td>
+          <td>${c.peso ? c.peso+' kg' : '—'}</td>
+          <td>${c.pas ? c.pas+'/'+c.pad : '—'}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.motivo||'—'}</td>
+          <td><span class="pill ${fasCount>=4?'green':fasCount>=2?'yellow':'gray'}">${fasCount}/5</span></td>
+          <td style="font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(c.plan||'').slice(0,60)}</td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="6" class="table-empty">Sin consultas registradas</td></tr>';
+}
+
+// ─── EVALUACIÓN VIEW ─────────────────────────────────────────────
+function renderEvaluacionView() {
+  if (!currentPatient) return;
+  const eoss = pcpData.eoss;
+  const eossEl = $('eoss-current-body');
+  if (eossEl) {
+    if (eoss !== null && eoss !== undefined) {
+      const colors = {0:'var(--green)',1:'var(--orange)',2:'#E67E22',3:'var(--danger)',4:'#8E1A0E'};
+      eossEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+          <div style="width:64px;height:64px;border-radius:50%;background:${colors[eoss]};display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:800">${eoss}</div>
+          <div><div style="font-size:22px;font-weight:700">EOSS ${eoss}</div><div style="font-size:13px;color:var(--text-muted);margin-top:2px">${EOSS_SHORT[eoss]}</div></div>
+        </div>
+        ${pcpData.eossNotes ? `<div style="font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:8px">${pcpData.eossNotes}</div>` : ''}
+        <div style="margin-top:12px">
+          <div class="highlight-box" style="font-size:12px">
+            ${eoss <= 1 ? '✅ <b>Manejo primer nivel:</b> Intervención estilo de vida estructurada. Seguimiento cada 3 meses.' : ''}
+            ${eoss === 2 ? '⚕️ <b>Acción requerida:</b> Iniciar farmacoterapia anti-obesidad + control de comorbilidades. Seguimiento mensual.' : ''}
+            ${eoss >= 3 ? '🔴 <b>Considerar referencia:</b> EOSS 3-4 requiere manejo especializado. Valorar equipo multidisciplinario.' : ''}
+          </div>
+        </div>`;
+    } else {
+      eossEl.innerHTML = '<div class="text-muted text-sm text-center" style="padding:16px">Sin estadificación registrada</div>';
+    }
+  }
+
+  // Comorbilidades
+  const combEl = $('comorbilidades-body');
+  if (combEl) {
+    const combs = pcpData.comorbilidades || [];
+    combEl.innerHTML = combs.length
+      ? combs.map(c => {
+          const dot = c.semaforo === 'green' ? '🟢' : c.semaforo === 'yellow' ? '🟡' : '🔴';
+          return `<div class="biometric-row">
+            <span class="bio-label">${dot} ${c.nombre}</span>
+            <span class="bio-value text-sm">${c.control}</span>
+          </div>`;
+        }).join('')
+      : '<div class="text-muted text-sm text-center" style="padding:16px">Sin comorbilidades registradas</div>';
+  }
+}
+
+// ─── TRATAMIENTO VIEW ────────────────────────────────────────────
+function renderTratamientoView() {
+  if (!currentPatient) return;
+  const eoss = pcpData.eoss;
+  const measurements = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const bmi = measurements[0]?.bmi ? parseFloat(measurements[0].bmi) : null;
+  const combs = pcpData.comorbilidades || [];
+  const hasComorbidity = combs.length > 0;
+  const meds = pcpData.medications.length;
+
+  const el = $('algo-decision-body');
+  if (!el) return;
+
+  if (eoss === null) {
+    el.innerHTML = '<div class="text-muted text-sm text-center" style="padding:16px">Completa la estadificación EOSS para ver la decisión personalizada.</div>';
+    return;
+  }
+
+  let rec = '';
+  let escalon = 1;
+  if (bmi && (bmi >= 30 || (bmi >= 27 && hasComorbidity)) && (eoss >= 2 || bmi >= 30)) {
+    escalon = 2;
+  }
+  if (bmi && (bmi >= 40 || (bmi >= 35 && hasComorbidity)) || eoss >= 3) {
+    escalon = 3;
+  }
+
+  const recColors = ['','var(--green)','var(--orange)','var(--danger)'];
+  const recTitles = ['','Estilo de vida intensivo','Farmacoterapia + estilo de vida','Referir para cirugía / especialista'];
+  const recDetails = [
+    '',
+    `Dieta hipocalórica estructurada, actividad física ≥150 min/semana, apoyo psicológico conductual. Seguimiento mensual.`,
+    `Indicado: IMC ${bmi ? bmi.toFixed(1) : '?'} ${eoss >= 2 ? '+ EOSS '+eoss : '+ comorbilidad'}. ${meds > 0 ? 'Ya tiene farmacoterapia activa ✓' : '⚠️ Aún sin fármaco anti-obesidad.'}`,
+    `IMC ${bmi ? bmi.toFixed(1) : '?'} ${eoss >= 3 ? '+ EOSS '+eoss : '≥ 35-40'}. Referir a cirugía bariátrica o endocrinología. ${meds > 0 ? 'Mantener farmacoterapia hasta la cirugía.' : ''}`,
+  ];
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px;background:${recColors[escalon]}22;border:2px solid ${recColors[escalon]};border-radius:10px;margin-bottom:12px">
+      <span style="font-size:28px">🎯</span>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:${recColors[escalon]}">Escalón ${escalon}: ${recTitles[escalon]}</div>
+        <div style="font-size:12px;color:var(--text);margin-top:4px">${recDetails[escalon]}</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted)">
+      IMC: <b>${bmi ? bmi.toFixed(1) : '?'}</b> · EOSS: <b>${eoss}</b> · Comorbilidades: <b>${combs.length}</b> · Fármacos activos: <b>${meds}</b>
+    </div>`;
+
+  // Highlight active escalon
+  [1,2,3].forEach(n => {
+    const el2 = $('escalon-'+n);
+    if (el2) el2.classList.toggle('active', n === escalon);
+  });
+}
+
+// ─── FARMACOTERAPIA VIEW ─────────────────────────────────────────
+function renderFarmacosView() {
+  if (!currentPatient) return;
+  const meds = pcpData.medications;
+  $('farma-n-meds').textContent = meds.length;
+
+  if (meds.length > 0) {
+    const expectedTWLs = meds.map(m => {
+      const info = MED2_INFO[m.medKey] || {};
+      const t = info.twl || '—';
+      return t !== '—' ? parseFloat(t.split('-')[1] || t) : 0;
+    });
+    const maxTWL = Math.max(...expectedTWLs);
+    $('farma-twl-exp').textContent = maxTWL ? maxTWL + '%' : '—';
+  }
+
+  const measurements = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  if (measurements.length >= 2) {
+    const twl = calcTWL(measurements[measurements.length-1].peso, measurements[0].peso);
+    $('farma-twl-real').textContent = twl + '%';
+    $('farma-twl-real-sub').textContent = parseFloat(twl) < -5 ? '✓ Respuesta adecuada' : parseFloat(twl) < 0 ? '⚠️ Respuesta subóptima (<5%)' : 'Sin pérdida de peso';
+    $('farma-twl-real-sub').className = 'stat-delta ' + (parseFloat(twl) < -5 ? 'pos' : parseFloat(twl) < 0 ? 'warn' : 'neg');
+  }
+
+  $('tbody-medications').innerHTML = meds.length
+    ? meds.map(m => {
+        const info = MED2_INFO[m.medKey] || {};
+        return `<tr>
+          <td><b>${m.nombre}</b></td>
+          <td>${info.clase || '—'}</td>
+          <td>${m.dosis}</td>
+          <td>${new Date(m.inicio).toLocaleDateString('es-MX')}</td>
+          <td><span class="pill green">${info.twl || '—'}</span></td>
+          <td style="font-size:11px;max-width:140px">${info.mon || '—'}</td>
+          <td><span class="pill green">Activo</span></td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="7" class="table-empty">Sin fármacos registrados</td></tr>';
+
+  const alertEl = $('farma-alert');
+  if (alertEl && measurements.length >= 2 && meds.length > 0) {
+    const twl = parseFloat(calcTWL(measurements[measurements.length-1].peso, measurements[0].peso));
+    if (twl > -5) {
+      alertEl.textContent = `⚠️ %TWL ${Math.abs(twl).toFixed(1)}% — Respuesta subóptima. Revisa adherencia al tratamiento farmacológico y considera ajuste de dosis o cambio de agente.`;
+      alertEl.style.display = 'block';
+    } else { alertEl.style.display = 'none'; }
+  }
+}
+
+// ─── SEGUIMIENTO VIEW ────────────────────────────────────────────
+function renderSeguimientoView() {
+  if (!currentPatient) return;
+  const measurements = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const labs = pcpData.labs.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const lat = measurements[0];
+  const first = measurements[measurements.length-1];
+
+  if (lat) {
+    $('seg-peso-actual').textContent = lat.peso + ' kg';
+    if (lat.bmi) { $('seg-bmi-actual').textContent = lat.bmi; $('seg-bmi-cat').textContent = bmiCat(parseFloat(lat.bmi)); }
+  }
+  if (first && lat && first.peso !== lat.peso) {
+    const twl = calcTWL(first.peso, lat.peso);
+    $('seg-twl').textContent = twl + '%';
+    $('seg-twl-meta').textContent = parseFloat(twl) < -5 ? '✓ Meta alcanzada' : 'Meta: ≥ -5%';
+    $('seg-twl-meta').className = 'stat-delta ' + (parseFloat(twl) < -5 ? 'pos' : 'neg');
+    if (first && lat) {
+      const delta = (lat.peso - first.peso).toFixed(1);
+      $('seg-delta-peso').textContent = (delta > 0 ? '+' : '') + delta + ' kg desde inicio';
+      $('seg-delta-peso').className = 'stat-delta ' + (parseFloat(delta) < 0 ? 'pos' : 'neg');
+    }
+  }
+
+  if (labs[0]?.hba1c) {
+    $('seg-hba1c').textContent = labs[0].hba1c + '%';
+    $('seg-hba1c-sub').textContent = labs[0].hba1c < 7 ? '✓ Meta' : '⚠️ Fuera de meta';
+    $('seg-hba1c-sub').className = 'stat-delta ' + (labs[0].hba1c < 7 ? 'pos' : 'neg');
+  }
+
+  renderWeightChart('chartSeg', measurements.slice().reverse());
+
+  // Labs summary
+  const labsEl = $('seg-labs-body');
+  if (labsEl && labs[0]) {
+    const l = labs[0];
+    labsEl.innerHTML = `
+      ${l.glucosa ? `<div class="biometric-row"><span class="bio-label">Glucosa en ayuno</span><span class="bio-value ${l.glucosa>=126?'danger':l.glucosa>=100?'warn':''}">${l.glucosa} mg/dL</span></div>` : ''}
+      ${l.hba1c ? `<div class="biometric-row"><span class="bio-label">HbA1c</span><span class="bio-value ${l.hba1c>=9?'danger':l.hba1c>=7?'warn':'ok'}">${l.hba1c}%</span></div>` : ''}
+      ${l.homa_ir ? `<div class="biometric-row"><span class="bio-label">HOMA-IR</span><span class="bio-value ${l.homa_ir>2.5?'warn':''}">${l.homa_ir}</span></div>` : ''}
+      ${l.ldl ? `<div class="biometric-row"><span class="bio-label">LDL</span><span class="bio-value ${l.ldl>=190?'danger':l.ldl>=100?'warn':''}">${l.ldl} mg/dL</span></div>` : ''}
+      ${l.tg ? `<div class="biometric-row"><span class="bio-label">Triglicéridos</span><span class="bio-value ${l.tg>=500?'danger':l.tg>=150?'warn':''}">${l.tg} mg/dL</span></div>` : ''}
+      ${l.tsh ? `<div class="biometric-row"><span class="bio-label">TSH</span><span class="bio-value">${l.tsh} mUI/L</span></div>` : ''}
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Labs del ${new Date(l.fecha).toLocaleDateString('es-MX')}</div>`;
+  }
+
+  // Measurements table
+  $('tbody-measurements').innerHTML = measurements.length
+    ? measurements.map(m => {
+        const twl = measurements.length > 1 ? calcTWL(measurements[measurements.length-1].peso, m.peso) : '—';
+        return `<tr>
+          <td>${new Date(m.fecha).toLocaleDateString('es-MX')}</td>
+          <td><b>${m.peso}</b></td>
+          <td><span class="pill ${bmiPillClass(parseFloat(m.bmi))}">${m.bmi||'—'}</span></td>
+          <td>${m.cintura||'—'}</td>
+          <td>${twl !== '—' ? twl+'%' : '—'}</td>
+          <td>${m.pas ? m.pas+'/'+m.pad : '—'}</td>
+        </tr>`;
+      }).join('')
+    : '<tr><td colspan="6" class="table-empty">Sin mediciones</td></tr>';
+}
+
+// ─── WEIGHT CHART ─────────────────────────────────────────────────
+function renderWeightChart(canvasId, data) {
+  const canvas = $(canvasId);
+  if (!canvas || !data || !data.length) return;
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  new Chart(canvas, {
+    type:'line',
+    data:{
+      labels: data.map(d=>new Date(d.fecha).toLocaleDateString('es-MX',{month:'short',day:'numeric'})),
+      datasets:[{
+        label:'Peso (kg)', data: data.map(d=>parseFloat(d.peso)),
+        borderColor:'var(--primary)', backgroundColor:'rgba(27,108,168,.08)',
+        borderWidth:2, tension:.35, fill:true, pointRadius:3, pointHoverRadius:5,
+      }],
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        y:{ ticks:{ font:{ size:10 } }, grid:{ color:'#EEE' } },
+        x:{ ticks:{ font:{ size:10 } }, grid:{ display:false } },
+      },
+    },
+  });
+}
+
+// ─── CALCULATIONS ─────────────────────────────────────────────────
+function bmiCat(bmi) {
+  if (bmi < 18.5) return 'Bajo peso';
+  if (bmi < 25)   return 'Normal';
+  if (bmi < 30)   return 'Sobrepeso';
+  if (bmi < 35)   return 'Obesidad G-I';
+  if (bmi < 40)   return 'Obesidad G-II';
+  return 'Obesidad G-III';
+}
+function bmiPillClass(bmi) {
+  if (!bmi || isNaN(bmi)) return 'gray';
+  if (bmi < 25) return 'green';
+  if (bmi < 30) return 'yellow';
+  return 'red';
+}
+function calcTWL(initial, current) {
+  return (((initial - current) / initial) * 100).toFixed(1);
+}
+
+function calcConsulta() {
+  const peso = parseFloat($('c-peso').value);
+  const talla = parseFloat($('c-talla').value);
+  if (peso > 0 && talla > 0) {
+    const bmi = (peso / Math.pow(talla/100, 2)).toFixed(1);
+    $('c-bmi-val').textContent = bmi;
+    $('c-bmi-val').className = 'calc-value ' + (bmi > 40 ? 'danger' : bmi > 30 ? 'warn' : '');
+    $('c-bmi-cat').textContent = bmiCat(parseFloat(bmi));
+    $('c-calcs').style.display = 'block';
+  } else { $('c-calcs').style.display = 'none'; }
+}
+
+function calcMeas() {
+  const peso = parseFloat($('meas-peso').value);
+  const talla = parseFloat($('meas-talla').value);
+  if (peso > 0 && talla > 0) {
+    const bmi = (peso / Math.pow(talla/100, 2)).toFixed(1);
+    $('meas-bmi').textContent = bmi;
+    $('meas-bmi').className = 'calc-value ' + (bmi > 40 ? 'danger' : bmi > 30 ? 'warn' : '');
+    $('meas-bmi-cat').textContent = bmiCat(parseFloat(bmi));
+    $('meas-calcs').style.display = 'block';
+    const ms = pcpData.measurements;
+    if (ms.length > 0 && peso > 0) {
+      const firstW = ms.slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha))[0].peso;
+      const twl = calcTWL(firstW, peso);
+      $('meas-twl-val').textContent = twl + '%';
+      $('meas-twl-val').className = 'calc-value ' + (parseFloat(twl) < -5 ? 'ok' : '');
+      $('meas-twl-row').style.display = 'flex';
+    }
+  } else { $('meas-calcs').style.display = 'none'; }
+}
+
+function calcHOMA2() {
+  const g = parseFloat($('lab2-glucosa').value);
+  const i = parseFloat($('lab2-insulina').value);
+  if (g > 0 && i > 0) {
+    const homa = ((g * i) / 405).toFixed(2);
+    $('lab2-homa-val').textContent = homa;
+    $('lab2-homa-val').className = 'calc-value ' + (homa > 2.5 ? 'danger' : 'ok');
+    $('lab2-homa-result').style.display = 'flex';
+  } else { $('lab2-homa-result').style.display = 'none'; }
+}
+
+// ─── SAVE FUNCTIONS ───────────────────────────────────────────────
+function saveConsulta() {
+  if (!currentPatient) return;
+  const peso = parseFloat($('c-peso').value) || null;
+  const talla = parseFloat($('c-talla').value) || (currentPatient.talla_cm ? parseFloat(currentPatient.talla_cm) : null);
+  const bmi = peso && talla ? (peso / Math.pow(talla/100, 2)).toFixed(1) : null;
+  const entry = {
+    fecha:   $('c-fecha').value || new Date().toISOString().split('T')[0],
+    motivo:  $('c-motivo').value,
+    peso, talla, bmi,
+    cintura: null,
+    pas:     parseFloat($('c-pas').value) || null,
+    pad:     parseFloat($('c-pad').value) || null,
+    fc:      parseFloat($('c-fc').value) || null,
+    glucosa: parseFloat($('c-glucosa').value) || null,
+    s: $('c-s').value,
+    o: $('c-o').value,
+    a: $('c-a').value,
+    plan: $('c-p').value,
+    fiveAs: {
+      ask:     $('5a-c-ask').checked,
+      advise:  $('5a-c-advise').checked,
+      assess:  $('5a-c-assess').checked,
+      assist:  $('5a-c-assist').checked,
+      arrange: $('5a-c-arrange').checked,
+    },
+    id: Date.now(),
+  };
+  if (peso) {
+    pcpData.measurements.push({ fecha: entry.fecha, peso, talla, bmi, cintura: null, pas: entry.pas, pad: entry.pad, id: entry.id });
+  }
+  pcpData.consultas.push(entry);
+  savePCPData();
+  renderDashboard();
+  renderConsultaView();
+  renderTratamientoView();
+  renderFarmacosView();
+  renderSeguimientoView();
+  closeModal('modal-consulta');
+  showToast('Consulta guardada correctamente');
+  earnPoints(3, 'consulta registrada');
+  ['c-motivo','c-s','c-o','c-a','c-p'].forEach(id=>$(id).value='');
+  ['5a-c-ask','5a-c-advise','5a-c-assess','5a-c-assist','5a-c-arrange'].forEach(id=>{$(id).checked=false;});
+}
+
+function selectEOSSModal(stage) {
+  selectedEOSSModal = stage;
+  document.querySelectorAll('#eoss-options .algo-node').forEach((el, i) => {
+    el.style.background = i === stage ? '#EBF4FB' : '';
+    el.style.borderColor = i === stage ? 'var(--primary)' : 'var(--border)';
+  });
+}
+
+function saveEOSS() {
+  if (selectedEOSSModal === null) { showToast('Selecciona un estadio', 'warn'); return; }
+  pcpData.eoss = selectedEOSSModal;
+  pcpData.eossNotes = $('eoss-modal-notes').value;
+  savePCPData();
+  renderPatientHeader();
+  renderDashboard();
+  renderEvaluacionView();
+  renderTratamientoView();
+  closeModal('modal-eoss');
+  showToast('EOSS ' + selectedEOSSModal + ' guardado');
+  earnPoints(5, 'estadificación EOSS completada');
+  selectedEOSSModal = null;
+  $('eoss-modal-notes').value = '';
+}
+
+function saveComorbilidad() {
+  if (!currentPatient) return;
+  let nombre = $('comb-nombre').value;
+  if (nombre === 'Otra') nombre = $('comb-otra-texto').value || 'Otra';
+  const entry = {
+    nombre,
+    control: $('comb-control').value,
+    semaforo: $('comb-semaforo').value,
+    notas: $('comb-notas').value,
+    id: Date.now(),
+  };
+  pcpData.comorbilidades.push(entry);
+  savePCPData();
+  renderEvaluacionView();
+  renderTratamientoView();
+  renderDashboard();
+  closeModal('modal-comorbilidades');
+  showToast('Comorbilidad registrada');
+  earnPoints(2, 'comorbilidad registrada');
+  $('comb-notas').value = '';
+}
+
+function updateMed2Info() {
+  const key = $('med2-nombre').value;
+  const info = MED2_INFO[key];
+  const box = $('med2-info-box');
+  if (info) {
+    box.innerHTML = `<b>${info.clase}</b> · %TWL: <b>${info.twl}</b> · Escalada: ${info.escalada} · Monitoreo: ${info.mon}`;
+    box.style.display = 'block';
+  } else { box.style.display = 'none'; }
+}
+
+function saveMedication2() {
+  if (!currentPatient) return;
+  const key = $('med2-nombre').value;
+  if (!key) { showToast('Selecciona un fármaco', 'warn'); return; }
+  const nombre = $('med2-nombre').selectedOptions[0]?.text?.split(' —')[0].trim() || '';
+  const entry = {
+    medKey: key,
+    nombre,
+    dosis:  $('med2-dosis').value,
+    inicio: $('med2-inicio').value || new Date().toISOString().split('T')[0],
+    notas:  $('med2-notas').value,
+    id: Date.now(),
+  };
+  pcpData.medications.push(entry);
+  savePCPData();
+  renderFarmacosView();
+  renderDashboard();
+  closeModal('modal-medication');
+  showToast('Fármaco anti-obesidad registrado');
+  earnPoints(5, 'farmacoterapia iniciada');
+  ['med2-dosis','med2-notas'].forEach(id=>$(id).value='');
+  $('med2-nombre').value = '';
+  $('med2-info-box').style.display = 'none';
+}
+
+function saveMeasurement2() {
+  if (!currentPatient) return;
+  const peso = parseFloat($('meas-peso').value);
+  if (!peso) { showToast('El peso es obligatorio', 'warn'); return; }
+  const talla = parseFloat($('meas-talla').value) || (currentPatient.talla_cm ? parseFloat(currentPatient.talla_cm) : null);
+  const bmi = talla ? (peso / Math.pow(talla/100, 2)).toFixed(1) : null;
+  const entry = {
+    fecha: $('meas-fecha').value || new Date().toISOString().split('T')[0],
+    peso, talla, bmi,
+    cintura: parseFloat($('meas-cintura').value) || null,
+    pas: parseFloat($('meas-pas').value) || null,
+    pad: parseFloat($('meas-pad').value) || null,
+    id: Date.now(),
+  };
+  pcpData.measurements.push(entry);
+  savePCPData();
+  renderDashboard();
+  renderSeguimientoView();
+  renderFarmacosView();
+  closeModal('modal-measurement');
+  showToast('Medición guardada');
+  earnPoints(1, 'medición registrada');
+  ['meas-peso','meas-talla','meas-cintura','meas-pas','meas-pad'].forEach(id=>$(id).value='');
+  $('meas-calcs').style.display = 'none';
+}
+
+function saveLabs2() {
+  if (!currentPatient) return;
+  const glucosa = parseFloat($('lab2-glucosa').value) || null;
+  const insulina = parseFloat($('lab2-insulina').value) || null;
+  const homa_ir = glucosa && insulina ? parseFloat(((glucosa*insulina)/405).toFixed(2)) : null;
+  const entry = {
+    fecha:      $('lab2-fecha').value || new Date().toISOString().split('T')[0],
+    glucosa, insulina, homa_ir,
+    hba1c:      parseFloat($('lab2-hba1c').value) || null,
+    coltotal:   parseFloat($('lab2-coltotal').value) || null,
+    ldl:        parseFloat($('lab2-ldl').value) || null,
+    hdl:        parseFloat($('lab2-hdl').value) || null,
+    tg:         parseFloat($('lab2-tg').value) || null,
+    alt:        parseFloat($('lab2-alt').value) || null,
+    tsh:        parseFloat($('lab2-tsh').value) || null,
+    creatinina: parseFloat($('lab2-creatinina').value) || null,
+    id: Date.now(),
+  };
+  pcpData.labs.push(entry);
+  savePCPData();
+  renderSeguimientoView();
+  renderDashboard();
+  closeModal('modal-labs');
+  showToast('Laboratorios guardados');
+  earnPoints(2, 'laboratorios registrados');
+}
+
+function previewReferral() {
+  if (!currentPatient) return;
+  const p = currentPatient;
+  const name = `${p.nombre} ${p.apellido_paterno||''} ${p.apellido_materno||''}`.trim();
+  const ms = pcpData.measurements.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const lat = ms[0];
+  const destinos = { endocrinologia:'Endocrinología / Medicina de la Obesidad', bariatrica:'Cirugía Bariátrica', nutricion:'Nutriología Clínica', psicologia:'Psicología / Psiquiatría', rehabilitacion:'Medicina de Rehabilitación' };
+  const txt = `CARTA DE REFERENCIA — ${new Date().toLocaleDateString('es-MX')}
+
+Paciente: ${name}
+Edad: ${p.edad || '—'} años · Sexo: ${p.sexo==='M'?'Masculino':'Femenino'}
+IMC: ${lat?.bmi || '—'} kg/m² · Peso: ${lat?.peso || '—'} kg
+EOSS: ${pcpData.eoss !== null ? pcpData.eoss : '—'}
+
+Referido a: ${destinos[$('ref-destino').value]}
+Urgencia: ${$('ref-urgencia').value}
+
+Motivo de referencia:
+${$('ref-motivo').value || 'No especificado'}
+
+Tratamientos previos:
+${$('ref-previo').value || 'Ninguno'}
+
+Comorbilidades activas: ${pcpData.comorbilidades.map(c=>c.nombre).join(', ') || 'Ninguna'}
+Medicamentos: ${pcpData.medications.map(m=>m.nombre+' '+m.dosis).join(', ') || 'Ninguno'}
+
+Médico remitente: ${currentUser?.nombre || currentUser?.email || '—'}`;
+  $('ref-preview').textContent = txt;
+  $('ref-preview').style.display = 'block';
+}
+
+function saveReferral() {
+  if (!currentPatient) return;
+  const entry = {
+    fecha: new Date().toISOString().split('T')[0],
+    destino: $('ref-destino').value,
+    urgencia: $('ref-urgencia').value,
+    motivo: $('ref-motivo').value,
+    previo: $('ref-previo').value,
+    id: Date.now(),
+  };
+  pcpData.referrals = pcpData.referrals || [];
+  pcpData.referrals.push(entry);
+  savePCPData();
+  closeModal('modal-referral');
+  showToast('Referencia guardada');
+  earnPoints(3, 'referencia generada');
+  ['ref-motivo','ref-previo'].forEach(id=>$(id).value='');
+  $('ref-preview').style.display='none';
+}
+
+// ─── INITIAL VIEW ─────────────────────────────────────────────────
+switchView('dashboard');
+</script>
+</body>
+</html>
