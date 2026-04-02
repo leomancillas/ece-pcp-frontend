@@ -1448,7 +1448,7 @@ function renderPatientList(pts) {
     const pkey = STORE_KEY(p.id);
     const d = JSON.parse(localStorage.getItem(pkey) || '{}');
     const eossTag = d.eoss !== undefined && d.eoss !== null ? `<span class="pill blue">EOSS ${d.eoss}</span>` : '';
-    return `<div class="patient-item" onclick="selectPatient(${p.id})">
+    return `<div class="patient-item" onclick="selectPatient('${p.id}')">
       <div class="patient-avatar">${ini}</div>
       <div><div class="patient-info-name">${name} ${eossTag}</div>
       <div class="patient-info-meta">${p.edad ? p.edad+' años · ' : ''}${p.sexo==='M'?'Masculino':'Femenino'}${p.expediente?' · Exp. '+p.expediente:''}</div></div>
@@ -1499,16 +1499,29 @@ async function saveNewPatient() {
       expediente: $('np2-exp').value.trim() || null,
       telefono: $('np2-tel').value.trim() || null,
     };
+    // Capture peso/talla before clearing form
+    const pesoInicial = parseFloat($('np2-peso').value) || null;
+    const tallaFinal  = talla;
+    const cintura     = parseFloat($('np2-cintura').value) || null;
+
     const p = await apiFetch('/api/patients', { method:'POST', body: JSON.stringify(body) });
     const patientId = p.id || p.patient?.id;
+    if (!patientId) throw new Error('No se recibió ID del paciente creado');
+
     closeModal('modal-new-patient');
     ['np2-nombre','np2-apat','np2-amat','np2-exp','np2-tel','np2-curp','np2-talla','np2-peso','np2-cintura','np2-motivo'].forEach(id=>{ if($(id)) $(id).value=''; });
     $('np2-institucion').value = '';
 
-    // If peso was entered, register it as first measurement right away
     await selectPatient(patientId);
-    const peso = parseFloat($('np2-peso')?.value) || null; // already cleared, save from local
-    const pesoInit = parseFloat(document.querySelector('#np2-peso')?.dataset?.last) || null;
+
+    // If peso was entered, register it as first measurement
+    if (pesoInicial && pesoInicial > 0) {
+      const bmi = tallaFinal ? (pesoInicial / Math.pow(tallaFinal/100,2)).toFixed(1) : null;
+      pcpData.measurements.push({ fecha: new Date().toISOString().split('T')[0], peso: pesoInicial, cintura, bmi });
+      savePCPData();
+      renderDashboard();
+      renderSeguimientoView();
+    }
     showToast('Paciente registrado correctamente');
   } catch(e) { showToast('Error: '+e.message,'error'); }
   finally { hideLoading(); }
