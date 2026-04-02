@@ -365,7 +365,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="sidebar-footer">
         <div class="sidebar-level">
           <div class="sidebar-level-label">Tu nivel</div>
-          <div class="sidebar-level-name" id="sidebar-level-name">Aprendiz</div>
+          <div class="sidebar-level-name" id="sidebar-level-name">Explorando</div>
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" id="sidebar-level-bar" style="width:0%"></div>
           </div>
@@ -767,7 +767,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
               </div>
               <div style="flex:1">
                 <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-                  <span style="font-weight:700;font-size:14px" id="cme-level-name">Aprendiz</span>
+                  <span style="font-weight:700;font-size:14px" id="cme-level-name">Explorando</span>
                   <span style="font-size:12px;color:var(--text-muted)" id="cme-level-next"></span>
                 </div>
                 <div class="progress-bar-wrap" style="height:10px"><div class="progress-bar-fill" id="cme-level-bar" style="width:0%;background:var(--purple)"></div></div>
@@ -1216,11 +1216,11 @@ let selectedEOSSModal = null;
 let cmePoints = 0;
 
 const CME_LEVELS = [
-  { name:'Aprendiz',     min:0,   max:50,  color:'#888' },
-  { name:'Practicante',  min:50,  max:150, color:'var(--orange)' },
-  { name:'Competente',   min:150, max:350, color:'var(--primary)' },
-  { name:'Experto',      min:350, max:700, color:'var(--green)' },
-  { name:'Maestro',      min:700, max:1200,color:'var(--purple)' },
+  { name:'Explorando',             min:0,   max:50,  color:'#888' },
+  { name:'Avanzando',              min:50,  max:150, color:'var(--orange)' },
+  { name:'Competente',             min:150, max:350, color:'var(--primary)' },
+  { name:'Consolidado',            min:350, max:700, color:'var(--green)' },
+  { name:'Listo para el Diplomado',min:700, max:1200,color:'var(--purple)' },
 ];
 
 const MED2_INFO = {
