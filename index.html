@@ -223,22 +223,137 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .referral-criteria-title{font-size:12px;font-weight:700;color:var(--danger);margin-bottom:8px}
 .referral-criteria li{font-size:12px;color:var(--text);margin-left:18px;line-height:2}
 
-/* ── CME MODULE ── */
-.cme-module-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:12px;transition:box-shadow .2s}
-.cme-module-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.09)}
-.cme-module-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s}
-.cme-module-header:hover{background:var(--bg)}
-.cme-mod-icon{font-size:22px}
-.cme-mod-info{flex:1}
-.cme-mod-title{font-weight:700;font-size:13px;letter-spacing:-.1px}
-.cme-mod-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
-.cme-mod-pts{font-size:12px;font-weight:700;color:var(--purple);background:linear-gradient(135deg,#F0E8FA,var(--purple-light));border-radius:7px;padding:3px 10px;border:1px solid rgba(108,52,131,.12)}
-.cme-mod-status{font-size:18px;margin-left:8px}
-.cme-module-body{border-top:1px solid var(--border);padding:16px 18px;background:var(--bg);display:none}
-.cme-module-body.open{display:block}
+/* ── CME MODULE (legacy) ── */
 .cme-pearl-item{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:12px 16px;margin-bottom:8px}
 .cme-pearl-item-title{font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px;letter-spacing:-.1px}
 .cme-pearl-item-body{font-size:12px;color:var(--text);line-height:1.7}
+
+/* ── CURRICULUM OVERVIEW ── */
+.curriculum-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.cur-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);text-align:center}
+.cur-stat-val{font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.cur-stat-lbl{font-size:10px;color:var(--text-muted);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.3px}
+.curriculum-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.cur-mod-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:all .2s;cursor:pointer}
+.cur-mod-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.11);transform:translateY(-2px)}
+.cur-mod-top{padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.cur-mod-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:#fff}
+.cur-mod-meta{flex:1;min-width:0}
+.cur-mod-title{font-size:13px;font-weight:700;letter-spacing:-.1px;color:var(--text);margin-bottom:3px}
+.cur-mod-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+.cur-mod-hours{font-size:10px;font-weight:600;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:4px}
+.cur-mod-bottom{padding:10px 18px;border-top:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:space-between}
+.cur-mod-progress{display:flex;align-items:center;gap:8px;flex:1}
+.cur-mod-progress-bar{flex:1;height:4px;background:rgba(0,0,0,.06);border-radius:4px;overflow:hidden}
+.cur-mod-progress-fill{height:4px;border-radius:4px;transition:width .4s ease}
+.cur-mod-pct{font-size:10px;font-weight:700;color:var(--text-muted);min-width:28px}
+.cur-mod-status-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0}
+.cur-mod-status-tag.done{background:var(--green-light);color:var(--green)}
+.cur-mod-status-tag.partial{background:var(--orange-light);color:var(--orange)}
+.cur-mod-status-tag.new{background:var(--primary-light);color:var(--primary)}
+.cur-mod-pts{font-size:10px;font-weight:700;color:var(--purple);background:var(--purple-light);border-radius:6px;padding:2px 8px;margin-left:8px}
+
+/* ── MODULE DETAIL ── */
+.cur-detail-back{background:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;color:var(--text-muted);transition:all .15s;margin-bottom:16px}
+.cur-detail-back:hover{background:var(--bg);color:var(--text)}
+.cur-detail-header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.cur-detail-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);flex-shrink:0}
+.cur-detail-title{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.cur-detail-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+.lesson-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.lesson-item{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;transition:all .15s}
+.lesson-item.read{border-color:rgba(26,122,69,.35);background:linear-gradient(135deg,#F0FBF4,#fff)}
+.lesson-header{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;transition:background .12s}
+.lesson-header:hover{background:var(--bg)}
+.lesson-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:#fff;background:var(--primary)}
+.lesson-item.read .lesson-num{background:var(--green)}
+.lesson-body{flex:1}
+.lesson-title{font-size:13px;font-weight:600;letter-spacing:-.1px}
+.lesson-meta{font-size:11px;color:var(--text-muted);margin-top:2px}
+.lesson-check{font-size:17px;flex-shrink:0}
+.lesson-content-panel{background:var(--bg);border-top:1px solid var(--border);padding:18px 18px 16px;display:none;animation:fadeUp .15s ease}
+.lesson-content-panel.open{display:block}
+.lesson-content-text{font-size:13px;color:var(--text);line-height:1.85}
+.lesson-content-text b{color:var(--primary);font-weight:700}
+.lesson-content-text p{margin-bottom:12px}
+.lesson-content-text p:last-child{margin-bottom:0}
+.lesson-mark-btn{margin-top:14px;background:linear-gradient(135deg,var(--green),#27AE60);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;box-shadow:0 2px 8px rgba(26,122,69,.3)}
+.lesson-mark-btn:hover{box-shadow:0 4px 16px rgba(26,122,69,.4);transform:translateY(-1px)}
+.lesson-mark-btn.already-read{background:var(--green-light);color:var(--green);border:1.5px solid rgba(26,122,69,.2);box-shadow:none;cursor:default;transform:none}
+
+/* ── QUIZ START CARD ── */
+.quiz-start-card{background:linear-gradient(135deg,#F0E8FA,#E8F3FD 60%,#EEF8F0);border:1.5px solid rgba(108,52,131,.2);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px}
+.quiz-start-icon{font-size:40px;margin-bottom:10px}
+.quiz-start-title{font-size:16px;font-weight:800;color:var(--purple);margin-bottom:8px;letter-spacing:-.2px}
+.quiz-start-desc{font-size:13px;color:var(--text-muted);max-width:420px;margin:0 auto 16px;line-height:1.6}
+.quiz-start-stats{display:flex;justify-content:center;gap:28px;margin-bottom:18px}
+.quiz-start-stat-val{font-size:18px;font-weight:800;color:var(--purple)}
+.quiz-start-stat-lbl{font-size:10px;color:var(--text-muted);margin-top:2px;text-transform:uppercase;letter-spacing:.3px}
+.quiz-start-btn{background:linear-gradient(135deg,var(--purple),#8E44AD);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(108,52,131,.35)}
+.quiz-start-btn:hover{box-shadow:0 6px 20px rgba(108,52,131,.45);transform:translateY(-1px)}
+.quiz-start-btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+.quiz-passed-tag{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);border:1px solid rgba(26,122,69,.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;margin-bottom:10px}
+
+/* ── QUIZ MODAL ── */
+.quiz-modal-header{padding:20px 24px;border-bottom:1px solid var(--border)}
+.quiz-modal-title{font-size:16px;font-weight:800;letter-spacing:-.2px;color:var(--purple)}
+.quiz-modal-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+.quiz-progress-row{padding:10px 24px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.quiz-q-counter{font-size:12px;font-weight:700;color:var(--text-muted);min-width:60px}
+.quiz-progress-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden}
+.quiz-progress-fill{height:5px;background:linear-gradient(90deg,var(--purple),#B07FD6);border-radius:5px;transition:width .3s ease}
+.quiz-body{padding:24px;max-height:60vh;overflow-y:auto}
+.quiz-question-num{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.quiz-question-text{font-size:15px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:18px;letter-spacing:-.1px}
+.quiz-options{display:flex;flex-direction:column;gap:9px}
+.quiz-option{display:flex;align-items:flex-start;gap:11px;padding:12px 15px;border:2px solid var(--border);border-radius:11px;cursor:pointer;transition:all .15s;background:var(--surface)}
+.quiz-option:hover:not(.locked){border-color:rgba(108,52,131,.4);background:var(--purple-light)}
+.quiz-option.selected{border-color:var(--purple);background:var(--purple-light)}
+.quiz-option.correct{border-color:var(--green);background:var(--green-light)}
+.quiz-option.wrong{border-color:var(--danger);background:var(--red-light)}
+.quiz-option-letter{width:25px;height:25px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all .15s;margin-top:1px}
+.quiz-option.selected .quiz-option-letter{background:var(--purple);border-color:var(--purple);color:#fff}
+.quiz-option.correct .quiz-option-letter{background:var(--green);border-color:var(--green);color:#fff}
+.quiz-option.wrong .quiz-option-letter{background:var(--danger);border-color:var(--danger);color:#fff}
+.quiz-option-text{font-size:13px;line-height:1.5;flex:1}
+.quiz-explanation{background:var(--green-light);border:1px solid rgba(26,122,69,.25);border-radius:10px;padding:12px 15px;margin-top:12px;display:none}
+.quiz-explanation.show{display:block}
+.quiz-explanation-text{font-size:13px;color:var(--text);line-height:1.6}
+.quiz-explanation-text b{color:var(--green)}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-top:1px solid var(--border);background:var(--bg)}
+.quiz-nav-btn{border:none;border-radius:9px;padding:10px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s}
+.quiz-nav-skip{background:var(--bg);border:1.5px solid var(--border);color:var(--text-muted)}
+.quiz-nav-skip:hover{background:var(--border)}
+.quiz-nav-next{background:linear-gradient(135deg,var(--purple),#8E44AD);color:#fff;box-shadow:0 2px 8px rgba(108,52,131,.3)}
+.quiz-nav-next:hover{box-shadow:0 4px 14px rgba(108,52,131,.4);transform:translateY(-1px)}
+.quiz-nav-next:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
+.quiz-result-panel{padding:32px 24px;text-align:center}
+.quiz-result-icon{font-size:52px;margin-bottom:12px;display:block}
+.quiz-result-score{font-size:42px;font-weight:900;letter-spacing:-1.5px;margin-bottom:6px}
+.quiz-result-score.pass{color:var(--green)}.quiz-result-score.fail{color:var(--danger)}
+.quiz-result-msg{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.2px}
+.quiz-result-sub{font-size:13px;color:var(--text-muted);max-width:360px;margin:0 auto 18px;line-height:1.6}
+.quiz-result-pts-row{display:flex;justify-content:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.quiz-result-pt-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:6px 16px;font-size:13px;font-weight:800;border:1px solid transparent}
+.quiz-result-pt-badge.purple{background:var(--purple-light);color:var(--purple);border-color:rgba(108,52,131,.2)}
+.quiz-result-pt-badge.green{background:var(--green-light);color:var(--green);border-color:rgba(26,122,69,.2)}
+.quiz-result-btn-row{display:flex;justify-content:center;gap:10px}
+.quiz-btn-retry{background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:10px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;color:var(--text)}
+.quiz-btn-retry:hover{background:var(--border)}
+.quiz-btn-done{background:linear-gradient(135deg,var(--purple),#8E44AD);color:#fff;border:none;border-radius:9px;padding:10px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s;box-shadow:0 2px 8px rgba(108,52,131,.3)}
+.quiz-btn-done:hover{box-shadow:0 4px 14px rgba(108,52,131,.4);transform:translateY(-1px)}
+
+/* ── POINTS BREAKDOWN ── */
+.points-breakdown{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.pts-cat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.pts-cat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+.pts-cat.practice::after{background:linear-gradient(90deg,var(--primary),#3B9EE8)}
+.pts-cat.theory::after{background:linear-gradient(90deg,var(--purple),#B07FD6)}
+.pts-cat.eval::after{background:linear-gradient(90deg,var(--green),#27AE60)}
+.pts-cat-icon{font-size:22px;margin-bottom:6px}
+.pts-cat-label{font-size:11px;color:var(--text-muted);font-weight:500}
+.pts-cat-val{font-size:24px;font-weight:800;color:var(--text);margin-top:2px;letter-spacing:-.5px}
+.pts-cat-max{font-size:10px;color:var(--text-muted);margin-top:2px}
 
 /* ── MODALS ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,20,40,.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
@@ -806,10 +921,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <div id="view-cme" class="module-view">
         <div class="module-header">
           <div class="module-icon-lg" style="background:var(--edu)">🎓</div>
-          <div><h2>Educación Médica Continua</h2><div class="module-sub">Aprende mientras atiendes · Perlas clínicas · Competencias</div></div>
+          <div><h2>Educación Médica Continua</h2><div class="module-sub">Diplomado en Obesidad · 50 h de teoría · Evaluaciones certificadas</div></div>
         </div>
 
-        <!-- Progress -->
+        <!-- Progress bar -->
         <div class="section-card" style="margin-bottom:16px">
           <div class="section-card-body">
             <div style="display:flex;align-items:center;gap:20px">
@@ -823,61 +938,36 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
                   <span style="font-size:12px;color:var(--text-muted)" id="cme-level-next"></span>
                 </div>
                 <div class="progress-bar-wrap" style="height:10px"><div class="progress-bar-fill" id="cme-level-bar" style="width:0%;background:var(--purple)"></div></div>
-                <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="cme-level-desc">Completa consultas y evaluaciones para ganar puntos</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="cme-level-desc">Completa clases y evaluaciones para ganar puntos</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="cme-module-card">
-          <div class="cme-module-header" onclick="toggleCME('cme-m1')">
-            <span class="cme-mod-icon">🧬</span>
-            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 1: Fisiopatología de la obesidad</div><div class="cme-mod-sub">Causas, mecanismos hormonales y genéticos · 5 perlas</div></div>
-            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
+        <!-- Points breakdown -->
+        <div class="points-breakdown">
+          <div class="pts-cat practice">
+            <div class="pts-cat-icon">🩺</div>
+            <div class="pts-cat-label">Práctica clínica</div>
+            <div class="pts-cat-val" id="cme-pts-practice">0</div>
+            <div class="pts-cat-max">Consultas, labs, referencias</div>
           </div>
-          <div class="cme-module-body" id="cme-m1">
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🧬 La obesidad NO es falta de voluntad</div><div class="cme-pearl-item-body">La obesidad es una enfermedad crónica compleja regulada por más de 250 genes y 8 ejes hormonales. La leptina, ghrelina, insulina y péptidos intestinales regulan el hambre independientemente de la voluntad. El estigma del peso daña la relación médico-paciente y empeora los resultados clínicos. <b>Aborda la obesidad como cualquier otra enfermedad crónica: con empatía y sin juicios.</b></div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🔄 El set point y la trampa biológica</div><div class="cme-pearl-item-body">Después de perder peso, el cuerpo activa mecanismos compensatorios: baja la tasa metabólica basal hasta un 15%, aumenta el apetito y reduce la saciedad. Este es el mecanismo principal del rebote. Los fármacos GLP-1 interrumpen este ciclo al actuar directamente sobre los centros hipotalámicos del hambre.</div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🏃 Tejido adiposo como órgano endocrino</div><div class="cme-pearl-item-body">El tejido adiposo visceral secreta adipoquinas proinflamatorias (TNF-α, IL-6, resistina) que perpetúan resistencia a la insulina, disfunción endotelial y riesgo cardiovascular. La circunferencia de cintura ≥ 80 cm (mujeres) / ≥ 90 cm (hombres) es un marcador de riesgo metabólico independiente del IMC.</div></div>
+          <div class="pts-cat theory">
+            <div class="pts-cat-icon">📖</div>
+            <div class="pts-cat-label">Clases teóricas</div>
+            <div class="pts-cat-val" id="cme-pts-theory">0</div>
+            <div class="pts-cat-max">Hasta 180 pts · 6 módulos</div>
           </div>
-        </div>
-
-        <div class="cme-module-card">
-          <div class="cme-module-header" onclick="toggleCME('cme-m2')">
-            <span class="cme-mod-icon">💊</span>
-            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 2: Farmacoterapia en primer nivel</div><div class="cme-mod-sub">GLP-1, tirzepatida, orlistat · Inicio y monitoreo · 6 perlas</div></div>
-            <span class="cme-mod-pts">+15 pts</span><span class="cme-mod-status">📖</span>
-          </div>
-          <div class="cme-module-body" id="cme-m2">
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">💉 Semaglutida: la nueva era del tratamiento</div><div class="cme-pearl-item-body">STEP 1 (n=1961): Semaglutida 2.4 mg SC semanal logró <b>-14.9% del peso corporal</b> vs -2.4% con placebo a 68 semanas. 86% de pacientes perdió ≥5%. Es el tratamiento farmacológico más efectivo disponible fuera de cirugía. Disponible en México bajo prescripción médica.</div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🔺 Esquema de escalada — clave para tolerabilidad</div><div class="cme-pearl-item-body">La náusea es el efecto adverso más común de GLP-1 (40-44%). Se minimiza con escalada lenta: <b>Semaglutida: 0.25 mg × 4 sem → 0.5 mg × 4 sem → 1 mg × 4 sem → 1.7 mg × 4 sem → 2.4 mg.</b> Administrar con alimento, hidratación adecuada y reducir porciones.</div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">⚠️ Contraindicación absoluta: CEF</div><div class="cme-pearl-item-body">Carcinoma de células C del tiroides (CEF) — antecedente personal o familiar es contraindicación absoluta para cualquier GLP-1/GIP agonista. Siempre pregunta sobre historia familiar de cáncer de tiroides antes de prescribir. MEN2A/2B también contraindica.</div></div>
+          <div class="pts-cat eval">
+            <div class="pts-cat-icon">✅</div>
+            <div class="pts-cat-label">Evaluaciones aprobadas</div>
+            <div class="pts-cat-val" id="cme-pts-eval">0</div>
+            <div class="pts-cat-max">Hasta 420 pts · 70% mínimo</div>
           </div>
         </div>
 
-        <div class="cme-module-card">
-          <div class="cme-module-header" onclick="toggleCME('cme-m3')">
-            <span class="cme-mod-icon">🗣️</span>
-            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 3: Comunicación médico-paciente en obesidad</div><div class="cme-mod-sub">Estigma, motivación, 5As · 4 perlas</div></div>
-            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
-          </div>
-          <div class="cme-module-body" id="cme-m3">
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🗣️ Lenguaje que no estigmatiza</div><div class="cme-pearl-item-body">Evita: "obeso", "gordo", "problema de peso". Usa: <b>"paciente que vive con obesidad"</b>, "IMC elevado", "peso excesivo". El lenguaje de persona-primero reduce la vergüenza y aumenta el engagement con el tratamiento. Estudios muestran que 65% de pacientes con obesidad evita ir al médico por miedo al estigma.</div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🎯 Metas de peso realistas</div><div class="cme-pearl-item-body">Muchos pacientes esperan perder 30-40% de su peso. Las metas clínicas son: <b>5-10% = mejora metabólica significativa, 10-15% = remisión de DM2 posible, >15% = mejoría de SAOS y función hepática.</b> Ajustar expectativas con datos reales mejora la adherencia a largo plazo.</div></div>
-          </div>
-        </div>
-
-        <div class="cme-module-card">
-          <div class="cme-module-header" onclick="toggleCME('cme-m4')">
-            <span class="cme-mod-icon">📏</span>
-            <div class="cme-mod-info"><div class="cme-mod-title">Módulo 4: EOSS y estratificación de riesgo</div><div class="cme-mod-sub">Edmonton Obesity Staging System · Comorbilidades · 5 perlas</div></div>
-            <span class="cme-mod-pts">+10 pts</span><span class="cme-mod-status">📖</span>
-          </div>
-          <div class="cme-module-body" id="cme-m4">
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">📊 EOSS predice mortalidad mejor que el IMC</div><div class="cme-pearl-item-body">En un estudio de 8,143 pacientes, EOSS predijo mortalidad independientemente del IMC. Pacientes EOSS 0-1 con IMC ≥ 35 tuvieron <b>menor</b> riesgo de muerte que pacientes EOSS 2-4 con IMC 25-29. El IMC solo clasifica el tamaño; el EOSS mide el daño.</div></div>
-            <div class="cme-pearl-item"><div class="cme-pearl-item-title">🏥 EOSS 2: el punto de inflexión terapéutico</div><div class="cme-pearl-item-body">EOSS 2 indica comorbilidades establecidas (DM2, HTA, dislipidemia, ERGE, osteoartritis, SAOS moderado). Este es el momento de iniciar farmacoterapia activa. <b>No esperar "a que el paciente esté listo" — el daño a órgano blanco progresa.</b></div></div>
-          </div>
-        </div>
+        <!-- Dynamic curriculum: overview or module detail -->
+        <div id="cme-curriculum-body"></div>
       </div>
 
       <!-- ─── VIEW: REFERENCIA RÁPIDA ───────────────────────── -->
@@ -1284,6 +1374,44 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   </div>
 </div>
 
+<!-- ─── QUIZ MODAL ─────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-quiz" style="z-index:2100">
+  <div class="modal" style="max-width:660px;padding:0">
+    <div id="quiz-panel-intro" style="display:none">
+      <!-- rendered by JS -->
+    </div>
+    <div id="quiz-panel-questions" style="display:none">
+      <div class="quiz-modal-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="quiz-modal-title" id="quiz-mod-title">Evaluación</div>
+          <div class="quiz-modal-meta" id="quiz-mod-meta">10 preguntas · aprobatorio 70%</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-quiz')">×</button>
+      </div>
+      <div class="quiz-progress-row">
+        <span class="quiz-q-counter" id="quiz-q-counter">1 / 10</span>
+        <div class="quiz-progress-bar-wrap"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:10%"></div></div>
+      </div>
+      <div class="quiz-body" id="quiz-body">
+        <!-- rendered by JS -->
+      </div>
+      <div class="quiz-nav">
+        <button class="quiz-nav-btn quiz-nav-skip" onclick="quizSkip()" id="quiz-btn-skip">Omitir</button>
+        <button class="quiz-nav-btn quiz-nav-next" onclick="quizNext()" id="quiz-btn-next" disabled>Siguiente →</button>
+      </div>
+    </div>
+    <div id="quiz-panel-result" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:flex-end;padding:14px 20px;border-bottom:1px solid var(--border)">
+        <button class="modal-close" onclick="closeModal('modal-quiz')">×</button>
+      </div>
+      <div class="quiz-result-panel" id="quiz-result-content">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Loading -->
 <div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
 <!-- Toasts -->
@@ -1306,12 +1434,652 @@ let selectedEOSSModal = null;
 let cmePoints = 0;
 
 const CME_LEVELS = [
-  { name:'Explorando',             min:0,   max:50,  color:'#888' },
-  { name:'Avanzando',              min:50,  max:150, color:'var(--orange)' },
-  { name:'Competente',             min:150, max:350, color:'var(--primary)' },
-  { name:'Consolidado',            min:350, max:700, color:'var(--green)' },
-  { name:'Listo para el Diplomado',min:700, max:1200,color:'var(--purple)' },
+  { name:'Explorando',             min:0,    max:100,  color:'#888' },
+  { name:'Avanzando',              min:100,  max:300,  color:'var(--orange)' },
+  { name:'Competente',             min:300,  max:600,  color:'var(--primary)' },
+  { name:'Consolidado',            min:600,  max:1000, color:'var(--green)' },
+  { name:'Listo para el Diplomado',min:1000, max:1500, color:'var(--purple)' },
 ];
+
+// ─── 50-HOUR THEORY CURRICULUM ───────────────────────────────────
+const THEORY_CURRICULUM = [
+  {
+    id:'m1', icon:'🧬', color:'#1B4F82', hours:9,
+    title:'Módulo 1: Fisiopatología y diagnóstico de la obesidad',
+    desc:'Regulación neuroendocrina, tejido adiposo como órgano endocrino, diagnóstico clínico y funcional',
+    lessons:[
+      { title:'Regulación neuroendocrina del peso corporal', duration:'2h',
+        body:`<p>La regulación del peso corporal involucra un sistema neuroendocrino de extraordinaria complejidad. El <b>hipotálamo</b> —específicamente el núcleo arcuato, ventromedial y paraventricular— actúa como el "termostato" del balance energético, integrando señales periféricas de grasa, intestino y páncreas.</p>
+<p>Las dos vías hipotalámicas fundamentales son: la vía <b>anorexigénica</b> (POMC/CART) que reduce el apetito y aumenta el gasto energético, y la vía <b>orexigénica</b> (NPY/AgRP) que estimula el hambre y reduce el gasto. En personas con obesidad, la vía NPY/AgRP frecuentemente está sobre-activada.</p>
+<p><b>Hormonas clave:</b> Leptina (señal de saciedad de largo plazo desde el tejido adiposo), ghrelina (hormona del hambre, pico preprandial desde el estómago), péptido YY y GLP-1 (señales de saciedad posprandial desde el intestino), insulina (señal de saciedad crónica desde el páncreas).</p>
+<p>Punto clínico crucial: después de perder peso, los niveles de ghrelina aumentan y los de leptina disminuyen durante hasta 2 años. Este fenómeno —llamado <b>"adaptación metabólica"</b>— explica por qué el rebote no es falta de voluntad sino una respuesta biológica orquestada.</p>` },
+      { title:'Tejido adiposo como órgano endocrino activo', duration:'2h',
+        body:`<p>Durante décadas se consideró al tejido adiposo un depósito pasivo de energía. Hoy sabemos que es un <b>órgano endocrino activo</b> que secreta más de 600 proteínas bioactivas denominadas adipoquinas.</p>
+<p><b>Tejido adiposo visceral (TAV):</b> Se localiza en el omento, mesenterio y espacio retroperitoneal. Sus adipocitos son metabólicamente hiperactivos y secretan altas cantidades de TNF-α, IL-6, resistina y angiotensinógeno —moléculas proinflamatorias que generan resistencia a la insulina, disfunción endotelial e hipertensión.</p>
+<p><b>Tejido adiposo subcutáneo (TAS):</b> Metabólicamente más benigno. Secreta adiponectina —una adipoquina antiinflamatoria y sensibilizadora de insulina— en mayor proporción. La relación TAV/TAS determina en gran medida el perfil de riesgo cardiometabólico.</p>
+<p><b>Aplicación clínica:</b> La circunferencia de cintura ≥ 80 cm en mujeres y ≥ 90 cm en hombres (criterios latinoamericanos) refleja acumulación de TAV y predice riesgo metabólico independientemente del IMC. Dos pacientes con IMC idéntico pueden tener perfiles de riesgo muy diferentes según su distribución de grasa.</p>` },
+      { title:'Diagnóstico clínico: IMC, EOSS y más allá', duration:'2h',
+        body:`<p>El <b>IMC</b> (peso en kg / talla² en m) es una herramienta de tamizaje poblacional, no un diagnóstico individual. Sus limitaciones son bien conocidas: no distingue músculo de grasa, no evalúa distribución de grasa, y su sensibilidad varía según etnia. En latinoamericanos, los puntos de corte de obesidad (IMC ≥ 27.5) se discuten como alternativa al estándar global (≥ 30).</p>
+<p>El <b>Edmonton Obesity Staging System (EOSS)</b> es superior al IMC para predecir mortalidad. Un paciente EOSS 0-1 con IMC 40 tiene menor riesgo de morir que un paciente EOSS 3 con IMC 28. Los estadios son: <b>0</b> = sin factores de riesgo ni síntomas; <b>1</b> = factores subumbrales; <b>2</b> = comorbilidades establecidas; <b>3</b> = daño orgánico significativo; <b>4</b> = enfermedad terminal.</p>
+<p><b>Otras herramientas diagnósticas:</b> Índice cintura-talla (ICT): saludable < 0.5. Índice cintura-cadera. Bioimpedancia eléctrica (BIA) para porcentaje de grasa. DXA como estándar de oro en investigación. Tomografía para cuantificación de TAV.</p>
+<p><b>Fenotipos especiales:</b> Obesidad de peso normal (IMC normal con alta grasa corporal, "skinny fat"), MONA (metabolically obese, normal weight), y obesidad sarcopénica (pérdida de músculo con exceso de grasa, común en adultos mayores).</p>` },
+      { title:'HOMA-IR y resistencia a la insulina: detección temprana', duration:'1.5h',
+        body:`<p>La resistencia a la insulina (RI) es el nexo fisiopatológico central entre obesidad visceral y síndrome metabólico. Su detección temprana permite intervenir antes del diagnóstico de DM2, cuando la reversibilidad es máxima.</p>
+<p><b>Fórmula HOMA-IR:</b> (glucosa en mg/dL × insulina en µIU/mL) ÷ 405. En adultos sin DM2: normal < 2.5; RI leve: 2.5-3.8; RI moderada: 3.8-5.0; RI severa: > 5.0. En niños y adolescentes el umbral varía por edad y etapa puberal.</p>
+<p><b>¿Cuándo solicitarlo?</b> En todo paciente con IMC ≥ 25 + alguno de: cintura aumentada, glucosa en ayuno 100-125 mg/dL, triglicéridos ≥ 150, HDL bajo, HTA, acantosis nigricans, ovario poliquístico. No requiere glucosa anormal para existir.</p>
+<p><b>Perlas clínicas:</b> La acantosis nigricans en cuello, axilas e ingles es el marcador clínico más accesible de RI severa. Un paciente con HbA1c de 5.6% pero HOMA-IR de 6 tiene riesgo inminente de DM2 —el páncreas aún está compensando—. La intervención en esta etapa puede prevenir 80% de los casos de DM2.</p>` },
+      { title:'Genética, epigenética y factores ambientales en obesidad', duration:'1.5h',
+        body:`<p>La obesidad es una enfermedad <b>poligénica compleja</b> con alta heredabilidad (40-70%). Se han identificado más de 250 loci genéticos asociados a obesidad, principalmente reguladores de la ingesta y el gasto energético. El gen FTO es el de mayor efecto, pero su contribución individual es modesta (1-3 kg en promedio).</p>
+<p><b>Epigenética:</b> El ambiente modifica la expresión génica sin cambiar el ADN. La <b>programación fetal</b> —nutrición materna deficiente o excesiva durante el embarazo— puede reprogramar el metabolismo del descendiente hacia obesidad y diabetes décadas más tarde (hipótesis de Barker o DOHaD). El estrés crónico, privación de sueño y microbioma intestinal también ejercen efectos epigenéticos.</p>
+<p><b>Factores ambientales "obesogénicos":</b> Disponibilidad de alimentos ultraprocesados de alta densidad calórica, publicidad de alimentos dirigida a niños, ambientes que desincentivan la actividad física, exposición a disruptores endocrinos (bisfenol A, ftalatos), y el urbanismo diseñado alrededor del automóvil.</p>
+<p><b>Implicación clínica:</b> El fenotipo obesogénico no es un defecto moral sino la intersección de genética susceptible con un ambiente tóxico. Esta comprensión debe guiar el lenguaje que usamos con los pacientes.</p>` },
+    ],
+    quiz:[
+      { q:'¿Cuál es la vía hipotalámica que ESTIMULA el apetito y REDUCE el gasto energético?', options:['Vía POMC/CART','Vía NPY/AgRP','Vía serotoninérgica mesolímbica','Vía colinérgica nigroestriatal'], correct:1, exp:'NPY (neuropéptido Y) y AgRP (agouti-related peptide) son neuropéptidos orexigénicos del núcleo arcuato. Su activación aumenta la ingesta y reduce el gasto energético, contrario a la vía POMC/CART que es anorexigénica.' },
+      { q:'Un paciente con IMC de 27 y circunferencia de cintura de 97 cm (hombre). ¿Cuál es la interpretación más correcta?', options:['IMC y cintura normales — sin acción','IMC limítrofe, cintura normal para hombre latinoamericano','Obesidad central significativa a pesar del IMC limítrofe','No se puede evaluar sin BIA completa'], correct:2, exp:'En hombres latinoamericanos, cintura ≥ 90 cm indica obesidad central. Este paciente tiene riesgo metabólico elevado a pesar de un IMC que no alcanza el criterio de obesidad. El tejido adiposo visceral es el determinante de riesgo más importante.' },
+      { q:'El HOMA-IR se calcula como:', options:['(glucosa × insulina) ÷ 405','(insulina ÷ glucosa) × 22.5','glucosa × 0.0555 × insulina','(glucosa + insulina) ÷ 2'], correct:0, exp:'HOMA-IR = (glucosa en mg/dL × insulina en µIU/mL) ÷ 405. Si la glucosa está en mmol/L, la fórmula cambia a (glucosa × insulina) ÷ 22.5. Un valor > 2.5 en adultos sin DM2 indica resistencia a la insulina.' },
+      { q:'¿Cuál de las siguientes adipoquinas tiene efecto ANTIINFLAMATORIO y SENSIBILIZADOR de insulina?', options:['TNF-α','Resistina','Adiponectina','Leptina'], correct:2, exp:'La adiponectina es secretada principalmente por el tejido adiposo subcutáneo y tiene efectos antiinflamatorios, sensibilizadores de insulina y antiaterogénicos. En la obesidad, sus niveles están paradójicamente disminuidos.' },
+      { q:'Un paciente con EOSS 1 y IMC de 38 tiene:', options:['Mayor riesgo de mortalidad que un EOSS 3 con IMC 26','Igual riesgo que un EOSS 3 con IMC 26','Menor riesgo de mortalidad que un EOSS 3 con IMC 26','El EOSS no es aplicable con IMC > 35'], correct:2, exp:'El EOSS predice mortalidad mejor que el IMC. Un paciente EOSS 0-1 con IMC 40 tiene menor riesgo de morir que un EOSS 3-4 con IMC 26. El IMC clasifica el tamaño del cuerpo; el EOSS mide el daño real a órganos y sistemas.' },
+      { q:'El fenómeno de "adaptación metabólica" post-pérdida de peso implica:', options:['Aumento permanente del metabolismo basal','Reducción del metabolismo basal y aumento de ghrelina durante hasta 2 años','Normalización inmediata de leptina al alcanzar el peso objetivo','Reducción transitoria de ghrelina que se normaliza en 3 meses'], correct:1, exp:'Tras la pérdida de peso, el metabolismo basal se reduce (más de lo esperado por la masa corporal perdida) y los niveles de ghrelina aumentan. Estos cambios persisten hasta 2 años, explicando biológicamente el rebote de peso y por qué "la voluntad sola no puede".' },
+      { q:'¿En qué consiste la "programación fetal" o hipótesis DOHaD?', options:['La programación del sistema inmune fetal ante exposición a alérgenos','La reprogramación del metabolismo del descendiente por la nutrición materna durante el embarazo','El aprendizaje de hábitos alimentarios en los primeros 1000 días','La herencia directa de genes de obesidad de madre a hijo'], correct:1, exp:'La hipótesis DOHaD (Developmental Origins of Health and Disease) sostiene que el ambiente nutricional y hormonal durante el desarrollo fetal y los primeros años de vida "programa" epigenéticamente el metabolismo, predisponiendo a obesidad, DM2 y enfermedad cardiovascular décadas después.' },
+      { q:'¿Qué es la "obesidad sarcopénica"?', options:['Obesidad exclusiva de personas mayores de 65 años','Coexistencia de exceso de grasa corporal con pérdida de masa y fuerza muscular','IMC normal con alta grasa visceral (skinny fat)','Obesidad secundaria a síndrome de Cushing'], correct:1, exp:'La obesidad sarcopénica es la coexistencia de exceso de masa grasa con pérdida de masa muscular (sarcopenia). Es especialmente frecuente en adultos mayores y en personas con pérdidas de peso rápidas sin preservación de músculo. Conlleva mayor riesgo funcional, metabólico y de mortalidad.' },
+      { q:'Un HOMA-IR de 4.2 en paciente sin diabetes con HbA1c de 5.5% indica:', options:['Resultado normal — no requiere acción','Resistencia a la insulina moderada con páncreas aún compensando','Diabetes tipo 2 ya establecida','Error de laboratorio — solicitar repetir'], correct:1, exp:'Un HOMA-IR > 3.8 indica resistencia moderada a la insulina. Con HbA1c de 5.5%, el páncreas aún está compensando. Este es el momento IDEAL de intervenir con cambios de estilo de vida intensivos y posiblemente metformina, cuando se puede prevenir hasta el 80% de la progresión a DM2.' },
+      { q:'¿Cuál es el índice cintura-talla que se considera de riesgo?', options:['> 0.4','≥ 0.5','> 0.6','≥ 0.7'], correct:1, exp:'Un índice cintura-talla (ICT) ≥ 0.5 se considera de riesgo cardiometabólico aumentado. Una regla mnemotécnica simple: "la cintura debe medir menos de la mitad de la talla". El ICT ≥ 0.5 predice riesgo independientemente del IMC.' },
+    ],
+  },
+  {
+    id:'m2', icon:'🗣️', color:'#6C3483', hours:8,
+    title:'Módulo 2: Estigma y comunicación centrada en la persona',
+    desc:'Estigma del peso, lenguaje sin estigma, framework 5As, entrevista motivacional',
+    lessons:[
+      { title:'El estigma del peso: evidencia científica y consecuencias clínicas', duration:'2h',
+        body:`<p>El estigma del peso (<i>weight stigma</i>) es el conjunto de actitudes negativas, prejuicios y discriminación hacia personas con sobrepeso u obesidad. Está profundamente arraigado en la cultura médica y es uno de los <b>últimos estigmas socialmente aceptables</b>.</p>
+<p><b>Magnitud del problema:</b> El 69% de los pacientes con obesidad reporta haber experimentado estigma por parte de profesionales de salud. El 50% ha pospuesto visitas al médico por miedo a ser juzgado. Los pacientes que anticipan estigma tienen menor adherencia al tratamiento y peores resultados clínicos.</p>
+<p><b>Consecuencias fisiológicas del estigma:</b> Aumenta cortisol y marcadores inflamatorios. Genera conductas de sobrealimentación como mecanismo de coping. Incrementa el riesgo de depresión, ansiedad y trastorno por atracón. Reduce la motivación para el ejercicio. En estudios longitudinales, el estigma predictor de aumento de peso futuro —independientemente del peso inicial.</p>
+<p><b>El ciclo vicioso:</b> Estigma → vergüenza → evitación médica → diagnóstico tardío → peores resultados → más estigma. Como médicos de primer nivel, tenemos la capacidad de romper este ciclo desde la primera consulta.</p>` },
+      { title:'Lenguaje sin estigma y comunicación efectiva en obesidad', duration:'2h',
+        body:`<p>El lenguaje que usamos refleja y refuerza creencias sobre la obesidad. El <b>lenguaje de persona-primero</b> (person-first language) sitúa a la persona antes que la condición, transmitiendo que la obesidad es algo que una persona <i>tiene</i>, no algo que una persona <i>es</i>.</p>
+<p><b>Guía rápida de lenguaje:</b><br>
+❌ "el obeso de la cama 3" → ✅ "el paciente con obesidad"<br>
+❌ "tiene un problema de peso" → ✅ "tiene obesidad" (una enfermedad, no un problema)<br>
+❌ "debe comer menos y moverse más" → ✅ "exploraremos estrategias individualizadas"<br>
+❌ "no tiene disciplina" → ✅ "enfrenta barreras biológicas y ambientales"<br>
+❌ "está gordo/a" → ✅ "tiene un IMC de X" o "tiene un exceso de peso"</p>
+<p><b>Preguntar permiso:</b> Antes de abordar el peso, pregunta: <i>"¿Está bien si hablamos de su peso hoy?"</i> Esta simple frase, respaldada por el Framework 3As de Obesity Canada, aumenta la receptividad y preserva la alianza terapéutica. Si el paciente dice no, respeta su decisión y registra que se ofreció el tema.</p>
+<p><b>Explorar perspectiva del paciente:</b> Antes de dar información, explora qué sabe y qué cree. Preguntas útiles: "¿Qué sabe usted sobre la obesidad?", "¿Qué ha intentado antes?", "¿Qué factores cree que han contribuido a su peso?"</p>` },
+      { title:'El Framework 5As en la consulta de obesidad', duration:'2h',
+        body:`<p>El Framework 5As (Ask, Assess, Advise, Agree, Assist) es la herramienta de comunicación más respaldada por evidencia para el manejo de la obesidad en atención primaria. Adaptado por <b>Obesity Canada (2020)</b> específicamente para obesidad.</p>
+<p><b>1. ASK — Preguntar permiso:</b> "¿Está bien si hablamos de su peso hoy?" No suponer que el paciente quiere abordar el tema. Si acepta, explorar con preguntas abiertas.</p>
+<p><b>2. ASSESS — Evaluar:</b> Evaluar las raíces de la obesidad del paciente (factores médicos, conductuales, psicológicos, sociales). Evaluar preparación para el cambio (etapa de Prochaska). Evaluar complicaciones presentes (EOSS). <i>No dar consejos antes de completar esta evaluación.</i></p>
+<p><b>3. ADVISE — Aconsejar:</b> Dar información basada en evidencia adaptada al contexto del paciente. Enfocarse en beneficios de salud más allá del número en la báscula. Presentar todas las opciones disponibles (estilo de vida, farmacoterapia, cirugía).</p>
+<p><b>4. AGREE — Acordar:</b> Establecer un plan <i>colaborativo</i> con el paciente. Preguntar: "¿Qué cambio le parece más factible hacer esta semana?" Metas SMART: específicas, medibles, alcanzables, relevantes, con tiempo definido.</p>
+<p><b>5. ASSIST — Asistir:</b> Dar herramientas concretas: referencias, apps, grupos de apoyo, planes escritos. Programar seguimiento. Conectar con otros profesionales cuando sea necesario.</p>` },
+      { title:'Entrevista motivacional aplicada a la obesidad', duration:'2h',
+        body:`<p>La <b>Entrevista Motivacional (EM)</b> es un estilo de comunicación colaborativo y centrado en la persona para evocar y fortalecer la motivación intrínseca hacia el cambio. Meta-análisis muestran que su uso reduce el peso hasta 3 kg más que la consejería estándar en 12 meses.</p>
+<p><b>Los 4 principios de la EM (RULE):</b><br>
+<b>R</b>esistir el reflejo corrector (no dar consejos no solicitados)<br>
+<b>U</b>nderstand (entender la motivación del paciente, no imponer la tuya)<br>
+<b>L</b>istening (escucha reflexiva, no interrogatorio)<br>
+<b>E</b>mpowering (empoderar, no prescribir)</p>
+<p><b>Técnicas clave:</b> Preguntas abiertas ("¿Cómo se siente respecto a su peso?"), afirmaciones ("Ha persistido a pesar de los obstáculos"), reflexiones (repetir en otras palabras lo que dice), resúmenes (integrar lo escuchado).</p>
+<p><b>Manejar la ambivalencia:</b> La ambivalencia es normal y esperada. No combatirla — explorarla. Técnica de la balanza: "¿Qué cosas buenas ve en hacer este cambio? ¿Qué le preocupa?" La discrepancia entre dónde está el paciente y dónde quiere estar es el motor del cambio.</p>
+<p><b>Escala de importancia-confianza:</b> "Del 1 al 10, ¿qué tan importante es para usted cambiar este hábito?" y "¿Qué tan confiado se siente de poder hacerlo?" Si la importancia es alta pero la confianza baja, el trabajo es en autoeficacia. Si la importancia es baja, explorar las raíces de esa percepción.</p>` },
+    ],
+    quiz:[
+      { q:'¿Qué porcentaje de pacientes con obesidad reporta haber experimentado estigma por parte de profesionales de salud?', options:['Aproximadamente 25%','Aproximadamente 40%','Aproximadamente 69%','Aproximadamente 90%'], correct:2, exp:'El 69% de los pacientes con obesidad reporta estigma por parte de profesionales de salud (Puhl & Heuer, IJOB 2021). Esta cifra subraya que el problema no es marginal — afecta a la mayoría de los pacientes que atendemos.' },
+      { q:'El "lenguaje de persona-primero" en obesidad implica:', options:['Hablar siempre del peso antes de otros temas clínicos','Describir al paciente como "el obeso" para ser directo','Decir "persona con obesidad" en lugar de "persona obesa"','Evitar mencionar el peso completamente'], correct:2, exp:'El lenguaje de persona-primero sitúa a la persona antes que la condición: "persona con obesidad" vs "persona obesa". Transmite que la obesidad es algo que una persona tiene, no algo que una persona es, reduciendo el estigma y mejorando la alianza terapéutica.' },
+      { q:'Antes de abordar el tema del peso en consulta, el Framework 5As recomienda:', options:['Medir el IMC sin preguntar al paciente','Preguntar permiso: "¿Está bien si hablamos de su peso hoy?"','Referir directamente al nutriólogo','Dar folletos informativos sobre obesidad'], correct:1, exp:'El primer paso del Framework 5As es ASK — pedir permiso antes de abordar el peso. Esta práctica, respaldada por Obesity Canada (2020), aumenta la receptividad del paciente y preserva la alianza terapéutica. Si el paciente dice no, se respeta y se registra en el expediente.' },
+      { q:'¿Cuál de las siguientes NO es una consecuencia fisiológica del estigma del peso?', options:['Aumento de cortisol','Conductas de sobrealimentación como coping','Reducción de marcadores inflamatorios','Aumento del riesgo de depresión y ansiedad'], correct:2, exp:'El estigma del peso AUMENTA los marcadores inflamatorios, no los reduce. Sus consecuencias incluyen aumento de cortisol, conductas de sobrealimentación, mayor riesgo de depresión/ansiedad y reducción de la adherencia al tratamiento.' },
+      { q:'En la Entrevista Motivacional, "resistir el reflejo corrector" significa:', options:['No corregir errores del paciente en ningún caso','No dar consejos no solicitados ni imponer cambios','Resistir la tentación de recetar medicamentos','Evitar discutir el peso con el paciente'], correct:1, exp:'El "reflejo corrector" es la tendencia natural del médico a querer corregir, aconsejar y prescribir soluciones. En EM, esto se resiste porque impone el punto de vista del médico antes de entender el del paciente, generando resistencia y reduciendo la motivación intrínseca.' },
+      { q:'La "A" de AGREE en el Framework 5As se refiere a:', options:['Afirmar al paciente incondicionalmente','Acordar un plan colaborativo con metas SMART','Aplicar el cuestionario de Prochaska','Analizar el expediente antes de la consulta'], correct:1, exp:'AGREE = Acordar. Implica establecer con el paciente un plan colaborativo (no unilateral), con metas SMART (específicas, medibles, alcanzables, relevantes, con tiempo definido). La pregunta guía es: "¿Qué cambio le parece más factible hacer esta semana?"' },
+      { q:'Un paciente con alta importancia de cambio (8/10) pero baja confianza (3/10) en la escala de EM requiere trabajo en:', options:['Aumentar la importancia percibida del cambio','Explorar las razones por las que no quiere cambiar','Autoeficacia: identificar recursos y experiencias de éxito previas','Prescribir farmacoterapia de inmediato'], correct:2, exp:'Cuando la importancia es alta pero la confianza es baja, el trabajo terapéutico se enfoca en autoeficacia: explorar experiencias previas de éxito, identificar recursos disponibles, dividir el cambio en pasos más pequeños y celebrar avances incrementales.' },
+      { q:'¿Cuál es el efecto documentado del uso de Entrevista Motivacional en el manejo de la obesidad?', options:['Reduce el peso hasta 10 kg más que la consejería estándar','Reduce el peso hasta 3 kg más que la consejería estándar en 12 meses','Es igualmente efectiva que dar folletos informativos','Solo es efectiva en pacientes con DM2 concomitante'], correct:1, exp:'Meta-análisis de EM en obesidad muestran una reducción adicional de hasta 3 kg comparado con la consejería estándar en 12 meses. No es una diferencia enorme en términos de kilos, pero sí en adherencia, satisfacción y relación médico-paciente a largo plazo.' },
+      { q:'En el 5As, la "A" de ASSESS recomienda evaluar TODO LO SIGUIENTE excepto:', options:['Raíces de la obesidad: factores médicos, conductuales y psicosociales','Etapa de preparación para el cambio (Prochaska)','La dieta que el médico considera ideal para el paciente','Complicaciones presentes (estadio EOSS)'], correct:2, exp:'ASSESS evalúa al paciente, no las preferencias del médico. Se evalúan las raíces individuales de la obesidad, la preparación para el cambio y las complicaciones actuales. La dieta "ideal según el médico" es un ejemplo de reflejo corrector que el 5As busca evitar en esta etapa.' },
+      { q:'¿Cuál es la pregunta que mejor ejemplifica la "A" de AGREE en 5As?', options:['"¿Qué sabe usted sobre la obesidad?"','"¿Está bien si hablamos de su peso?"','"¿Qué cambio le parece más factible hacer esta semana?"','"¿Cuánto pesa actualmente?"'], correct:2, exp:'AGREE implica acordar un plan colaborativo. La pregunta "¿Qué cambio le parece más factible hacer esta semana?" es el prototipo de AGREE: sitúa al paciente como agente activo, busca su perspectiva sobre viabilidad, y establece una meta de corto plazo definida por el propio paciente.' },
+    ],
+  },
+  {
+    id:'m3', icon:'🥗', color:'#117A65', hours:9,
+    title:'Módulo 3: Modificaciones del estilo de vida',
+    desc:'Prescripción dietética, actividad física FITT-VP, manejo conductual y sueño',
+    lessons:[
+      { title:'Evaluación nutricional y prescripción dietética basada en evidencia', duration:'2h',
+        body:`<p>El tratamiento dietético de la obesidad tiene décadas de evidencia y numerosos mitos superados. La premisa fundamental es el <b>déficit energético sostenible</b>: reducir la ingesta calórica total de manera que sea fisiológicamente tolerable y emocionalmente viable para el paciente.</p>
+<p><b>¿Cuánto déficit?</b> Un déficit de 500-750 kcal/día se asocia con pérdida de 0.5-0.75 kg/semana teórica. En la práctica, la pérdida real es menor por la adaptación metabólica. La restricción muy severa (< 800 kcal/día) puede acelerar la pérdida a corto plazo pero aumenta la pérdida de músculo y el rebote posterior.</p>
+<p><b>Patrones dietéticos con evidencia:</b> La evidencia actual NO favorece un macronutriente específico. Las dietas mediterránea, DASH, baja en carbohidratos y baja en grasas muestran eficacia similar a 2 años cuando la adherencia es comparable. El mejor patrón dietético es <b>el que el paciente puede sostener</b>.</p>
+<p><b>Alimentos ultraprocesados (AUP):</b> El NOVA Group los clasifica como formulaciones industriales con poco o ningún alimento entero. Estudios muestran que una dieta alta en AUP lleva a consumir ~500 kcal/día más de forma no consciente (Hall et al., Cell Metabolism, 2019). Reducir AUP es probablemente la intervención dietética más impactante en primer nivel.</p>
+<p><b>En la consulta:</b> Un recordatorio de 24h abreviado toma 3-4 minutos y da información valiosa. Preguntas clave: ¿Qué come en la noche? ¿Bebidas azucaradas? ¿Come frente a pantalla? ¿Come rápido? ¿Salta el desayuno? Cada respuesta revela intervenciones específicas.</p>` },
+      { title:'Prescripción de actividad física: el principio FITT-VP', duration:'2h',
+        body:`<p>La actividad física es <b>el predictor más fuerte de mantenimiento del peso</b> a largo plazo, superando a las modificaciones dietéticas. El beneficio cardiovascular y metabólico del ejercicio ocurre independientemente de la pérdida de peso.</p>
+<p><b>Principio FITT-VP:</b><br>
+<b>F</b>recuencia: 5 días/semana para ejercicio aeróbico, 2-3 para resistencia<br>
+<b>I</b>ntensidad: Moderada (hablar con dificultad leve, 60-70% FCmax) como base, avanzar a vigorosa<br>
+<b>T</b>ipo: Aeróbico (caminar, bicicleta, nadar) + resistencia muscular<br>
+<b>T</b>iempo: 150-300 min/semana moderado O 75-150 min/semana vigoroso<br>
+<b>V</b>olumen: Incrementar gradualmente (regla del 10%/semana)<br>
+<b>P</b>rogresión: Aumentar cuando el ejercicio actual se sienta "cómodo"</p>
+<p><b>Barreras más comunes y cómo abordarlas:</b> "No tengo tiempo" → caminar en trayectos. "Tengo dolor de rodillas" → ejercicio en agua o bicicleta. "Me da vergüenza" → ejercicio en casa inicialmente. "No tengo dinero" → parques, escaleras, videos gratuitos.</p>
+<p><b>Prescripción concreta:</b> Da minutos, no solo "haz ejercicio". Un paciente sedentario puede comenzar con 10 min/día 3 días/semana y aumentar gradualmente. La meta de 10,000 pasos/día es una buena referencia inicial. Los dispositivos wearables aumentan la actividad hasta 40 min/semana.</p>` },
+      { title:'Manejo conductual y cambio de comportamiento en obesidad', duration:'2h',
+        body:`<p>Las intervenciones conductuales son el pilar del tratamiento de la obesidad y potencian el efecto de cualquier otra intervención. Su objetivo es modificar pensamientos, emociones y conductas que perpetúan el exceso de peso.</p>
+<p><b>Componentes de las intervenciones conductuales de alta eficacia:</b> Automonitoreo (registrar alimentos, ejercicio, emociones), control de estímulos (no tener AUP en casa, comer solo en la mesa), plan de comidas con estructura, manejo del estrés, resolución de problemas, prevención de recaídas.</p>
+<p><b>Trastorno por atracón (BED - Binge Eating Disorder):</b> Presente en el 30-40% de personas que buscan tratamiento. Se caracteriza por episodios recurrentes de ingesta excesiva sin conductas compensatorias. La Binge Eating Scale (BES) es un instrumento de tamizaje validado. El BED requiere abordaje psicológico especializado —las dietas restrictivas pueden empeorarlo.</p>
+<p><b>Comida emocional:</b> El 70% de las personas come en respuesta a emociones, no hambre física. Identificar el "gatillo emocional" y desarrollar estrategias de coping alternativas (respiración, caminata, llamar a alguien) es parte del tratamiento conductual.</p>
+<p><b>Sueño y el ciclo ingesta-descanso:</b> La privación de sueño activa la vía endocannabinoide, aumentando la preferencia por alimentos calóricos. Un paciente que duerme 5 horas consume en promedio 300 kcal/día más. Prescribir 7-9 horas de sueño es tan legítimo como prescribir ejercicio.</p>` },
+      { title:'Sueño, estrés y peso: intervenciones específicas', duration:'1.5h',
+        body:`<p>El sueño insuficiente y el estrés crónico son impulsores poderosos y frecuentemente ignorados del exceso de peso. Forman parte de lo que se denomina <b>"las raíces de la obesidad"</b> en el modelo de Obesity Canada.</p>
+<p><b>Mecanismos del sueño insuficiente sobre el peso:</b> Reducción de leptina (↓saciedad), aumento de ghrelina (↑hambre), activación del sistema endocannabinoide (↑apetito hedónico), reducción de la actividad física, mayor tiempo disponible para comer, peor función ejecutiva para tomar decisiones saludables.</p>
+<p><b>Higiene del sueño en consulta:</b> Horario regular de sueño-vigilia, habitación oscura y fresca (18-20°C), evitar pantallas 1h antes de dormir, no cafeína después de las 14h, no alcohol como inductor del sueño (fragmenta el sueño profundo), tratar el SAOS (ver Módulo 5).</p>
+<p><b>Estrés crónico y cortisol:</b> El cortisol elevado: estimula el apetito por azúcares y grasas, favorece el depósito de grasa visceral, aumenta la resistencia a la insulina, y reduce la actividad física espontánea. Estrategias de reducción del estrés con evidencia en obesidad: mindfulness-based interventions, actividad física (reduce cortisol), conexión social, psicoterapia.</p>` },
+      { title:'Estrategias de mantenimiento y prevención del rebote', duration:'1.5h',
+        body:`<p>El <b>mantenimiento del peso</b> es el desafío más difícil del tratamiento de la obesidad. Los estudios muestran que el 80% del peso perdido se recupera en los primeros 2-5 años sin estrategias activas de mantenimiento.</p>
+<p><b>Predictores del mantenimiento exitoso (Registro Nacional de Control del Peso, NWCR):</b> Alta actividad física (~1 hora/día), desayuno diario, automonitoreo frecuente del peso (al menos 1 vez/semana), consistencia en los hábitos entre semana y fines de semana, seguimiento médico regular.</p>
+<p><b>La trampa de las "vacaciones del tratamiento":</b> Suspender farmacoterapia, actividad física o seguimiento cuando se alcanza el objetivo lleva inevitablemente al rebote. La obesidad debe tratarse como la HTA o DM2: de forma continua e indefinida, ajustando la intensidad según la fase.</p>
+<p><b>Comunicar esto desde el inicio:</b> Antes de comenzar el tratamiento, explica: "El tratamiento de la obesidad es indefinido, como el de la hipertensión. El objetivo no es llegar a un número y parar, sino mantener los cambios de por vida. El éxito se mide en calidad de vida y salud metabólica, no solo en kilos." Esta conversación, aunque difícil, previene la decepción y el abandono.</p>` },
+    ],
+    quiz:[
+      { q:'¿Cuál es el déficit calórico diario recomendado para una pérdida de peso sostenible?', options:['100-200 kcal/día','500-750 kcal/día','1000-1500 kcal/día','Ayuno completo 2 días a la semana'], correct:1, exp:'Un déficit de 500-750 kcal/día genera teóricamente una pérdida de 0.5-0.75 kg/semana. La restricción muy severa (< 800 kcal/día) puede acelerar la pérdida inicial pero aumenta la pérdida muscular, la adaptación metabólica y el riesgo de rebote.' },
+      { q:'¿Qué patrón dietético específico tiene MAYOR evidencia como superior a los demás para pérdida de peso?', options:['La dieta mediterránea','La dieta baja en carbohidratos','La dieta alta en proteínas','Ninguno: la adherencia importa más que el tipo de dieta'], correct:3, exp:'La evidencia actual NO favorece un macronutriente o patrón dietético específico sobre otro a 2 años cuando la adherencia es comparable. La dieta mediterránea, DASH, baja en carbohidratos y baja en grasas muestran eficacia similar. El mejor patrón es el que el paciente puede sostener.' },
+      { q:'Según el principio FITT, ¿cuántos minutos de actividad aeróbica moderada a la semana se recomiendan para pérdida de peso?', options:['60-90 minutos','100-120 minutos','150-300 minutos','500 minutos o más'], correct:2, exp:'Las guías AHA/ACC 2023 recomiendan 150-300 minutos/semana de actividad moderada (o 75-150 de vigorosa) para beneficios metabólicos. La actividad física es el predictor más fuerte de mantenimiento del peso a largo plazo, superando las modificaciones dietéticas.' },
+      { q:'El Trastorno por Atracón (BED) está presente en qué porcentaje de personas que buscan tratamiento para la obesidad?', options:['5-10%','15-20%','30-40%','50-60%'], correct:2, exp:'El BED está presente en el 30-40% de las personas que buscan tratamiento para obesidad. Las dietas muy restrictivas pueden empeorarlo. Su tratamiento requiere abordaje psicológico especializado. El instrumento de tamizaje validado es la Binge Eating Scale (BES).' },
+      { q:'¿Cuál de los siguientes NO es un mecanismo por el que el sueño insuficiente favorece el exceso de peso?', options:['Reducción de leptina','Aumento de ghrelina','Activación del sistema endocannabinoide','Aumento de adiponectina'], correct:3, exp:'La privación de sueño REDUCE la adiponectina (adipoquina antiinflamatoria). Sus efectos sobre el peso incluyen: reducción de leptina, aumento de ghrelina, activación endocannabinoide (↑apetito hedónico), peor función ejecutiva y mayor tiempo disponible para comer.' },
+      { q:'¿Cuál es el hallazgo del estudio Hall et al. (Cell Metabolism, 2019) sobre alimentos ultraprocesados?', options:['Son nutricionalmente equivalentes a alimentos sin procesar si las calorías son iguales','Una dieta alta en AUP lleva a consumir ~500 kcal/día más de forma no consciente','Los AUP solo afectan el peso en personas con predisposición genética','Los AUP tienen el mismo efecto saciante que los alimentos enteros'], correct:1, exp:'Hall et al. (2019) en un diseño cruzado aleatorizado encontró que los participantes consumían ~500 kcal/día más cuando se les ofrecía ad libitum una dieta alta en alimentos ultraprocesados vs. una dieta de alimentos mínimamente procesados, a pesar de que ambas dietas estaban igualadas en presentación, calorías por gramo y nutrientes.' },
+      { q:'¿Qué intervención conductual tiene la evidencia más sólida para el mantenimiento del peso a largo plazo?', options:['Dietas muy restrictivas cíclicas','Automonitoreo regular del peso y alta actividad física','Suplementos naturales para el metabolismo','Ayunos prolongados mensuales'], correct:1, exp:'El Registro Nacional de Control del Peso (NWCR, EE.UU., >10,000 participantes) identifica el automonitoreo frecuente del peso y la alta actividad física (~60 min/día) como los predictores más consistentes del mantenimiento exitoso del peso a largo plazo.' },
+      { q:'La "regla del 10%" en prescripción de ejercicio se refiere a:', options:['Iniciar con 10% del peso objetivo como meta','Aumentar el volumen de ejercicio máximo un 10% por semana','Reducir calorías un 10% adicional cada mes','El 10% de los pacientes responde bien al ejercicio sin dieta'], correct:1, exp:'La regla del 10% indica aumentar el volumen total de ejercicio (distancia, tiempo, frecuencia) no más del 10% por semana para evitar lesiones y sobreentrenamiento. Es especialmente importante en pacientes sedentarios que inician actividad física.' },
+      { q:'¿Cuál de las siguientes preguntas de un recordatorio de 24h es MÁS relevante para identificar oportunidades de mejora en obesidad?', options:['"¿Cuántas veces al día come verduras?"','"¿Qué come en la noche?" (alimentación nocturna)','"¿Toma vitaminas o suplementos?"','"¿A qué horas toma el medicamento?"'], correct:1, exp:'La alimentación nocturna (night eating) es un patrón muy prevalente en personas con obesidad: ingesta calórica excesiva después de las 8-9 pm, frecuentemente relacionada con estrés, soledad o hábito televisivo. Identificarlo en el recordatorio de 24h revela una intervención conductual de alto impacto.' },
+      { q:'Un paciente comenta: "Llegué a mi meta de peso, ya puedo dejar de tomar el medicamento y el seguimiento". La respuesta más apropiada es:', options:['Apoyar la decisión — llegar a la meta es el objetivo del tratamiento','Explicar que la obesidad requiere tratamiento continuo como HTA o DM2','Reducir la dosis del medicamento gradualmente y dar de alta en 3 meses','Referir al endocrinólogo para continuar el seguimiento'], correct:1, exp:'La obesidad es una enfermedad crónica recurrente. Suspender el tratamiento al alcanzar la meta lleva al rebote en el 80% de los casos a 2-5 años. La conversación sobre la naturaleza crónica del tratamiento debe darse desde la primera consulta, comparando con HTA o DM2.' },
+    ],
+  },
+  {
+    id:'m4', icon:'💊', color:'#C96B10', hours:9,
+    title:'Módulo 4: Farmacoterapia anti-obesidad',
+    desc:'GLP-1 agonistas, tirzepatida, orlistat, bupropión/naltrexona — indicaciones y monitoreo',
+    lessons:[
+      { title:'GLP-1 agonistas: mecanismo, indicaciones y contraindicaciones', duration:'2h',
+        body:`<p>Los agonistas del receptor de GLP-1 (glucagon-like peptide-1) representan el avance farmacológico más importante en el tratamiento de la obesidad en los últimos 30 años. Su mecanismo central es la <b>reducción del apetito</b> mediante acción directa sobre los centros hipotalámicos del hambre y la saciedad.</p>
+<p><b>Mecanismo de acción en obesidad:</b> Activación de receptores GLP-1R en el hipotálamo → reducción del apetito y aumento de la saciedad. Enlentecimiento del vaciamiento gástrico → mayor saciedad posprandial. Reducción de la preferencia por alimentos calóricos (efecto hedónico). Sin el efecto GLP-1 endógeno de liberar insulina a dosis farmacológicas (no causa hipoglucemia en no-diabéticos).</p>
+<p><b>Indicaciones FDA/COFEPRIS para obesidad:</b> IMC ≥ 30 kg/m² SIN comorbilidades, O IMC ≥ 27 kg/m² CON al menos una comorbilidad relacionada con el peso (DM2, HTA, dislipidemia, SAOS, enfermedad cardiovascular establecida).</p>
+<p><b>Contraindicaciones absolutas:</b> Antecedente personal o familiar de carcinoma de células C de tiroides (CEF/MTC) — preguntar siempre. Neoplasia endocrina múltiple tipo 2A o 2B (MEN2). Embarazo y lactancia. Pancreatitis activa o historia de pancreatitis recurrente (contraindicación relativa para algunos).</p>
+<p><b>Precauciones:</b> Retinopatía diabética con riesgo de progresión (con semaglutida alta dosis en DM2). Gastroparesia establecida. Historia de obstrucción intestinal.</p>` },
+      { title:'Semaglutida y liraglutida: evidencia clínica y protocolo de prescripción', duration:'2h',
+        body:`<p><b>Semaglutida 2.4 mg (Wegovy®):</b> Aprobada por FDA (2021) y COFEPRIS para tratamiento de obesidad. Administración SC semanal. El estudio STEP 1 (n=1961, 68 semanas) demostró -14.9% de peso corporal vs -2.4% con placebo. El 86.4% de participantes perdió ≥5% y el 69.1% perdió ≥10%.</p>
+<p><b>Esquema de escalada de semaglutida:</b><br>
+Semanas 1-4: 0.25 mg SC semanal (dosis de inicio)<br>
+Semanas 5-8: 0.5 mg SC semanal<br>
+Semanas 9-12: 1.0 mg SC semanal<br>
+Semanas 13-16: 1.7 mg SC semanal<br>
+Semana 17 en adelante: 2.4 mg SC semanal (dosis de mantenimiento)<br>
+<b>Nota:</b> Si la tolerabilidad es pobre, la dosis puede mantenerse por 4 semanas adicionales antes de escalar.</p>
+<p><b>Liraglutida 3.0 mg (Saxenda®):</b> Primera GLP-1 aprobada para obesidad (FDA 2014). Administración SC diaria. Estudio SCALE Obesity: -8.4% vs -2.8% con placebo a 56 semanas. Menor eficacia que semaglutida pero con más años de experiencia clínica.</p>
+<p><b>Consideraciones prácticas:</b> La náusea (40-44%) es el efecto adverso más frecuente y la principal causa de descontinuación en las primeras semanas. Se minimiza con: escalada lenta, administrar 30 min antes de la comida más pesada o en ayuno, reducir el tamaño de porciones, buena hidratación. La náusea disminuye significativamente después de las primeras 4-8 semanas.</p>` },
+      { title:'Tirzepatida: el agonista dual GIP+GLP-1', duration:'2h',
+        body:`<p>Tirzepatida (Mounjaro® para DM2 / Zepbound® para obesidad) es el primer agonista dual de los receptores GIP (glucose-dependent insulinotropic polypeptide) y GLP-1. Representa el mayor avance farmacológico en eficacia para la obesidad hasta la fecha.</p>
+<p><b>Mecanismo de acción dual:</b> La activación del receptor GIP potencia el efecto del GLP-1 en la reducción del apetito y el metabolismo lipídico. Los estudios en animales sugieren que el GIP actúa sinérgicamente con el GLP-1 en el tejido adiposo (aumento de la lipolisis), hígado y músculo.</p>
+<p><b>Estudio SURMOUNT-1 (n=2539, 72 semanas):</b> Las dosis de 10 mg y 15 mg lograron -19.5% y -20.9% de peso corporal respectivamente vs -3.1% con placebo. El 56.7% de participantes con 15 mg perdió ≥20% del peso — cifra que históricamente solo se lograba con cirugía bariátrica.</p>
+<p><b>Esquema de escalada:</b><br>
+Semanas 1-4: 2.5 mg SC semanal<br>
+Semanas 5-8: 5 mg SC semanal<br>
+Semanas 9-12: 7.5 mg SC semanal (opcional detenerse aquí)<br>
+Semanas 13-16: 10 mg SC semanal<br>
+Semanas 17-20: 12.5 mg SC semanal<br>
+Semana 21+: 15 mg SC semanal (dosis máxima)</p>
+<p><b>Monitoreo adicional:</b> Amilasa y lipasa al inicio y si hay dolor abdominal. Frecuencia cardíaca (puede aumentar). Igual que semaglutida: preguntar historia familiar de CEF/MEN2 antes de prescribir.</p>` },
+      { title:'Orlistat y bupropión/naltrexona: alternativas farmacológicas', duration:'1.5h',
+        body:`<p><b>Orlistat 120 mg (Xenical®):</b> Inhibidor de las lipasas pancreática y gástrica. Bloquea la absorción de ~30% de la grasa de la dieta. Administración: 120 mg tres veces al día con cada comida que contenga grasa.</p>
+<p>Eficacia: -3-5% de peso corporal vs placebo a 1 año. Es significativamente menos eficaz que los GLP-1 agonistas. <b>Efectos adversos digestivos</b> (esteatorrea, urgencia fecal, manchas de grasa) son frecuentes y a menudo limitantes — ocurren especialmente si el paciente consume comidas con alta grasa. Puede reducir la absorción de vitaminas liposolubles A, D, E, K: suplementar 2 horas después de la dosis.</p>
+<p><b>Bupropión/naltrexona (Contrave® / Mysimba®):</b> Combinación de un antidepresivo/antitabaco (bupropión 360 mg/día) con un antagonista opioide (naltrexona 32 mg/día). Actúa sobre la vía mesolímbica reduciendo el apetito hedónico (el comer por placer).</p>
+<p>Eficacia: -5-7% de peso corporal a 56 semanas. Esquema de titulación en 4 semanas (1 tab/día → 1 BID → 2 AM + 1 PM → 2 BID). <b>Contraindicaciones:</b> epilepsia/convulsiones, trastorno bipolar no tratado, anorexia/bulimia, uso de IMAOs en las últimas 2 semanas, dolor crónico que requiere opioides (la naltrexona bloquea el efecto analgésico).</p>` },
+      { title:'Monitoreo, efectos adversos y discontinuación de farmacoterapia', duration:'1.5h',
+        body:`<p>El seguimiento estructurado de la farmacoterapia anti-obesidad es fundamental para maximizar la eficacia y minimizar los efectos adversos. La tasa de discontinuación por efectos adversos puede alcanzar 20-30% sin manejo adecuado.</p>
+<p><b>Cronograma de seguimiento mínimo para GLP-1 agonistas:</b><br>
+Mes 1: Tolera la titulación inicial, náuseas manejables, educación sobre técnica de inyección<br>
+Mes 3: Evaluación de respuesta (%TWL): ≥5% = responder, continuar. < 5% = re-evaluar adherencia, explorar barreras<br>
+Mes 6: Evaluación intermedia, ajuste de otros factores (sueño, estrés, dieta)<br>
+Mes 12: Evaluación completa de eficacia y seguridad, decisión de continuar/cambiar</p>
+<p><b>Manejo de efectos adversos frecuentes:</b><br>
+Náuseas: Alimento pequeño antes de la inyección, hidratación, evitar comidas grasas/condimentadas, jengibre.<br>
+Estreñimiento (frecuente con tirzepatida): Incrementar fibra e hidratación, considerar polietilenglicol si es severo.<br>
+Vómito: Puede indicar que la dosis se escaló rápido — regresar a dosis anterior por 4 semanas más.</p>
+<p><b>Criterio de "no respondedor":</b> Pérdida < 5% del peso a los 3 meses con adherencia confirmada. En este caso: revisar diagnóstico diferencial (hipotiroidismo, Cushing, medicamentos que suben de peso), considerar cambiar a fármaco más eficaz, o referir a endocrinología.</p>
+<p><b>Discontinuación y rebote:</b> Al suspender semaglutida, el 2/3 del peso perdido se recupera en 12 meses (estudio STEP 1 extensión). Comunicar esto desde el inicio. El tratamiento es indefinido mientras haya indicación y tolerabilidad.</p>` },
+    ],
+    quiz:[
+      { q:'¿Cuál es la indicación aprobada para GLP-1 agonistas en obesidad (sin DM2)?', options:['IMC ≥ 25 kg/m²','IMC ≥ 27 con comorbilidad O IMC ≥ 30 sin comorbilidad','IMC ≥ 35 kg/m² con al menos 2 comorbilidades','Solo en pacientes que han fracasado a dieta + ejercicio por 6 meses'], correct:1, exp:'La indicación aprobada es IMC ≥ 30 kg/m² sin comorbilidades, O IMC ≥ 27 kg/m² con al menos una comorbilidad relacionada con el peso (DM2, HTA, dislipidemia, SAOS, o enfermedad cardiovascular establecida).' },
+      { q:'¿Cuál es la CONTRAINDICACIÓN ABSOLUTA más importante antes de prescribir cualquier GLP-1 agonista?', options:['Diabetes tipo 2 establecida','HbA1c > 8%','Antecedente personal o familiar de carcinoma de células C de tiroides (CEF/MTC)','IMC > 40 kg/m²'], correct:2, exp:'El antecedente personal o familiar de carcinoma de células C (medulary thyroid carcinoma, MTC) y la neoplasia endocrina múltiple tipo 2 (MEN2A/2B) son contraindicaciones absolutas para todos los GLP-1 y GIP/GLP-1 agonistas. Siempre preguntar historia familiar de cáncer de tiroides.' },
+      { q:'¿Cuánto peso corporal perdieron en promedio los participantes con semaglutida 2.4 mg en el estudio STEP 1?', options:['5-7%','9-11%','14-15%','20-22%'], correct:2, exp:'El estudio STEP 1 (n=1961, 68 semanas) demostró una pérdida media de -14.9% del peso corporal con semaglutida 2.4 mg SC semanal, vs -2.4% con placebo. El 86.4% perdió ≥5% y el 69.1% perdió ≥10%.' },
+      { q:'¿Cuál es la dosis de INICIO de semaglutida en el esquema de escalada estándar?', options:['0.1 mg SC semanal','0.25 mg SC semanal','0.5 mg SC semanal','1.0 mg SC semanal'], correct:1, exp:'La dosis inicial de semaglutida es 0.25 mg SC semanal por 4 semanas. Esta dosis no tiene efecto terapéutico significativo sobre el peso — es exclusivamente una dosis de inicio para minimizar náuseas durante la introducción. El esquema completo tarda 16 semanas en llegar a la dosis de mantenimiento de 2.4 mg.' },
+      { q:'El estudio SURMOUNT-1 con tirzepatida 15 mg demostró que ¿qué porcentaje de participantes perdió ≥20% de su peso?', options:['12%','28%','57%','78%'], correct:2, exp:'El estudio SURMOUNT-1 (n=2539, 72 semanas) mostró que el 56.7% de los participantes con tirzepatida 15 mg perdió ≥20% del peso corporal vs < 2% con placebo. Esta cifra históricamente solo se lograba con cirugía bariátrica.' },
+      { q:'¿Cuál es el mecanismo primario por el que el orlistat produce pérdida de peso?', options:['Agonismo de receptores GLP-1 en el hipotálamo','Reducción del apetito hedónico a través de la vía mesolímbica','Inhibición de lipasas pancreática y gástrica, bloqueando absorción de ~30% de la grasa de la dieta','Inhibición de la recaptación de serotonina y norepinefrina'], correct:2, exp:'Orlistat es un inhibidor de las lipasas pancreática y gástrica. Al bloquear estas enzimas, impide la hidrólisis de triglicéridos de la dieta, reduciendo la absorción de grasa en ~30%. Esto genera un déficit calórico pero con frecuentes efectos adversos gastrointestinales (esteatorrea, urgencia fecal).' },
+      { q:'La combinación bupropión/naltrexona está CONTRAINDICADA en pacientes con:', options:['Depresión mayor tratada con ISRS','HTA leve controlada','Epilepsia o antecedente de convulsiones','Reflujo gastroesofágico'], correct:2, exp:'Bupropión reduce el umbral convulsivo, por lo que la epilepsia y el antecedente de convulsiones son contraindicaciones absolutas. Otras contraindicaciones incluyen: trastorno bipolar no tratado, anorexia/bulimia nerviosa, uso de IMAOs en < 2 semanas, y dolor crónico que requiere opioides (la naltrexona bloquea el efecto analgésico).' },
+      { q:'¿Qué porcentaje del peso perdido con semaglutida se recupera al año de suspenderla?', options:['10-15%','25-30%','50-60%','Aproximadamente 2/3 del peso perdido'], correct:3, exp:'Según la extensión de STEP 1 (1 año post-suspensión), los participantes recuperaron aproximadamente 2/3 del peso perdido. Este hallazgo subraya que la obesidad es una enfermedad crónica que requiere tratamiento indefinido, igual que la HTA o la DM2.' },
+      { q:'Un paciente con semaglutida 0.5 mg presenta náuseas frecuentes (7/10 de intensidad). ¿Cuál es la conducta más adecuada?', options:['Suspender la semaglutida por náuseas intratables','Aumentar rápidamente a 1.0 mg para "superar" las náuseas','Mantener la dosis de 0.5 mg por 4 semanas adicionales antes de escalar','Cambiar de semaglutida a tirzepatida'], correct:2, exp:'Las náuseas con GLP-1 agonistas generalmente disminuyen significativamente a las 4-8 semanas de una dosis estable. Si son intensas, la conducta correcta es mantener (no aumentar) la dosis por 4 semanas adicionales, con educación sobre medidas de mitigación (comer pequeñas porciones, hidratación, evitar comidas grasas). Solo se justifica descontinuar si son intratables.' },
+      { q:'¿Cuál es el criterio de "no respondedor" a farmacoterapia anti-obesidad a los 3 meses?', options:['Pérdida < 2% del peso inicial','Pérdida < 5% del peso inicial con adherencia confirmada','Pérdida < 10% del peso inicial','El paciente sigue comiendo alimentos procesados'], correct:1, exp:'El criterio estándar de "no respondedor" es una pérdida < 5% del peso inicial a los 3 meses de tratamiento a dosis estable, con adherencia confirmada. En este caso se debe revisar diagnóstico diferencial, considerar escalar la dosis, cambiar el fármaco o referir a especialista.' },
+    ],
+  },
+  {
+    id:'m5', icon:'🫀', color:'#C0392B', hours:8,
+    title:'Módulo 5: Comorbilidades y casos especiales',
+    desc:'Obesidad y DM2, SAOS, salud mental, MASLD, HTA y dislipidemia',
+    lessons:[
+      { title:'Obesidad y diabetes tipo 2: del diagnóstico a la remisión', duration:'2h',
+        body:`<p>La obesidad y la DM2 comparten una fisiopatología común: la resistencia a la insulina mediada por adiposidad visceral. El manejo integrado de ambas condiciones es más efectivo que tratarlas por separado.</p>
+<p><b>Diagnóstico de DM2:</b> Glucosa en ayuno ≥ 126 mg/dL en dos ocasiones, O glucosa a las 2h en PTOG ≥ 200 mg/dL, O HbA1c ≥ 6.5%, O glucosa casual ≥ 200 mg/dL con síntomas. La prediabetes se diagnostica con: glucosa 100-125 mg/dL en ayuno, o HbA1c 5.7-6.4%, o glucosa 140-199 mg/dL en PTOG.</p>
+<p><b>La remisión de DM2 es posible:</b> El estudio DiRECT (Lancet 2018) demostró que con pérdida de ≥15 kg, el 86% de pacientes con DM2 de diagnóstico reciente (< 6 años) logró remisión completa (HbA1c < 6.5% sin fármacos). Los GLP-1 y tirzepatida además tienen efectos directos sobre las células beta pancreáticas.</p>
+<p><b>Elección de hipoglucemiante en DM2 + obesidad:</b> Los algoritmos actuales (ADA 2024, ALAD 2023) priorizan los GLP-1 agonistas y los inhibidores de SGLT-2 como fármacos de primera línea en DM2 con obesidad, por encima de la metformina sola. La tirzepatida tiene indicación tanto para DM2 como para obesidad.</p>
+<p><b>Hipoglucemia:</b> Los GLP-1 agonistas en monoterapia (sin insulina ni sulfonilurea) NO causan hipoglucemia clínicamente significativa. Esta es una ventaja importante que diferencia a estos fármacos de las sulfonilureas.</p>` },
+      { title:'Obesidad y síndrome de apnea obstructiva del sueño (SAOS)', duration:'2h',
+        body:`<p>El SAOS y la obesidad forman un círculo vicioso: la obesidad causa SAOS por depósito de grasa faríngea; el SAOS aumenta la resistencia a la insulina, eleva el cortisol y favorece el aumento de peso. El manejo de uno impacta directamente al otro.</p>
+<p><b>Tamizaje con STOP-BANG:</b> 8 preguntas binarias (S: Snoring, T: Tired, O: Observed apnea, P: Pressure, B: BMI, A: Age, N: Neck, G: Gender). Score ≥ 3 tiene sensibilidad del 93% para SAOS moderado-severo. No necesitas polisomnografía para referir — el STOP-BANG solo justifica la referencia a medicina del sueño.</p>
+<p><b>Consecuencias del SAOS no tratado:</b> El AHI (índice de apnea-hipopnea) > 15/hora duplica el riesgo cardiovascular a 10 años. El SAOS severo se asocia con HTA resistente, arritmias nocturnas (FA), hipertensión pulmonar y exceso de mortalidad. La hipoxia intermitente nocturna activa el sistema nervioso simpático y el estrés oxidativo.</p>
+<p><b>Efecto de la pérdida de peso sobre el SAOS:</b> Cada 10% de pérdida de peso reduce el AHI en ~26%. Con la pérdida de peso lograda con GLP-1/tirzepatida (15-21%), muchos pacientes con SAOS moderado pueden reducir significativamente la severidad o incluso remitir el SAOS. Sin embargo, el CPAP no debe suspenderse hasta confirmar la mejoría con nueva evaluación.</p>` },
+      { title:'Obesidad y salud mental: depresión, ansiedad y trastorno por atracón', duration:'2h',
+        body:`<p>Las condiciones de salud mental y la obesidad se retroalimentan bidireccional y constantemente. El médico de primer nivel es el punto de contacto más frecuente para ambas —y a menudo el único.</p>
+<p><b>Depresión y obesidad:</b> La depresión aumenta 40% el riesgo de obesidad y la obesidad aumenta 55% el riesgo de depresión (meta-análisis, J Affect Disord, 2012). Los mecanismos incluyen: cortisol elevado, sedentarismo, alteraciones del sueño, sobrealimentación emocional y efectos directos de las adipoquinas sobre el sistema nervioso central.</p>
+<p><b>Instrumentos de tamizaje:</b> PHQ-9 para depresión (puntuación ≥ 10 = depresión moderada-severa, requiere acción), GAD-7 para ansiedad, BES (Binge Eating Scale) para trastorno por atracón. Aplica PHQ-9 en cada nuevo paciente con obesidad.</p>
+<p><b>Interacciones fármaco-peso:</b> Varios psicofármacos causan aumento de peso significativo (mirtazapina, olanzapina, clozapina, valproato, litio). Al prescribirlos o al evaluar obesidad, considera estos fármacos como posibles contribuidores. Discutir con psiquiatría alternativas más neutras en peso (bupropión, aripiprazol, topiramate) cuando sea clínicamente posible.</p>
+<p><b>Señal de alerta en GLP-1 agonistas:</b> Las guías de 2023 añadieron advertencia sobre pensamientos suicidas como posible efecto adverso. La evidencia es débil y causal no establecida, pero es prudente preguntar sobre bienestar mental en cada visita de seguimiento.</p>` },
+      { title:'Obesidad y MASLD, HTA, dislipidemia: manejo integrado', duration:'2h',
+        body:`<p><b>MASLD (Metabolic dysfunction-Associated Steatotic Liver Disease):</b> Antes llamada NAFLD/NASH, es la enfermedad hepática más frecuente mundialmente. Afecta al 25-30% de la población general y hasta 80% de las personas con obesidad mórbida. Presenta un espectro: esteatosis simple → MASH (con inflamación) → fibrosis → cirrosis → CHC.</p>
+<p>Los GLP-1 agonistas y el tirzepatida tienen evidencia creciente de reducción de la inflamación hepática y fibrosis en MASH. La pérdida de peso ≥ 10% es el tratamiento más efectivo actualmente disponible. Tamizaje: ALT/AST elevadas, ecografía abdominal, FIB-4 score para evaluar fibrosis (FIB-4 ≥ 2.67 = fibrosis avanzada, referir a hepatología).</p>
+<p><b>HTA y obesidad:</b> Por cada 10 kg de exceso de peso, la PA sistólica aumenta 3-5 mmHg. La pérdida de peso de 5-10 kg reduce la PA sistólica 5-10 mmHg — equivalente a agregar un antihipertensivo. El IECA/ARAII son los antihipertensivos de primera elección en obesidad por su efecto cardioprotector y de preservación renal.</p>
+<p><b>Dislipidemia en obesidad:</b> El patrón típico es la "dislipidemia aterogénica": triglicéridos altos (>150), HDL bajo (<40H/<50M), LDL con partículas pequeñas y densas (más aterogénicas). La pérdida de peso mejora todos los parámetros. Las estatinas son el tratamiento estándar para el LDL elevado; los fibratos para triglicéridos muy altos (>500 mg/dL por riesgo de pancreatitis).</p>` },
+    ],
+    quiz:[
+      { q:'¿Qué porcentaje de pérdida de peso permitió la remisión de DM2 en el 86% de los pacientes del estudio DiRECT?', options:['5%','10%','15%','20%'], correct:2, exp:'El estudio DiRECT (Lancet 2018, n=298) demostró que con pérdida ≥15 kg, el 86% de los participantes con DM2 de diagnóstico reciente (< 6 años) logró remisión completa (HbA1c < 6.5% sin fármacos antidiabéticos).' },
+      { q:'Un STOP-BANG de ≥ 3 puntos tiene:', options:['Especificidad del 93% para SAOS severo','Sensibilidad del 93% para SAOS moderado-severo','Valor predictivo negativo del 93%','Solo aplica en pacientes con IMC > 35'], correct:1, exp:'El STOP-BANG con score ≥ 3 tiene sensibilidad del 93% para SAOS moderado-severo. Su alta sensibilidad lo hace útil como tamizaje — una puntuación ≥ 3 justifica la referencia a medicina del sueño sin necesidad de esperar polisomnografía.' },
+      { q:'¿Cuál es el instrumento de tamizaje recomendado para depresión en pacientes con obesidad?', options:['GHQ-12','PHQ-9','HAM-D','BDI-II'], correct:1, exp:'El PHQ-9 (Patient Health Questionnaire-9) es el instrumento de tamizaje de depresión más validado y utilizado en atención primaria. Una puntuación ≥ 10 indica depresión moderada-severa y requiere acción. Se recomienda aplicarlo en todo nuevo paciente con obesidad.' },
+      { q:'¿Qué FIB-4 score sugiere fibrosis hepática avanzada y requiere referencia a hepatología?', options:['≥ 1.30','≥ 2.67','≥ 3.50','≥ 5.00'], correct:1, exp:'Un FIB-4 ≥ 2.67 indica fibrosis hepática avanzada (F3-F4) con alta especificidad y requiere referencia a hepatología. FIB-4 < 1.30 sugiere bajo riesgo de fibrosis avanzada. El FIB-4 se calcula con edad, AST, ALT y plaquetas —todos disponibles en laboratorio rutinario.' },
+      { q:'¿Los GLP-1 agonistas en monoterapia (sin insulina ni sulfonilurea) causan hipoglucemia clínicamente significativa?', options:['Sí, frecuentemente — requieren monitoreo con glucómetro diario','Sí, especialmente en las primeras semanas de tratamiento','No, porque su mecanismo es dependiente de glucosa','Solo en pacientes con DM2 de larga evolución'], correct:2, exp:'Los GLP-1 agonistas actúan de forma glucodependiente: estimulan la secreción de insulina solo cuando la glucosa está elevada. A niveles de glucosa normales o bajos, el efecto insulinotrópico se "apaga". Por esto, en monoterapia, no causan hipoglucemia clínicamente significativa.' },
+      { q:'El "patrón de dislipidemia aterogénica" típico de la obesidad incluye:', options:['LDL muy elevado con triglicéridos normales','Triglicéridos altos, HDL bajo, LDL con partículas pequeñas y densas','HDL muy alto con LDL normal','Triglicéridos normales, HDL normal, LDL elevado'], correct:1, exp:'La dislipidemia aterogénica de la obesidad se caracteriza por triglicéridos altos (>150 mg/dL), HDL bajo (<40 en hombres / <50 en mujeres) y LDL con predominio de partículas pequeñas y densas (más aterogénicas que las LDL grandes y flotantes). Este patrón es altamente predictivo de riesgo cardiovascular.' },
+      { q:'¿Cuánto reduce la PA sistólica la pérdida de 10 kg de peso?', options:['1-2 mmHg','3-5 mmHg','5-10 mmHg','15-20 mmHg'], correct:2, exp:'La pérdida de 10 kg de peso corporal reduce la PA sistólica en 5-10 mmHg, lo que es equivalente a agregar un fármaco antihipertensivo. Por cada 10 kg de exceso de peso, la PA sistólica aumenta en sentido inverso aproximadamente 3-5 mmHg.' },
+      { q:'¿Cuál de los siguientes psicofármacos tiene el MAYOR potencial de aumento de peso?', options:['Bupropión','Aripiprazol','Olanzapina','Sertralina'], correct:2, exp:'La olanzapina (antipsicótico atípico) tiene uno de los mayores potenciales de aumento de peso, con aumentos promedio de 4-6 kg en los primeros meses. Clozapina tiene efecto similar. Bupropión y aripiprazol son las alternativas más neutras o incluso favorables en peso dentro de sus categorías.' },
+      { q:'En MASLD, ¿qué porcentaje de pérdida de peso se considera el tratamiento más efectivo actualmente disponible?', options:['≥ 3%','≥ 5%','≥ 10%','≥ 20%'], correct:2, exp:'Una pérdida de peso ≥ 10% es el tratamiento más efectivo actualmente disponible para MASLD/MASH: mejora la esteatosis, la inflamación hepática (MASH) y en algunos casos la fibrosis. Con pérdida ≥ 5% ya se observa mejoría en esteatosis, pero el umbral de 10% es el más consistentemente asociado con mejoría histológica.' },
+      { q:'El SAOS no tratado con AHI > 15/hora se asocia con:', options:['Reducción del riesgo cardiovascular por aumento del sueño total','Duplicación del riesgo cardiovascular a 10 años','Solo impacto funcional (somnolencia diurna) sin efecto en mortalidad','Aumento del riesgo exclusivamente en pacientes con IMC > 40'], correct:1, exp:'Un AHI > 15/hora (SAOS moderado-severo) no tratado duplica el riesgo cardiovascular a 10 años (AASM Guidelines 2023). La hipoxia intermitente nocturna activa el sistema nervioso simpático, aumenta el estrés oxidativo y promueve HTA, FA, hipertensión pulmonar y exceso de mortalidad.' },
+    ],
+  },
+  {
+    id:'m6', icon:'🏥', color:'#154360', hours:8,
+    title:'Módulo 6: Referencia, cirugía y seguimiento a largo plazo',
+    desc:'Criterios de referencia, cirugía bariátrica, seguimiento post-quirúrgico, mantenimiento',
+    lessons:[
+      { title:'Criterios de referencia al especialista en obesidad', duration:'2h',
+        body:`<p>El médico de primer nivel es la puerta de entrada al sistema de salud para la mayoría de las personas con obesidad. Saber cuándo y cómo referir al especialista es una competencia crítica que impacta directamente los resultados del paciente.</p>
+<p><b>¿Cuándo referir a endocrinología / especialista en obesidad?</b><br>
+• EOSS 2 o mayor: comorbilidades establecidas que requieren manejo coordinado<br>
+• Necesidad de farmacoterapia y el médico no se siente competente para prescribirla<br>
+• No respondedor a tratamiento en primer nivel (< 5% TWL a 3 meses)<br>
+• Sospecha de obesidad secundaria (hipotiroidismo no diagnosticado, Cushing, hipopituitarismo, SOPQ severo, medicamentos)<br>
+• Evaluación para cirugía bariátrica<br>
+• Embarazo con obesidad grave (EOSS 3-4)</p>
+<p><b>Obesidades secundarias a no perder:</b> Hipotiroidismo (TSH elevada), síndrome de Cushing (cortisol libre urinario, test de supresión con dexametasona), hipopituitarismo (GH, gonadotropinas), síndrome de ovario poliquístico (SHBG, androstenediona, LH/FSH), medicamentos engordadores (lista más adelante).</p>
+<p><b>Cómo hacer una referencia efectiva:</b> Incluir siempre: peso, talla, IMC, EOSS, comorbilidades activas, farmacoterapia actual (incluyendo fármacos que pueden subir de peso), motivo específico de referencia, tratamientos ya intentados. Una referencia bien documentada acelera el proceso y mejora la calidad de atención especializada.</p>` },
+      { title:'Cirugía bariátrica: indicaciones, tipos y preparación preoperatoria', duration:'2h',
+        body:`<p>La cirugía bariátrica es el tratamiento más eficaz y duradero para la obesidad severa. Es la única intervención que consistentemente logra remisión de DM2, SAOS, HTA y dislipidemia en pacientes con EOSS ≥ 2 y obesidad severa.</p>
+<p><b>Indicaciones actuales (ASMBS 2022 / SCOMET 2023):</b><br>
+• IMC ≥ 40 kg/m² sin comorbilidades<br>
+• IMC ≥ 35 kg/m² con al menos una comorbilidad mayor (DM2, SAOS, HTA, MASLD, pseudotumor cerebri, artropatía incapacitante)<br>
+• IMC ≥ 30 kg/m² con DM2 mal controlada (nuevo consenso 2022)</p>
+<p><b>Procedimientos más frecuentes:</b><br>
+<b>Manga gástrica (Sleeve gastrectomy):</b> Resección del 80% del estómago. %EWL promedio: 60-70%. No es malabsortiva. Menos deficiencias nutricionales. Riesgo de reflujo postoperatorio.<br>
+<b>Bypass gástrico en Y de Roux (RYGB):</b> Estándar de oro histórico. %EWL promedio: 70-80%. Malabsortivo parcial. Mayor riesgo de deficiencias (B12, hierro, calcio). Superior en DM2 y ERGE.<br>
+<b>Duodenal switch (DS) / SADI-S:</b> Mayor eficacia (>80%EWL) pero mayor riesgo de malabsorción severa. Para obesidad extrema.</p>
+<p><b>Preparación preoperatoria (rol del primer nivel):</b> Evaluación psicológica preoperatoria (motivación, manejo de expectativas, trastornos de conducta alimentaria), optimización de comorbilidades, cese de tabaquismo mínimo 6 semanas antes, optimización nutricional (vitamina D, hierro, folato), y evaluación cardiovascular en pacientes de alto riesgo.</p>` },
+      { title:'Seguimiento post-quirúrgico en primer nivel', duration:'2h',
+        body:`<p>El cirujano bariátrico idealmente mantiene el seguimiento especializado, pero en la práctica, el médico de primer nivel frecuentemente es el primer contacto para las complicaciones y el seguimiento rutinario del paciente post-bariátrico.</p>
+<p><b>Seguimiento nutricional obligatorio post-bariátrico:</b><br>
+Mes 1-3: Progresión de consistencias (líquidos → purés → sólidos), hidratación adecuada (≥ 1.5L/día), proteína ≥ 60g/día para prevenir pérdida muscular<br>
+Mes 3-12: Etapa de pérdida de peso activa. Monitoreo mensual o bimestral de peso, composición corporal, laboratorios<br>
+Año 1 en adelante: Mantenimiento, vigilancia de deficiencias nutricionales de por vida</p>
+<p><b>Deficiencias nutricionales más frecuentes:</b> Vitamina B12 (especialmente RYGB — por ausencia de factor intrínseco), hierro (especialmente mujeres en edad reproductiva), vitamina D y calcio (todas las cirugías), tiamina (riesgo si hay vómitos persistentes — puede causar encefalopatía de Wernicke). Suplementar de por vida con multivitamínico barítrico específico.</p>
+<p><b>Síndrome de dumping:</b> Paso rápido de contenido gástrico al intestino delgado. Temprano (30 min): náuseas, diarrea, palpitaciones, sudoración. Tardío (2-4h): hipoglucemia reactiva. Manejo: comidas pequeñas y frecuentes, no mezclar sólidos y líquidos, evitar azúcares simples.</p>` },
+      { title:'Manejo a largo plazo, prevención del rebote y reconversión', duration:'2h',
+        body:`<p>El seguimiento a largo plazo post-bariátrico y post-farmacológico es donde se gana o pierde la batalla contra la obesidad. El rebote de peso es inevitable si no hay estrategias activas de mantenimiento.</p>
+<p><b>Curva de peso post-bariátrica:</b> La pérdida máxima se alcanza a los 12-18 meses. Entre el 20-30% del peso recuperado en 5 años es esperable y normal — esto debe comunicarse antes de la cirugía. Recuperación > 50% del peso perdido indica "fracaso bariátrico" y requiere evaluación multidisciplinaria.</p>
+<p><b>Indicadores de alerta para seguimiento estrecho:</b> Recuperación de peso > 10% del peso mínimo, reintroducción de hábitos alimentarios previos, nuevo inicio de atracones, abandono del ejercicio, stressores psicosociales significativos, nuevo inicio de medicamentos que aumentan el peso.</p>
+<p><b>La farmacoterapia como puente o refuerzo:</b> Los GLP-1 agonistas se usan con evidencia creciente como complemento post-bariátrico en pacientes con rebote. Estudios recientes muestran pérdida adicional de 5-10% del peso en este contexto. La combinación farmacoterapia + cambios de estilo de vida + seguimiento conductual es más eficaz que cualquier intervención sola.</p>
+<p><b>El primer nivel como coordinador del cuidado:</b> El manejo de la obesidad a largo plazo requiere coordinación: endocrinología, nutrición, psicología, medicina del sueño, y el médico de primer nivel como coordinador del plan integral. La comunicación entre especialistas y el médico de cabecera es fundamental para evitar la fragmentación del cuidado.</p>` },
+    ],
+    quiz:[
+      { q:'¿Cuál de los siguientes NO es un criterio para referir a un paciente con obesidad al especialista?', options:['EOSS 2 o mayor','No respondedor a tratamiento (< 5% TWL a 3 meses)','IMC > 25 con hipertensión bien controlada','Sospecha de obesidad secundaria'], correct:2, exp:'Un IMC > 25 con HTA bien controlada es manejable en el primer nivel. Los criterios de referencia son: EOSS 2+, no respondedor, sospecha de obesidad secundaria, necesidad de farmacoterapia especializada, o evaluación para cirugía bariátrica.' },
+      { q:'¿Cuáles son las indicaciones actuales (ASMBS 2022) para cirugía bariátrica?', options:['IMC ≥ 40 sin comorbilidades, O IMC ≥ 35 con comorbilidad mayor, O IMC ≥ 30 con DM2 mal controlada','Solo IMC ≥ 40 con al menos 2 comorbilidades mayores','IMC ≥ 30 en cualquier paciente que desee la cirugía','IMC ≥ 35 sin comorbilidades O IMC ≥ 30 con alguna comorbilidad'], correct:0, exp:'Las indicaciones actuales (ASMBS 2022) incluyen: IMC ≥ 40 sin comorbilidades, IMC ≥ 35 con al menos una comorbilidad mayor, e IMC ≥ 30 con DM2 mal controlada (nuevo consenso que refleja la eficacia de la cirugía en el tratamiento metabólico).' },
+      { q:'¿Cuál es el procedimiento bariátrico considerado "estándar de oro" por su eficacia y durabilidad?', options:['Banda gástrica ajustable','Manga gástrica (sleeve gastrectomy)','Bypass gástrico en Y de Roux (RYGB)','Balón intragástrico'], correct:2, exp:'El bypass gástrico en Y de Roux (RYGB) ha sido históricamente el estándar de oro con %EWL de 70-80% y el mayor beneficio demostrado en DM2 y ERGE. La manga gástrica ha ganado popularidad por menor riesgo de deficiencias nutricionales, pero el RYGB mantiene superioridad en eficacia y en manejo de DM2.' },
+      { q:'La deficiencia nutricional más frecuente tras bypass gástrico en Y de Roux (RYGB) es:', options:['Vitamina C','Vitamina B12','Ácido fólico','Vitamina E'], correct:1, exp:'La vitamina B12 es la deficiencia más frecuente post-RYGB porque el bypass del estómago proximal elimina la producción de factor intrínseco, necesario para la absorción de B12 en el íleon terminal. Todos los pacientes post-RYGB deben suplementar B12 de por vida (sublingual o IM preferible sobre oral).' },
+      { q:'El síndrome de dumping tardío (2-4 horas post-ingesta) se manifiesta principalmente con:', options:['Náuseas y vómitos','Hipoglucemia reactiva','Diarrea explosiva y urgencia fecal','Distensión abdominal y meteorismo'], correct:1, exp:'El dumping tardío ocurre por la liberación excesiva de insulina en respuesta a la rápida absorción de carbohidratos simples tras la ingesta. Se manifiesta con hipoglucemia reactiva 2-4 horas después de comer. El manejo incluye: evitar azúcares simples, comidas pequeñas frecuentes, y no separar sólidos de líquidos durante la comida.' },
+      { q:'¿Cuál es el porcentaje de recuperación de peso post-bariátrico a 5 años que se considera normal y debe comunicarse antes de la cirugía?', options:['< 5% del peso perdido','5-10% del peso perdido','20-30% del peso recuperado','> 50% del peso recuperado'], correct:2, exp:'Una recuperación de 20-30% del peso perdido en los primeros 5 años post-cirugía es esperable y normal, y debe comunicarse al paciente antes de la cirugía para manejar expectativas. Una recuperación > 50% del peso perdido se considera "fracaso bariátrico" y requiere reevaluación multidisciplinaria.' },
+      { q:'¿Cuánto tiempo antes de la cirugía bariátrica debe cesar el tabaquismo como mínimo?', options:['2 semanas','4 semanas','6 semanas','3 meses'], correct:2, exp:'El cese de tabaquismo al menos 6 semanas antes de la cirugía bariátrica es el estándar recomendado. El tabaquismo aumenta el riesgo de úlcera marginal post-bypass, dehiscencia de anastomosis, y complicaciones pulmonares perioperatorias. Algunos programas requieren 3 meses.' },
+      { q:'Los GLP-1 agonistas post-cirugía bariátrica con rebote de peso han demostrado:', options:['No ser efectivos — la cirugía previamente los neutraliza','Pérdida adicional de 5-10% del peso en este contexto','Solo ser útiles en el primer año post-cirugía','Requerir dosis menores que en pacientes no operados'], correct:1, exp:'Estudios recientes (2022-2024) muestran que los GLP-1 agonistas logran una pérdida adicional de 5-10% del peso en pacientes post-bariátricos con rebote. Esta combinación (farmacoterapia + cirugía + cambios de estilo de vida) es más eficaz que cualquier intervención sola.' },
+      { q:'¿Qué elemento debe incluirse SIEMPRE en una carta de referencia a endocrinología por obesidad?', options:['Resultado del test de supresión con dexametasona','EOSS, comorbilidades activas y tratamientos ya intentados','Predicción del médico sobre la respuesta al tratamiento','Solo el peso y el IMC actuales'], correct:1, exp:'Una referencia efectiva debe incluir siempre: EOSS actual, comorbilidades activas, farmacoterapia en curso (incluyendo fármacos que pueden subir de peso), tratamientos ya intentados y el motivo específico de referencia. Esta información acelera el proceso y mejora la calidad de la atención especializada.' },
+      { q:'La evaluación psicológica preoperatoria en cirugía bariátrica tiene como objetivo principal:', options:['Descartar trastornos psiquiátricos que contraindiquen la cirugía y preparar al paciente','Determinar si el paciente merece la cirugía basado en su "carácter"','Solo aplica en pacientes con historia de depresión previa','Evaluar si el paciente entenderá el protocolo postoperatorio'], correct:0, exp:'La evaluación psicológica preoperatoria busca: identificar trastornos de conducta alimentaria (especialmente BED) que requieren tratamiento previo, evaluar la motivación y manejo de expectativas, identificar factores psicosociales de riesgo para el resultado, y preparar al paciente para los cambios de vida que requiere la cirugía.' },
+    ],
+  },
+];
+
+// ─── THEORY PROGRESS TRACKING ────────────────────────────────────
+let theoryProgress = {}; // { m1: { lessonsRead: [0,1,2], quizScore: 80, quizPassed: true, theoryPtsAwarded: true, evalPtsAwarded: true } }
+
+function theoryProgressKey() {
+  return currentUser ? 'ece_pcp_theory_' + currentUser.id : 'ece_pcp_theory_guest';
+}
+
+function loadTheoryProgress() {
+  const raw = localStorage.getItem(theoryProgressKey());
+  theoryProgress = raw ? JSON.parse(raw) : {};
+}
+
+function saveTheoryProgress() {
+  localStorage.setItem(theoryProgressKey(), JSON.stringify(theoryProgress));
+}
+
+function getModuleProgress(moduleId) {
+  return theoryProgress[moduleId] || { lessonsRead: [], quizScore: null, quizPassed: false, theoryPtsAwarded: false, evalPtsAwarded: false };
+}
+
+function markLessonRead(moduleId, lessonIdx) {
+  loadTheoryProgress();
+  if (!theoryProgress[moduleId]) theoryProgress[moduleId] = { lessonsRead: [], quizScore: null, quizPassed: false, theoryPtsAwarded: false, evalPtsAwarded: false };
+  const mp = theoryProgress[moduleId];
+  if (!mp.lessonsRead.includes(lessonIdx)) {
+    mp.lessonsRead.push(lessonIdx);
+    saveTheoryProgress();
+    const mod = THEORY_CURRICULUM.find(m => m.id === moduleId);
+    if (mod) {
+      const allRead = mod.lessons.every((_, i) => mp.lessonsRead.includes(i));
+      if (allRead && !mp.theoryPtsAwarded) {
+        mp.theoryPtsAwarded = true;
+        saveTheoryProgress();
+        earnPointsCategory(30, `Módulo teórico completado: ${mod.title.replace('Módulo ','M').split(':')[0]}`, 'theory');
+      }
+    }
+  }
+  renderCurrentCMEView();
+}
+
+// ─── CME POINT CATEGORIES ─────────────────────────────────────────
+let cmePointsBreakdown = { practice: 0, theory: 0, eval: 0 };
+
+function cmeBreakdownKey() {
+  return currentUser ? 'ece_pcp_cmebr_' + currentUser.id : 'ece_pcp_cmebr_guest';
+}
+
+function loadCMEBreakdown() {
+  const raw = localStorage.getItem(cmeBreakdownKey());
+  cmePointsBreakdown = raw ? JSON.parse(raw) : { practice: 0, theory: 0, eval: 0 };
+}
+
+function saveCMEBreakdown() {
+  localStorage.setItem(cmeBreakdownKey(), JSON.stringify(cmePointsBreakdown));
+}
+
+function earnPointsCategory(pts, reason, category) {
+  cmePoints += pts;
+  const userKey = currentUser ? 'ece_pcp_cme_' + currentUser.id : 'ece_pcp_cme_guest';
+  localStorage.setItem(userKey, cmePoints);
+  if (category && cmePointsBreakdown[category] !== undefined) {
+    cmePointsBreakdown[category] += pts;
+    saveCMEBreakdown();
+  }
+  renderCMEProgress();
+  showToast(`+${pts} pts CME — ${reason}`, 'edu', 4000);
+}
+
+// Override earnPoints to track by category
+function earnPoints(pts, reason) {
+  earnPointsCategory(pts, reason, 'practice');
+}
+
+// ─── QUIZ ENGINE ──────────────────────────────────────────────────
+let activeQuiz = { moduleId: null, questions: [], current: 0, answers: [], answered: false };
+
+function startQuiz(moduleId) {
+  const mod = THEORY_CURRICULUM.find(m => m.id === moduleId);
+  if (!mod) return;
+  const mp = getModuleProgress(moduleId);
+  const allLessonsRead = mod.lessons.every((_, i) => mp.lessonsRead.includes(i));
+  if (!allLessonsRead) {
+    showToast('Completa todas las clases antes de la evaluación', 'warn');
+    return;
+  }
+  activeQuiz = {
+    moduleId,
+    questions: [...mod.quiz].sort(() => Math.random() - 0.5),
+    current: 0,
+    answers: new Array(mod.quiz.length).fill(null),
+    answered: false,
+  };
+  $('quiz-mod-title').textContent = `Evaluación: ${mod.title.split(':')[1]?.trim() || mod.title}`;
+  $('quiz-mod-meta').textContent = `${mod.quiz.length} preguntas · Aprobatorio ≥ 70%`;
+  $('quiz-panel-intro').style.display = 'none';
+  $('quiz-panel-questions').style.display = 'block';
+  $('quiz-panel-result').style.display = 'none';
+  openModal('modal-quiz');
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = activeQuiz.questions[activeQuiz.current];
+  const total = activeQuiz.questions.length;
+  const current = activeQuiz.current;
+  const letters = ['A','B','C','D'];
+  const selectedAns = activeQuiz.answers[current];
+  const isAnswered = selectedAns !== null;
+  $('quiz-q-counter').textContent = `${current + 1} / ${total}`;
+  $('quiz-progress-fill').style.width = ((current + 1) / total * 100) + '%';
+  const nextBtn = $('quiz-btn-next');
+  nextBtn.textContent = current === total - 1 ? 'Finalizar →' : 'Siguiente →';
+  nextBtn.disabled = !isAnswered;
+  let html = `<div class="quiz-question-num">Pregunta ${current + 1} de ${total}</div>
+<div class="quiz-question-text">${q.q}</div>
+<div class="quiz-options">`;
+  q.options.forEach((opt, i) => {
+    let cls = 'quiz-option';
+    if (isAnswered) {
+      cls += ' locked';
+      if (i === q.correct) cls += ' correct';
+      else if (i === selectedAns && i !== q.correct) cls += ' wrong';
+    } else if (i === selectedAns) cls += ' selected';
+    html += `<div class="${cls}" onclick="quizSelectAnswer(${i})">
+  <div class="quiz-option-letter">${letters[i]}</div>
+  <div class="quiz-option-text">${opt}</div>
+</div>`;
+  });
+  html += `</div>`;
+  if (isAnswered) {
+    html += `<div class="quiz-explanation show">
+  <div class="quiz-explanation-text"><b>📚 Explicación:</b> ${q.exp}</div>
+</div>`;
+  }
+  $('quiz-body').innerHTML = html;
+}
+
+function quizSelectAnswer(idx) {
+  if (activeQuiz.answers[activeQuiz.current] !== null) return;
+  activeQuiz.answers[activeQuiz.current] = idx;
+  $('quiz-btn-next').disabled = false;
+  renderQuizQuestion();
+}
+
+function quizSkip() {
+  quizNext(true);
+}
+
+function quizNext(skip=false) {
+  if (!skip && activeQuiz.answers[activeQuiz.current] === null) return;
+  if (skip) activeQuiz.answers[activeQuiz.current] = -1; // -1 = skipped
+  if (activeQuiz.current < activeQuiz.questions.length - 1) {
+    activeQuiz.current++;
+    renderQuizQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz() {
+  const mod = THEORY_CURRICULUM.find(m => m.id === activeQuiz.moduleId);
+  const total = activeQuiz.questions.length;
+  let correct = 0;
+  activeQuiz.questions.forEach((q, i) => {
+    if (activeQuiz.answers[i] === q.correct) correct++;
+  });
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+  loadTheoryProgress();
+  if (!theoryProgress[activeQuiz.moduleId]) theoryProgress[activeQuiz.moduleId] = { lessonsRead: [], quizScore: null, quizPassed: false, theoryPtsAwarded: false, evalPtsAwarded: false };
+  const mp = theoryProgress[activeQuiz.moduleId];
+  const prevBest = mp.quizScore || 0;
+  mp.quizScore = Math.max(pct, prevBest);
+  mp.quizPassed = mp.quizPassed || passed;
+  let ptsEarned = 0;
+  if (passed && !mp.evalPtsAwarded) {
+    mp.evalPtsAwarded = true;
+    ptsEarned = pct === 100 ? 70 : 50; // Bonus +20 for perfect score
+    saveTheoryProgress();
+    earnPointsCategory(ptsEarned, `Evaluación aprobada: ${mod ? mod.title.split(':')[1]?.trim() : ''} (${pct}%)`, 'eval');
+  } else {
+    saveTheoryProgress();
+  }
+  $('quiz-panel-questions').style.display = 'none';
+  $('quiz-panel-result').style.display = 'block';
+  let resultHtml = `<span class="quiz-result-icon">${passed ? '🏆' : '📚'}</span>
+<div class="quiz-result-score ${passed ? 'pass' : 'fail'}">${pct}%</div>
+<div class="quiz-result-msg">${passed ? '¡Evaluación aprobada!' : 'Necesitas repasar el módulo'}</div>
+<div class="quiz-result-sub">${correct} de ${total} correctas${passed ? ' — ¡Excelente trabajo!' : ' — El mínimo aprobatorio es 70%. Puedes reintentar.'}</div>`;
+  if (ptsEarned > 0) {
+    resultHtml += `<div class="quiz-result-pts-row"><span class="quiz-result-pt-badge green">+${ptsEarned} pts CME 🎓</span>${pct === 100 ? '<span class="quiz-result-pt-badge purple">✨ Puntaje perfecto</span>' : ''}</div>`;
+  } else if (passed && mp.evalPtsAwarded && ptsEarned === 0) {
+    resultHtml += `<div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Ya habías obtenido los puntos de evaluación en un intento anterior</div>`;
+  }
+  resultHtml += `<div class="quiz-result-btn-row">`;
+  if (!passed) resultHtml += `<button class="quiz-btn-retry" onclick="startQuiz('${activeQuiz.moduleId}')">🔄 Reintentar</button>`;
+  resultHtml += `<button class="quiz-btn-done" onclick="closeModal('modal-quiz');renderCurrentCMEView()">✓ Cerrar</button></div>`;
+  $('quiz-result-content').innerHTML = resultHtml;
+}
+
+// ─── CURRICULUM RENDER ────────────────────────────────────────────
+let currentCMEModuleId = null;
+
+function renderCurrentCMEView() {
+  if (currentCMEModuleId) renderModuleDetail(currentCMEModuleId);
+  else renderCurriculumOverview();
+}
+
+function renderCurriculumOverview() {
+  currentCMEModuleId = null;
+  loadTheoryProgress();
+  const totalLessons = THEORY_CURRICULUM.reduce((s, m) => s + m.lessons.length, 0);
+  const totalHours   = THEORY_CURRICULUM.reduce((s, m) => s + m.hours, 0);
+  let readLessons = 0;
+  let modsPassed  = 0;
+  THEORY_CURRICULUM.forEach(m => {
+    const mp = getModuleProgress(m.id);
+    readLessons += mp.lessonsRead.length;
+    if (mp.quizPassed) modsPassed++;
+  });
+  let html = `<div class="curriculum-stats">
+  <div class="cur-stat"><div class="cur-stat-val">${totalHours}h</div><div class="cur-stat-lbl">Horas de teoría</div></div>
+  <div class="cur-stat"><div class="cur-stat-val">${totalLessons}</div><div class="cur-stat-lbl">Clases</div></div>
+  <div class="cur-stat"><div class="cur-stat-val">${readLessons}/${totalLessons}</div><div class="cur-stat-lbl">Clases completadas</div></div>
+  <div class="cur-stat"><div class="cur-stat-val">${modsPassed}/${THEORY_CURRICULUM.length}</div><div class="cur-stat-lbl">Evaluaciones aprobadas</div></div>
+</div>
+<div class="curriculum-grid">`;
+  THEORY_CURRICULUM.forEach(mod => {
+    const mp = getModuleProgress(mod.id);
+    const total = mod.lessons.length;
+    const read  = mp.lessonsRead.length;
+    const pct   = Math.round((read / total) * 100);
+    const allRead = read === total;
+    const passed  = mp.quizPassed;
+    const tag = passed ? 'done' : allRead ? 'partial' : 'new';
+    const tagTxt = passed ? '✓ Aprobado' : allRead ? 'Por evaluar' : read > 0 ? 'En progreso' : 'No iniciado';
+    html += `<div class="cur-mod-card" onclick="renderModuleDetail('${mod.id}')">
+  <div class="cur-mod-top">
+    <div class="cur-mod-badge" style="background:${mod.color}">${mod.icon}</div>
+    <div class="cur-mod-meta">
+      <div class="cur-mod-title">${mod.title}</div>
+      <div class="cur-mod-desc">${mod.desc}</div>
+      <div class="cur-mod-hours">🕐 ${mod.hours} horas · ${total} clases</div>
+    </div>
+  </div>
+  <div class="cur-mod-bottom">
+    <div class="cur-mod-progress">
+      <div class="cur-mod-progress-bar"><div class="cur-mod-progress-fill" style="width:${pct}%;background:${mod.color}"></div></div>
+      <span class="cur-mod-pct">${pct}%</span>
+    </div>
+    <span class="cur-mod-status-tag ${tag}">${tagTxt}</span>
+    <span class="cur-mod-pts">+80 pts</span>
+  </div>
+</div>`;
+  });
+  html += '</div>';
+  $('cme-curriculum-body').innerHTML = html;
+}
+
+function renderModuleDetail(moduleId) {
+  currentCMEModuleId = moduleId;
+  loadTheoryProgress();
+  const mod = THEORY_CURRICULUM.find(m => m.id === moduleId);
+  if (!mod) return;
+  const mp = getModuleProgress(moduleId);
+  const allRead = mod.lessons.every((_, i) => mp.lessonsRead.includes(i));
+  let html = `<button class="cur-detail-back" onclick="renderCurriculumOverview()">← Volver al programa</button>
+<div class="cur-detail-header">
+  <div class="cur-detail-icon" style="background:${mod.color}">${mod.icon}</div>
+  <div>
+    <div class="cur-detail-title">${mod.title}</div>
+    <div class="cur-detail-meta">${mod.hours} horas · ${mod.lessons.length} clases · 10 preguntas de evaluación</div>
+  </div>
+</div>
+<div class="section-card" style="margin-bottom:14px">
+  <div class="section-card-header"><span class="section-card-title">📖 Clases del módulo</span><span style="font-size:11px;color:var(--text-muted)">${mp.lessonsRead.length}/${mod.lessons.length} completadas</span></div>
+  <div class="section-card-body" style="padding:12px 16px">
+    <div class="lesson-list">`;
+  mod.lessons.forEach((lesson, i) => {
+    const isRead = mp.lessonsRead.includes(i);
+    html += `<div class="lesson-item ${isRead ? 'read' : ''}" id="lesson-item-${moduleId}-${i}">
+  <div class="lesson-header" onclick="toggleLesson('${moduleId}',${i})">
+    <div class="lesson-num">${i + 1}</div>
+    <div class="lesson-body">
+      <div class="lesson-title">${lesson.title}</div>
+      <div class="lesson-meta">⏱ ${lesson.duration}${isRead ? ' · ✓ Completada' : ''}</div>
+    </div>
+    <div class="lesson-check">${isRead ? '✅' : '📄'}</div>
+  </div>
+  <div class="lesson-content-panel" id="lesson-panel-${moduleId}-${i}">
+    <div class="lesson-content-text">${lesson.body}</div>
+    <button class="lesson-mark-btn ${isRead ? 'already-read' : ''}" id="lesson-btn-${moduleId}-${i}" onclick="${isRead ? '' : `markLessonRead('${moduleId}',${i})`}">
+      ${isRead ? '✓ Clase completada' : '✓ Marcar como leída y ganar puntos de progreso'}
+    </button>
+  </div>
+</div>`;
+  });
+  html += `</div></div></div>`;
+  // Quiz card
+  const quizScore = mp.quizScore;
+  const quizPassed = mp.quizPassed;
+  html += `<div class="quiz-start-card">
+  <div class="quiz-start-icon">📝</div>`;
+  if (quizPassed) {
+    html += `<div style="margin-bottom:8px"><span class="quiz-passed-tag">🏆 Evaluación aprobada · ${quizScore}%</span></div>`;
+  }
+  html += `<div class="quiz-start-title">Evaluación del módulo</div>
+  <div class="quiz-start-desc">10 preguntas de opción múltiple basadas en el contenido de este módulo. Aprobatorio ≥ 70%. Puedes reintentar cuantas veces sea necesario.</div>
+  <div class="quiz-start-stats">
+    <div class="quiz-start-stat"><div class="quiz-start-stat-val">10</div><div class="quiz-start-stat-lbl">Preguntas</div></div>
+    <div class="quiz-start-stat"><div class="quiz-start-stat-val">70%</div><div class="quiz-start-stat-lbl">Aprobatorio</div></div>
+    <div class="quiz-start-stat"><div class="quiz-start-stat-val">+50</div><div class="quiz-start-stat-lbl">Puntos CME</div></div>
+    <div class="quiz-start-stat"><div class="quiz-start-stat-val">${quizScore !== null ? quizScore + '%' : '—'}</div><div class="quiz-start-stat-lbl">Tu mejor puntaje</div></div>
+  </div>
+  <button class="quiz-start-btn" onclick="startQuiz('${moduleId}')" ${!allRead ? 'disabled title="Completa todas las clases primero"' : ''}>
+    ${allRead ? (quizPassed ? '🔄 Reintentar evaluación' : '▶ Comenzar evaluación') : '🔒 Completa todas las clases primero'}
+  </button>
+</div>`;
+  $('cme-curriculum-body').innerHTML = html;
+}
+
+function toggleLesson(moduleId, lessonIdx) {
+  const panel = $(`lesson-panel-${moduleId}-${lessonIdx}`);
+  if (!panel) return;
+  panel.classList.toggle('open');
+}
 
 const MED2_INFO = {
   semaglutide:          { clase:'GLP-1 agonista', twl:'15-20%', via:'SC semanal', escalada:'0.25→0.5→1→1.7→2.4 mg (cada 4 sem)', mon:'Náuseas, FC, PA, CEF familiar' },
@@ -1462,18 +2230,12 @@ async function apiFetch(path, opts={}) {
 }
 
 // ─── CME SYSTEM ──────────────────────────────────────────────────
-function earnPoints(pts, reason) {
-  cmePoints += pts;
-  const userKey = currentUser ? 'ece_pcp_cme_' + currentUser.id : 'ece_pcp_cme_guest';
-  localStorage.setItem(userKey, cmePoints);
-  renderCMEProgress();
-  showToast(`+${pts} pts CME — ${reason}`, 'edu', 4000);
-}
-
 function loadCMEPoints() {
   if (!currentUser) return;
   const key = 'ece_pcp_cme_' + currentUser.id;
   cmePoints = parseInt(localStorage.getItem(key) || '0');
+  loadCMEBreakdown();
+  loadTheoryProgress();
   renderCMEProgress();
 }
 
@@ -1492,12 +2254,16 @@ function renderCMEProgress() {
   if ($('cme-level-name')) $('cme-level-name').textContent = level.name;
   if ($('cme-level-next')) $('cme-level-next').textContent = nextLevel !== level ? `Siguiente: ${nextLevel.name} (${nextLevel.min} pts)` : '¡Nivel máximo!';
   if ($('cme-level-bar')) { $('cme-level-bar').style.width = pct + '%'; $('cme-level-bar').style.background = level.color; }
-  if ($('cme-level-desc')) $('cme-level-desc').textContent = `Has atendido pacientes y completado actividades educativas`;
+  if ($('cme-level-desc')) $('cme-level-desc').textContent = `Práctica clínica + ${THEORY_CURRICULUM.length * 30} pts teoría + ${THEORY_CURRICULUM.length * 50} pts evaluaciones`;
+  // Update breakdown cards
+  if ($('cme-pts-practice')) $('cme-pts-practice').textContent = cmePointsBreakdown.practice || 0;
+  if ($('cme-pts-theory'))   $('cme-pts-theory').textContent   = cmePointsBreakdown.theory   || 0;
+  if ($('cme-pts-eval'))     $('cme-pts-eval').textContent     = cmePointsBreakdown.eval     || 0;
 }
 
 function toggleCME(id) {
   const el = $(id);
-  el.classList.toggle('open');
+  if (el) el.classList.toggle('open');
 }
 
 // ─── EDUCATIONAL PEARLS ──────────────────────────────────────────
@@ -1755,6 +2521,8 @@ function switchView(view) {
   if (si) si.classList.add('active');
   if (!currentPatient) $('no-patient').style.display = 'flex';
   else $('no-patient').style.display = 'none';
+  // Render dynamic views
+  if (view === 'cme') { currentCMEModuleId = null; renderCurriculumOverview(); }
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────
@@ -2472,6 +3240,7 @@ function saveReferral() {
 
 // ─── INITIAL VIEW ─────────────────────────────────────────────────
 switchView('dashboard');
+
 </script>
 </body>
 </html>
