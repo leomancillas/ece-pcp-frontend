@@ -1634,7 +1634,9 @@ function renderAlertZone() {
   const labs = pcpData.labs.slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
   const l = labs[0];
   if (l) {
-    if (l.hba1c && l.hba1c >= 9) alerts.push({ type:'red', msg:`⚠️ HbA1c ${l.hba1c}% — Control glucémico deficiente. Revisar tratamiento de DM2 y considerar referencia.` });
+    if (l.hba1c && l.hba1c >= 9)   alerts.push({ type:'red',    msg:`⚠️ HbA1c ${l.hba1c}% — Control glucémico deficiente. Revisar tratamiento de DM2 y considerar referencia.` });
+    if (l.hba1c && l.hba1c >= 6.5 && l.hba1c < 9) alerts.push({ type:'orange', msg:`⚠️ HbA1c ${l.hba1c}% — Criterio diagnóstico de DM2 (≥6.5%). Confirmar diagnóstico e iniciar tratamiento.` });
+    if (l.hba1c && l.hba1c >= 5.7 && l.hba1c < 6.5) alerts.push({ type:'orange', msg:`⚠️ HbA1c ${l.hba1c}% — Rango de prediabetes (5.7–6.4%). Intervención intensiva de estilo de vida.` });
     if (l.tg && l.tg >= 500) alerts.push({ type:'red', msg:`⚠️ Triglicéridos ${l.tg} mg/dL — Riesgo de pancreatitis aguda. Iniciar fibrato urgente.` });
     if (l.ldl && l.ldl >= 190) alerts.push({ type:'orange', msg:`⚠️ LDL ${l.ldl} mg/dL — Considerar hipercolesterolemia familiar. Iniciar estatina de alta intensidad.` });
   }
@@ -1927,8 +1929,9 @@ function renderSeguimientoView() {
 
   if (labs[0]?.hba1c) {
     $('seg-hba1c').textContent = labs[0].hba1c + '%';
-    $('seg-hba1c-sub').textContent = labs[0].hba1c < 7 ? '✓ Meta' : '⚠️ Fuera de meta';
-    $('seg-hba1c-sub').className = 'stat-delta ' + (labs[0].hba1c < 7 ? 'pos' : 'neg');
+    const hba1c = labs[0].hba1c;
+    $('seg-hba1c-sub').textContent = hba1c < 5.7 ? '✓ Normal' : hba1c < 6.5 ? '⚠️ Prediabetes' : hba1c < 7 ? '⚠️ DM2 — en meta' : '⚠️ DM2 — fuera de meta';
+    $('seg-hba1c-sub').className = 'stat-delta ' + (hba1c < 5.7 ? 'pos' : 'neg');
   }
 
   renderWeightChart('chartSeg', measurements.slice().reverse());
@@ -1939,7 +1942,7 @@ function renderSeguimientoView() {
     const l = labs[0];
     labsEl.innerHTML = `
       ${l.glucosa ? `<div class="biometric-row"><span class="bio-label">Glucosa en ayuno</span><span class="bio-value ${l.glucosa>=126?'danger':l.glucosa>=100?'warn':''}">${l.glucosa} mg/dL</span></div>` : ''}
-      ${l.hba1c ? `<div class="biometric-row"><span class="bio-label">HbA1c</span><span class="bio-value ${l.hba1c>=9?'danger':l.hba1c>=7?'warn':'ok'}">${l.hba1c}%</span></div>` : ''}
+      ${l.hba1c ? `<div class="biometric-row"><span class="bio-label">HbA1c</span><span class="bio-value ${l.hba1c>=6.5?'danger':l.hba1c>=5.7?'warn':'ok'}">${l.hba1c}% <span style="font-size:11px;font-weight:500">${l.hba1c>=6.5?'DM2':l.hba1c>=5.7?'Prediabetes':'Normal'}</span></span></div>` : ''}
       ${l.homa_ir ? `<div class="biometric-row"><span class="bio-label">HOMA-IR</span><span class="bio-value ${l.homa_ir>2.5?'warn':''}">${l.homa_ir}</span></div>` : ''}
       ${l.ldl ? `<div class="biometric-row"><span class="bio-label">LDL</span><span class="bio-value ${l.ldl>=190?'danger':l.ldl>=100?'warn':''}">${l.ldl} mg/dL</span></div>` : ''}
       ${l.tg ? `<div class="biometric-row"><span class="bio-label">Triglicéridos</span><span class="bio-value ${l.tg>=500?'danger':l.tg>=150?'warn':''}">${l.tg} mg/dL</span></div>` : ''}
