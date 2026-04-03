@@ -575,9 +575,26 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <!-- No patient placeholder -->
       <div id="no-patient">
         <div class="no-pt-icon">🩺</div>
-        <h3>Selecciona un paciente para comenzar</h3>
-        <p>Busca un paciente existente o registra uno nuevo para abrir su expediente de obesidad.</p>
+        <h3>ECE PCP — Obesidad en el Primer Nivel</h3>
+        <p>Busca o registra un paciente para abrir su expediente de obesidad.</p>
         <button class="btn-search-big" onclick="openModal('modal-search')">🔍 Buscar paciente</button>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:520px;margin-top:8px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:6px">📋</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">5As + SOAP</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Consulta estructurada</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:6px">⚖️</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">EOSS + Escalones</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Estadificación clínica</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
+            <div style="font-size:24px;margin-bottom:6px">🎓</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text)">50h CME</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Diplomado certificado</div>
+          </div>
+        </div>
       </div>
 
       <!-- ─── VIEW: DASHBOARD ───────────────────────────────── -->
@@ -914,7 +931,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
         <div class="module-header" style="--mod-color:#1A5276">
           <div class="module-icon-lg" style="background:linear-gradient(135deg,#1A5276,#154360)">📊</div>
           <div><h2>Seguimiento longitudinal</h2><div class="module-sub">Evolución de peso · Control metabólico · Metas</div></div>
-          <div style="margin-left:auto;display:flex;gap:8px">
+                  <!-- Perla del módulo seguimiento -->
+        <div class="pearl-card" style="margin-bottom:16px">
+          <div class="pearl-card-header">
+            <span class="pearl-icon">💎</span>
+            <span class="pearl-title">Meta clínicamente significativa: ≥5% pérdida de peso</span>
+            <span class="pearl-source">ADA Standards, 2024</span>
+            <button class="pearl-close" onclick="this.closest('.pearl-card').style.display='none'">×</button>
+          </div>
+          <div class="pearl-body">Una pérdida de <b>≥5% del peso corporal</b> es el punto de corte clínicamente significativo. Con <b>≥10%</b> se ven beneficios cardiometabólicos consistentes: reducción de HbA1c, PA y triglicéridos. El monitoreo cada 4-8 semanas en los primeros 6 meses de farmacoterapia es clave para ajustes de dosis.</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px">
             <button class="btn-add" style="background:#1A5276" onclick="openModal('modal-measurement')">+ Peso / medidas</button>
             <button class="btn-add" style="background:#117A65" onclick="openModal('modal-labs')">+ Labs</button>
           </div>
@@ -942,6 +969,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
             <div class="section-card-header"><span class="section-card-title">🧪 Últimos laboratorios</span></div>
             <div class="section-card-body" id="seg-labs-body">
               <div class="text-muted text-sm text-center" style="padding:16px">Sin laboratorios registrados</div>
+            </div>
+          </div>
+        </div>
+
+                <div class="section-card" style="margin-top:16px">
+          <div class="section-card-header"><span class="section-card-title">🧪 Evolución de glucosa y HbA1c</span></div>
+          <div class="section-card-body" style="height:180px;position:relative">
+            <canvas id="chartLabs"></canvas>
+            <div id="chartLabs-empty" class="chart-empty" style="display:none">
+              <div class="chart-empty-icon">🧪</div>
+              <div class="chart-empty-text">Registra laboratorios para ver la evolución glucémica</div>
             </div>
           </div>
         </div>
@@ -2924,6 +2962,7 @@ function renderSeguimientoView() {
   }
 
   renderWeightChart('chartSeg', measurements.slice().reverse());
+  renderLabsChart();
 
   // Labs summary
   const labsEl = $('seg-labs-body');
@@ -2953,6 +2992,101 @@ function renderSeguimientoView() {
         </tr>`;
       }).join('')
     : '<tr><td colspan="6" class="table-empty">⚖️<br>Sin mediciones registradas</td></tr>';
+}
+
+
+// ─── EXPORT CSV ───────────────────────────────────────────────────
+function exportPCPData() {
+  if (!currentPatient || !pcpData) { showToast('Selecciona un paciente primero', 'error'); return; }
+  const sections = [];
+
+  // Header del paciente
+  sections.push(['=== ECE PCP — EXPEDIENTE DE OBESIDAD ===']);
+  sections.push([`Paciente: ${currentPatient.nombre || ''} ${currentPatient.apellido || ''}`]);
+  sections.push([`Fecha de exportación: ${new Date().toLocaleDateString('es-MX')}`]);
+  sections.push([]);
+
+  // Mediciones
+  sections.push(['--- MEDICIONES ---']);
+  sections.push(['Fecha','Peso (kg)','IMC','Cintura (cm)','PAS','PAD','%TWL']);
+  const meds = (pcpData.measurements || []).slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+  const baseline = meds[0]?.peso;
+  meds.forEach(m => {
+    const twl = baseline && m.peso ? (((parseFloat(m.peso) - parseFloat(baseline)) / parseFloat(baseline)) * 100).toFixed(1) : '';
+    sections.push([m.fecha, m.peso||'', m.bmi||'', m.cintura||'', m.pas||'', m.pad||'', twl ? twl+'%' : '']);
+  });
+  sections.push([]);
+
+  // Consultas
+  sections.push(['--- CONSULTAS ---']);
+  sections.push(['Fecha','Motivo','Peso','PA','Plan']);
+  (pcpData.consultas || []).forEach(c => sections.push([c.fecha, c.motivo||'', c.peso||'', c.pas ? c.pas+'/'+c.pad : '', c.plan||'']));
+  sections.push([]);
+
+  // Laboratorios
+  sections.push(['--- LABORATORIOS ---']);
+  sections.push(['Fecha','Glucosa','HbA1c','HOMA-IR','LDL','TG','TSH']);
+  (pcpData.labs || []).forEach(l => sections.push([l.fecha, l.glucosa||'', l.hba1c||'', l.homa_ir||'', l.ldl||'', l.tg||'', l.tsh||'']));
+  sections.push([]);
+
+  // Medicamentos
+  sections.push(['--- FARMACOTERAPIA ---']);
+  sections.push(['Fármaco','Dosis','Inicio','Notas']);
+  (pcpData.medications || []).forEach(m => sections.push([m.nombre||'', m.dosis||'', m.inicio||'', m.notas||'']));
+
+  const csv = sections.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const nombre = `${currentPatient.nombre || 'paciente'}_${currentPatient.apellido || ''}`.replace(/\s+/g,'-');
+  a.download = `ECE_PCP_${nombre}_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Expediente exportado como CSV', 'success');
+}
+
+// ─── LABS CHART ────────────────────────────────────────────────────
+function renderLabsChart() {
+  const canvas = document.getElementById('chartLabs');
+  if (!canvas) return;
+  const emptyEl = document.getElementById('chartLabs-empty');
+  const labs = (pcpData.labs || []).slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+  const withData = labs.filter(l => l.glucosa || l.hba1c);
+  if (!withData.length) {
+    canvas.style.display = 'none';
+    if (emptyEl) emptyEl.style.display = 'flex';
+    return;
+  }
+  canvas.style.display = 'block';
+  if (emptyEl) emptyEl.style.display = 'none';
+  const existing = Chart.getChart(canvas);
+  if (existing) existing.destroy();
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: withData.map(l => new Date(l.fecha).toLocaleDateString('es-MX',{month:'short',day:'numeric'})),
+      datasets: [
+        { label:'Glucosa (mg/dL)', data: withData.map(l => parseFloat(l.glucosa)||null),
+          borderColor:'#C96B10', backgroundColor:'rgba(201,107,16,.08)',
+          borderWidth:2, tension:.3, fill:false, pointRadius:3, yAxisID:'y' },
+        { label:'HbA1c (%)', data: withData.map(l => l.hba1c ? parseFloat(l.hba1c)*10 : null),
+          borderColor:'#C0392B', backgroundColor:'rgba(192,57,43,.08)',
+          borderWidth:2, tension:.3, fill:false, borderDash:[4,3], pointRadius:3, yAxisID:'y' },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:true, position:'top', labels:{ font:{ size:10 }, boxWidth:12 } },
+        tooltip:{ callbacks:{ label: ctx => ctx.datasetIndex===1 ? `HbA1c: ${(ctx.raw/10).toFixed(1)}%` : `Glucosa: ${ctx.raw} mg/dL` } } },
+      scales:{
+        y:{ ticks:{ font:{size:10} }, grid:{ color:'#EEE' },
+          min:0,
+          afterDataLimits: scale => { scale.max = Math.max(scale.max, 160); } },
+        x:{ ticks:{ font:{size:10} }, grid:{ display:false } }
+      }
+    }
+  });
 }
 
 // ─── WEIGHT CHART ─────────────────────────────────────────────────
@@ -3285,6 +3419,23 @@ function saveReferral() {
   ['ref-motivo','ref-previo'].forEach(id=>$(id).value='');
   $('ref-preview').style.display='none';
 }
+
+
+// ─── KEYBOARD SHORTCUTS ───────────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  // Escape cierra modales
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id || m.getAttribute('id')));
+  }
+  // Ctrl+Enter o Cmd+Enter guarda en modal abierto
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    const openModal = document.querySelector('.modal-overlay.open');
+    if (openModal) {
+      const saveBtn = openModal.querySelector('.btn-save');
+      if (saveBtn && !saveBtn.disabled) saveBtn.click();
+    }
+  }
+});
 
 // ─── INITIAL VIEW ─────────────────────────────────────────────────
 switchView('dashboard');
