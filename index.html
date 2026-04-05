@@ -67,6 +67,15 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .topbar-pt-info:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25)}
 .topbar-pt-name{color:#fff;font-weight:600;font-size:13.5px}
 .topbar-pt-meta{color:rgba(255,255,255,.65);font-size:11.5px}
+/* ── Fenotipificación ─────────────────────────────────────────── */
+.fen-grid-pcp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fen-tile{background:var(--bg);border:2px solid var(--border);border-radius:8px;padding:11px 10px;text-align:center;transition:border-color .2s}
+.fen-tile.definido{border-color:var(--primary);background:rgba(26,82,118,.05)}
+.fen-tile.alerta{border-color:#C0392B;background:rgba(192,57,43,.06)}
+.fen-tile.positivo{border-color:#27AE60;background:rgba(39,174,96,.06)}
+.fen-tile-label{font-size:10px;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:.4px;margin-bottom:5px}
+.fen-tile-value{font-size:12px;font-weight:700;color:var(--text);line-height:1.35}
+.fen-tile-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
 .eoss-badge{border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;letter-spacing:.2px}
 .eoss-badge.e0{background:#27AE60;color:#fff}.eoss-badge.e1{background:#F39C12;color:#fff}.eoss-badge.e2{background:#E67E22;color:#fff}.eoss-badge.e3{background:#E74C3C;color:#fff}.eoss-badge.e4{background:#8E1A0E;color:#fff}
 .topbar-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
@@ -448,30 +457,67 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .referral-card-title{font-size:14px;font-weight:700;color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 
 /* ── VISUAL ENHANCEMENTS ── */
+
+/* Stat card per-column accent colors */
 .stats-row .stat-card:nth-child(1)::after{background:linear-gradient(90deg,var(--primary),#3B9EE8)}
 .stats-row .stat-card:nth-child(2)::after{background:linear-gradient(90deg,var(--orange),#F0A03A)}
 .stats-row .stat-card:nth-child(3)::after{background:linear-gradient(90deg,var(--red),#E74C3C)}
 .stats-row .stat-card:nth-child(4)::after{background:linear-gradient(90deg,var(--green),#27AE60)}
+
+/* Colored stat value per column */
 .stats-row .stat-card:nth-child(2) .stat-value{color:var(--orange)}
 .stats-row .stat-card:nth-child(3) .stat-value{color:var(--red)}
 .stats-row .stat-card:nth-child(4) .stat-value{color:var(--green)}
+
+/* Stat card micro-icon */
+.stat-card{cursor:default}
+
+/* Section card title icon */
+.section-card-title{display:flex;align-items:center;gap:6px;letter-spacing:-.1px}
+
+/* Chart empty state */
 .chart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);gap:8px}
 .chart-empty-icon{font-size:32px;opacity:.4}
 .chart-empty-text{font-size:12px;font-weight:500;opacity:.75}
+
+/* Pearl card left accent */
 .pearl-card{border-left:4px solid rgba(108,52,131,.35)}
+
+/* Module header h2 */
 .module-header h2{font-size:19px;font-weight:800;letter-spacing:-.4px}
 .module-header .module-sub{font-size:12px;color:var(--text-muted);margin-top:3px;font-weight:400}
+
+/* Enhanced section card hover */
 .section-card{transition:box-shadow .2s,transform .15s}
 .section-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.10);transform:translateY(-1px)}
+
+/* Pearl card hover lift */
 .pearl-card{transition:box-shadow .2s,transform .15s}
 .pearl-card:hover{box-shadow:0 4px 20px rgba(108,52,131,.13);transform:translateY(-1px)}
-#no-patient .no-pt-icon{background:linear-gradient(135deg,rgba(27,108,168,.08),rgba(27,108,168,.04));border-radius:50%;width:110px;height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;border:2px solid rgba(27,108,168,.12)}
+
+/* Better no-patient state */
+#no-patient .no-pt-icon{
+  background:linear-gradient(135deg,rgba(27,108,168,.08),rgba(27,108,168,.04));
+  border-radius:50%;width:110px;height:110px;display:flex;align-items:center;justify-content:center;
+  font-size:52px;border:2px solid rgba(27,108,168,.12);
+}
+
+/* Timeline entry hover */
+.tl-entry{cursor:default}
+
+/* Curriculum stat card accent */
 .curriculum-stats .cur-stat:nth-child(1){border-top:3px solid var(--primary)}
 .curriculum-stats .cur-stat:nth-child(2){border-top:3px solid var(--orange)}
 .curriculum-stats .cur-stat:nth-child(3){border-top:3px solid var(--green)}
 .curriculum-stats .cur-stat:nth-child(4){border-top:3px solid var(--purple)}
+
+/* Main content gentle entry animation */
 .module-view.visible{animation:fadeUp .18s cubic-bezier(.4,0,.2,1)}
+
+/* Sticky section card header on scroll */
 .section-card-header{position:sticky;top:0;z-index:1}
+
+/* Topbar CME counter glow pulse */
 @keyframes cme-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.0)}50%{box-shadow:0 0 0 4px rgba(255,215,0,.15)}}
 .topbar-cme.has-pts{animation:cme-pulse 3s ease infinite}
 </style>
@@ -575,26 +621,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <!-- No patient placeholder -->
       <div id="no-patient">
         <div class="no-pt-icon">🩺</div>
-        <h3>ECE PCP — Obesidad en el Primer Nivel</h3>
-        <p>Busca o registra un paciente para abrir su expediente de obesidad.</p>
+        <h3>Selecciona un paciente para comenzar</h3>
+        <p>Busca un paciente existente o registra uno nuevo para abrir su expediente de obesidad.</p>
         <button class="btn-search-big" onclick="openModal('modal-search')">🔍 Buscar paciente</button>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:520px;margin-top:8px">
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
-            <div style="font-size:24px;margin-bottom:6px">📋</div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">5As + SOAP</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Consulta estructurada</div>
-          </div>
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
-            <div style="font-size:24px;margin-bottom:6px">⚖️</div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">EOSS + Escalones</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Estadificación clínica</div>
-          </div>
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--shadow)">
-            <div style="font-size:24px;margin-bottom:6px">🎓</div>
-            <div style="font-size:12px;font-weight:700;color:var(--text)">50h CME</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Diplomado certificado</div>
-          </div>
-        </div>
       </div>
 
       <!-- ─── VIEW: DASHBOARD ───────────────────────────────── -->
@@ -931,17 +960,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
         <div class="module-header" style="--mod-color:#1A5276">
           <div class="module-icon-lg" style="background:linear-gradient(135deg,#1A5276,#154360)">📊</div>
           <div><h2>Seguimiento longitudinal</h2><div class="module-sub">Evolución de peso · Control metabólico · Metas</div></div>
-                  <!-- Perla del módulo seguimiento -->
-        <div class="pearl-card" style="margin-bottom:16px">
-          <div class="pearl-card-header">
-            <span class="pearl-icon">💎</span>
-            <span class="pearl-title">Meta clínicamente significativa: ≥5% pérdida de peso</span>
-            <span class="pearl-source">ADA Standards, 2024</span>
-            <button class="pearl-close" onclick="this.closest('.pearl-card').style.display='none'">×</button>
-          </div>
-          <div class="pearl-body">Una pérdida de <b>≥5% del peso corporal</b> es el punto de corte clínicamente significativo. Con <b>≥10%</b> se ven beneficios cardiometabólicos consistentes: reducción de HbA1c, PA y triglicéridos. El monitoreo cada 4-8 semanas en los primeros 6 meses de farmacoterapia es clave para ajustes de dosis.</div>
-        </div>
-        <div style="margin-left:auto;display:flex;gap:8px">
+          <div style="margin-left:auto;display:flex;gap:8px">
             <button class="btn-add" style="background:#1A5276" onclick="openModal('modal-measurement')">+ Peso / medidas</button>
             <button class="btn-add" style="background:#117A65" onclick="openModal('modal-labs')">+ Labs</button>
           </div>
@@ -973,22 +992,127 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
           </div>
         </div>
 
-                <div class="section-card" style="margin-top:16px">
-          <div class="section-card-header"><span class="section-card-title">🧪 Evolución de glucosa y HbA1c</span></div>
-          <div class="section-card-body" style="height:180px;position:relative">
-            <canvas id="chartLabs"></canvas>
-            <div id="chartLabs-empty" class="chart-empty" style="display:none">
-              <div class="chart-empty-icon">🧪</div>
-              <div class="chart-empty-text">Registra laboratorios para ver la evolución glucémica</div>
-            </div>
-          </div>
-        </div>
-
         <div class="section-card" style="margin-top:0">
           <div class="section-card-header"><span class="section-card-title">📋 Historial de mediciones</span></div>
           <div class="section-card-body no-pad">
             <table class="data-table"><thead><tr><th>Fecha</th><th>Peso (kg)</th><th>IMC</th><th>Cintura (cm)</th><th>%TWL</th><th>PA</th></tr></thead>
             <tbody id="tbody-measurements"><tr><td colspan="6" class="table-empty">⚖️<br>Sin mediciones registradas</td></tr></tbody></table>
+          </div>
+        </div>
+
+        <!-- ── Diagnóstico Lancet 2025 (ligero) ─────────────────── -->
+        <div class="section-card" style="margin-top:14px" id="pcp-lancet-card">
+          <div class="section-card-header">
+            <span class="section-card-title">🎯 Clasificación Lancet 2025 — OC / OP</span>
+            <button class="btn-add" onclick="openPcpLancetModal()" style="font-size:11px;padding:4px 10px">Actualizar</button>
+          </div>
+          <div class="section-card-body">
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <span id="pcp-lancet-badge" style="display:inline-flex;align-items:center;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800;background:var(--bg);border:2px solid var(--border);color:var(--text-muted)">⏳ Sin clasificar</span>
+              <div style="font-size:11px;color:var(--text-muted)" id="pcp-lancet-sub">Auto-detectado de mediciones y labs. Rubino et al., Lancet 2025.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap" id="pcp-lancet-domains">
+              <div id="pcp-ld-cardio" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;flex:1;min-width:100px">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted)">❤️ Cardiometab.</div>
+                <div style="font-size:11px;font-weight:700;margin-top:2px" id="pcp-ld-cardio-val">—</div>
+              </div>
+              <div id="pcp-ld-mec" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;flex:1;min-width:100px">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted)">🦴 Mecánico</div>
+                <div style="font-size:11px;font-weight:700;margin-top:2px" id="pcp-ld-mec-val">—</div>
+              </div>
+              <div id="pcp-ld-mental" style="border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;flex:1;min-width:100px">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted)">🧠 Mental/Func.</div>
+                <div style="font-size:11px;font-weight:700;margin-top:2px" id="pcp-ld-mental-val">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Modal Lancet 2025 PCP (ligero) ────────────────────── -->
+        <div class="modal-overlay" id="modal-pcp-lancet">
+          <div class="modal" style="max-width:520px">
+            <div class="modal-header">
+              <h3>🎯 Clasificación Lancet 2025</h3>
+              <button class="modal-close" onclick="closeModal('modal-pcp-lancet')">×</button>
+            </div>
+            <div class="modal-body">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;background:rgba(26,82,118,.07);border-radius:6px;padding:8px 12px"><b>OC</b> = adiposidad en exceso + ≥1 criterio de disfunción orgánica. <b>OP</b> = adiposidad sin disfunción actual. (Rubino et al., Lancet 2025)</div>
+              <div id="pcp-lancet-auto-info" style="background:var(--bg);border-radius:6px;padding:8px 12px;font-size:11px;margin-bottom:14px;color:var(--text-muted)"></div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Dominio A — Cardiometabólico</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-dm2" onchange="calcPcpLancetPreview()" /> DM2 / HbA1c ≥6.5%</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-hta" onchange="calcPcpLancetPreview()" /> Hipertensión arterial</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-dislip" onchange="calcPcpLancetPreview()" /> Dislipidemia (TG≥150 / HDL↓)</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-homa" onchange="calcPcpLancetPreview()" /> HOMA-IR &gt;2.9</label>
+              </div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Dominio B — Mecánico</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-saos" onchange="calcPcpLancetPreview()" /> SAOS (STOP-BANG ≥3)</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-artro" onchange="calcPcpLancetPreview()" /> Osteoartritis / dolor articular</label>
+              </div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Dominio C — Mental / Funcional</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-depresion" onchange="calcPcpLancetPreview()" /> Depresión moderada-severa</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer"><input type="checkbox" id="pcp-lc-funcional" onchange="calcPcpLancetPreview()" /> Limitación funcional significativa</label>
+              </div>
+              <div id="pcp-lancet-preview" style="padding:10px 14px;border-radius:8px;text-align:center;background:var(--bg);border:1.5px solid var(--border);font-size:13px;font-weight:700;margin-bottom:12px">Marca los criterios para ver la clasificación.</div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-secondary" onclick="closeModal('modal-pcp-lancet')">Cancelar</button>
+              <button class="btn-save" onclick="savePcpLancet()">💾 Guardar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Fenotipificación rápida ──────────────────────────── -->
+        <div class="section-card" style="margin-top:14px">
+          <div class="section-card-header">
+            <span class="section-card-title">🔬 Fenotipificación de la obesidad</span>
+            <span style="font-size:11px;color:var(--text-muted)">Calculado automáticamente · Actualiza al registrar mediciones</span>
+          </div>
+          <div class="section-card-body">
+            <div class="fen-grid-pcp" id="fen-pcp-grid">
+              <div class="fen-tile" id="fen-pcp-distrib-card">
+                <div class="fen-tile-label">Distribución adiposa</div>
+                <div class="fen-tile-value" id="fen-pcp-distrib">—</div>
+                <div class="fen-tile-sub" id="fen-pcp-distrib-sub"></div>
+              </div>
+              <div class="fen-tile" id="fen-pcp-ict-card">
+                <div class="fen-tile-label">Riesgo por ICT</div>
+                <div class="fen-tile-value" id="fen-pcp-ict">—</div>
+                <div class="fen-tile-sub" id="fen-pcp-ict-sub"></div>
+              </div>
+              <div class="fen-tile" id="fen-pcp-etio-card">
+                <div class="fen-tile-label">Etiología sugerida</div>
+                <div class="fen-tile-value" id="fen-pcp-etio">—</div>
+                <div class="fen-tile-sub" id="fen-pcp-etio-sub">Completar en consulta</div>
+              </div>
+            </div>
+            <!-- Flags de alerta -->
+            <div id="fen-pcp-flags" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+            <!-- Etiología rápida -->
+            <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase">Etiología principal:</span>
+              <select id="pcp-etiologia" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border)" onchange="savePcpEtiologia()">
+                <option value="">— No determinada —</option>
+                <option value="alimentario">Alimentario / hiperfagia</option>
+                <option value="sedentario">Sedentario / bajo gasto energético</option>
+                <option value="emocional">Emocional / psicológico</option>
+                <option value="endocrino">Endocrino (hipotiroidismo, Cushing, SOP…)</option>
+                <option value="farmacologico">Farmacológico (antipsicóticos, corticoides…)</option>
+                <option value="genetico">Genético / sindrómica</option>
+                <option value="mixto">Multifactorial / mixto</option>
+              </select>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+                <input type="checkbox" id="pcp-flag-sarco" style="accent-color:#C0392B" onchange="savePcpEtiologia()" /> Posible sarcopenia
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+                <input type="checkbox" id="pcp-flag-lipedema" style="accent-color:#C0392B" onchange="savePcpEtiologia()" /> Posible lipedema
+              </label>
+            </div>
+            <div style="font-size:10px;color:var(--text-muted);margin-top:8px">
+              Para fenotipificación completa (sarcopénica, endotipo conductual, estadificación lipedema): usar ECE OBES → Módulo Médico.
+            </div>
           </div>
         </div>
       </div>
@@ -2962,7 +3086,6 @@ function renderSeguimientoView() {
   }
 
   renderWeightChart('chartSeg', measurements.slice().reverse());
-  renderLabsChart();
 
   // Labs summary
   const labsEl = $('seg-labs-body');
@@ -2992,101 +3115,188 @@ function renderSeguimientoView() {
         </tr>`;
       }).join('')
     : '<tr><td colspan="6" class="table-empty">⚖️<br>Sin mediciones registradas</td></tr>';
+
+  // Clasificación Lancet 2025
+  renderPcpLancet2025();
+  // Fenotipificación rápida
+  renderPcpFenotipos(measurements);
 }
 
+// ─── FENOTIPIFICACIÓN PCP ──────────────────────────────────────────
+function renderPcpFenotipos(measurements) {
+  if (!currentPatient) return;
+  const lat = measurements && measurements.length ? measurements[0] : null;
+  const sexo = (currentPatient.sexo||'').toUpperCase().startsWith('F') ? 'F' : 'M';
 
-// ─── EXPORT CSV ───────────────────────────────────────────────────
-function exportPCPData() {
-  if (!currentPatient || !pcpData) { showToast('Selecciona un paciente primero', 'error'); return; }
-  const sections = [];
+  const setTile = (cardId, valId, subId, label, sub, tipo) => {
+    const card = $(cardId), val = $(valId), subEl = $(subId);
+    if (val) val.textContent = label || '—';
+    if (subEl) subEl.textContent = sub || '';
+    if (card) card.className = `fen-tile${tipo ? ' '+tipo : ''}`;
+  };
 
-  // Header del paciente
-  sections.push(['=== ECE PCP — EXPEDIENTE DE OBESIDAD ===']);
-  sections.push([`Paciente: ${currentPatient.nombre || ''} ${currentPatient.apellido || ''}`]);
-  sections.push([`Fecha de exportación: ${new Date().toLocaleDateString('es-MX')}`]);
-  sections.push([]);
-
-  // Mediciones
-  sections.push(['--- MEDICIONES ---']);
-  sections.push(['Fecha','Peso (kg)','IMC','Cintura (cm)','PAS','PAD','%TWL']);
-  const meds = (pcpData.measurements || []).slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
-  const baseline = meds[0]?.peso;
-  meds.forEach(m => {
-    const twl = baseline && m.peso ? (((parseFloat(m.peso) - parseFloat(baseline)) / parseFloat(baseline)) * 100).toFixed(1) : '';
-    sections.push([m.fecha, m.peso||'', m.bmi||'', m.cintura||'', m.pas||'', m.pad||'', twl ? twl+'%' : '']);
-  });
-  sections.push([]);
-
-  // Consultas
-  sections.push(['--- CONSULTAS ---']);
-  sections.push(['Fecha','Motivo','Peso','PA','Plan']);
-  (pcpData.consultas || []).forEach(c => sections.push([c.fecha, c.motivo||'', c.peso||'', c.pas ? c.pas+'/'+c.pad : '', c.plan||'']));
-  sections.push([]);
-
-  // Laboratorios
-  sections.push(['--- LABORATORIOS ---']);
-  sections.push(['Fecha','Glucosa','HbA1c','HOMA-IR','LDL','TG','TSH']);
-  (pcpData.labs || []).forEach(l => sections.push([l.fecha, l.glucosa||'', l.hba1c||'', l.homa_ir||'', l.ldl||'', l.tg||'', l.tsh||'']));
-  sections.push([]);
-
-  // Medicamentos
-  sections.push(['--- FARMACOTERAPIA ---']);
-  sections.push(['Fármaco','Dosis','Inicio','Notas']);
-  (pcpData.medications || []).forEach(m => sections.push([m.nombre||'', m.dosis||'', m.inicio||'', m.notas||'']));
-
-  const csv = sections.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  const nombre = `${currentPatient.nombre || 'paciente'}_${currentPatient.apellido || ''}`.replace(/\s+/g,'-');
-  a.download = `ECE_PCP_${nombre}_${new Date().toISOString().split('T')[0]}.csv`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('Expediente exportado como CSV', 'success');
-}
-
-// ─── LABS CHART ────────────────────────────────────────────────────
-function renderLabsChart() {
-  const canvas = document.getElementById('chartLabs');
-  if (!canvas) return;
-  const emptyEl = document.getElementById('chartLabs-empty');
-  const labs = (pcpData.labs || []).slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
-  const withData = labs.filter(l => l.glucosa || l.hba1c);
-  if (!withData.length) {
-    canvas.style.display = 'none';
-    if (emptyEl) emptyEl.style.display = 'flex';
-    return;
+  // 1. Distribución adiposa (ICC desde última medición con cintura+cadera)
+  const withICC = (measurements||[]).find(m => m.cintura && m.cadera);
+  if (withICC) {
+    const icc = withICC.cintura / withICC.cadera;
+    const umbral = sexo === 'F' ? 0.85 : 0.90;
+    if (icc > umbral + 0.05) setTile('fen-pcp-distrib-card','fen-pcp-distrib','fen-pcp-distrib-sub','Android (central)',`ICC ${icc.toFixed(2)} · riesgo CV↑`,'alerta');
+    else if (icc < umbral - 0.05) setTile('fen-pcp-distrib-card','fen-pcp-distrib','fen-pcp-distrib-sub','Ginoide (periférico)',`ICC ${icc.toFixed(2)}`,'positivo');
+    else setTile('fen-pcp-distrib-card','fen-pcp-distrib','fen-pcp-distrib-sub','Mixto',`ICC ${icc.toFixed(2)}`,'definido');
   }
-  canvas.style.display = 'block';
-  if (emptyEl) emptyEl.style.display = 'none';
-  const existing = Chart.getChart(canvas);
-  if (existing) existing.destroy();
-  new Chart(canvas, {
-    type: 'line',
-    data: {
-      labels: withData.map(l => new Date(l.fecha).toLocaleDateString('es-MX',{month:'short',day:'numeric'})),
-      datasets: [
-        { label:'Glucosa (mg/dL)', data: withData.map(l => parseFloat(l.glucosa)||null),
-          borderColor:'#C96B10', backgroundColor:'rgba(201,107,16,.08)',
-          borderWidth:2, tension:.3, fill:false, pointRadius:3, yAxisID:'y' },
-        { label:'HbA1c (%)', data: withData.map(l => l.hba1c ? parseFloat(l.hba1c)*10 : null),
-          borderColor:'#C0392B', backgroundColor:'rgba(192,57,43,.08)',
-          borderWidth:2, tension:.3, fill:false, borderDash:[4,3], pointRadius:3, yAxisID:'y' },
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ display:true, position:'top', labels:{ font:{ size:10 }, boxWidth:12 } },
-        tooltip:{ callbacks:{ label: ctx => ctx.datasetIndex===1 ? `HbA1c: ${(ctx.raw/10).toFixed(1)}%` : `Glucosa: ${ctx.raw} mg/dL` } } },
-      scales:{
-        y:{ ticks:{ font:{size:10} }, grid:{ color:'#EEE' },
-          min:0,
-          afterDataLimits: scale => { scale.max = Math.max(scale.max, 160); } },
-        x:{ ticks:{ font:{size:10} }, grid:{ display:false } }
-      }
+
+  // 2. ICT (índice cintura-talla)
+  const withICT = (measurements||[]).find(m => m.cintura && m.talla);
+  if (withICT) {
+    const ict = withICT.cintura / withICT.talla;
+    const risk = ict < 0.5 ? { label:'Riesgo bajo', sub:`ICT ${ict.toFixed(2)}`, tipo:'positivo' }
+               : ict < 0.6 ? { label:'Riesgo moderado', sub:`ICT ${ict.toFixed(2)}`, tipo:'definido' }
+               : { label:'Riesgo alto', sub:`ICT ${ict.toFixed(2)} — intervención prioritaria`, tipo:'alerta' };
+    setTile('fen-pcp-ict-card','fen-pcp-ict','fen-pcp-ict-sub', risk.label, risk.sub, risk.tipo);
+  }
+
+  // 3. Etiología guardada
+  const f = pcpData.fenotipos_pcp || {};
+  const ETIO = {
+    alimentario:'Alimentario',sedentario:'Sedentario',emocional:'Emocional/psicológico',
+    endocrino:'Endocrino',farmacologico:'Farmacológico',genetico:'Genético/sindrómica',mixto:'Multifactorial',
+  };
+  if (f.etiologia) setTile('fen-pcp-etio-card','fen-pcp-etio','fen-pcp-etio-sub', ETIO[f.etiologia]||f.etiologia, '', 'definido');
+
+  // Restore select and checkboxes
+  const selEl = $('pcp-etiologia'); if (selEl) selEl.value = f.etiologia || '';
+  const sarcoEl = $('pcp-flag-sarco'); if (sarcoEl) sarcoEl.checked = !!f.sarco;
+  const lipedEl = $('pcp-flag-lipedema'); if (lipedEl) lipedEl.checked = !!f.lipedema;
+
+  // Flags
+  const flagsEl = $('fen-pcp-flags');
+  if (flagsEl) {
+    const flags = [];
+    if (f.sarco) flags.push('<span style="background:#FDEBD0;color:#A04000;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:700">⚠️ Posible sarcopenia</span>');
+    if (f.lipedema) flags.push('<span style="background:#FDEDEC;color:#C0392B;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:700">⚠️ Posible lipedema</span>');
+    if (lat?.bmi && parseFloat(lat.bmi) < 30 && withICC && withICC.cintura/withICC.cadera > (sexo==='F'?0.85:0.90)) {
+      flags.push('<span style="background:#EBF5FB;color:#1A5276;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:700">ℹ️ Posible TOFI (IMC normal + adiposidad visceral)</span>');
     }
-  });
+    flagsEl.innerHTML = flags.join('');
+  }
+}
+
+function savePcpEtiologia() {
+  if (!currentPatient) return;
+  if (!pcpData.fenotipos_pcp) pcpData.fenotipos_pcp = {};
+  pcpData.fenotipos_pcp.etiologia = $('pcp-etiologia')?.value || '';
+  pcpData.fenotipos_pcp.sarco     = !!$('pcp-flag-sarco')?.checked;
+  pcpData.fenotipos_pcp.lipedema  = !!$('pcp-flag-lipedema')?.checked;
+  savePCPData();
+  const f = pcpData.fenotipos_pcp;
+  const ETIO = {
+    alimentario:'Alimentario',sedentario:'Sedentario',emocional:'Emocional/psicológico',
+    endocrino:'Endocrino',farmacologico:'Farmacológico',genetico:'Genético/sindrómica',mixto:'Multifactorial',
+  };
+  const etioCard = $('fen-pcp-etio-card');
+  if (etioCard && f.etiologia) {
+    $('fen-pcp-etio').textContent = ETIO[f.etiologia]||f.etiologia;
+    $('fen-pcp-etio-sub').textContent = '';
+    etioCard.className = 'fen-tile definido';
+  }
+  const flagsEl = $('fen-pcp-flags');
+  if (flagsEl) {
+    const flags = [];
+    if (f.sarco)    flags.push('<span style="background:#FDEBD0;color:#A04000;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:700">⚠️ Posible sarcopenia</span>');
+    if (f.lipedema) flags.push('<span style="background:#FDEDEC;color:#C0392B;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:700">⚠️ Posible lipedema</span>');
+    flagsEl.innerHTML = flags.join('');
+  }
+  showToast('Fenotipo guardado', 'success', 2000);
+}
+
+// ─── LANCET 2025 PCP (lightweight) ────────────────────────────────
+
+function openPcpLancetModal() {
+  if (!currentPatient) return;
+  const saved = pcpData.lancet2025 || {};
+  // Auto-detect from labs
+  const labs = (pcpData.labs||[]).slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  const latestL = labs[0];
+  const autoInfo = $('pcp-lancet-auto-info');
+  if (autoInfo && latestL) {
+    const items = [];
+    if (latestL.hba1c)         items.push(`HbA1c ${latestL.hba1c}%`);
+    if (latestL.glucosa)       items.push(`Glucosa ${latestL.glucosa} mg/dL`);
+    if (latestL.trigliceridos) items.push(`TG ${latestL.trigliceridos} mg/dL`);
+    if (latestL.hdl)           items.push(`HDL ${latestL.hdl} mg/dL`);
+    autoInfo.textContent = items.length ? '🔗 Últimos labs: ' + items.join(' · ') : 'Sin laboratorios recientes.';
+    autoInfo.style.display='block';
+  }
+  // Restore checkboxes
+  [['pcp-lc-dm2','dm2'],['pcp-lc-hta','hta'],['pcp-lc-dislip','dislip'],['pcp-lc-homa','homa'],
+   ['pcp-lc-saos','saos'],['pcp-lc-artro','artro'],['pcp-lc-depresion','depresion'],['pcp-lc-funcional','funcional']
+  ].forEach(([id,key])=>{ const el=$(id); if(el) el.checked=!!saved[key]; });
+  // Auto-check from labs if no saved data
+  if (!saved.dm2 && latestL) {
+    if ((latestL.hba1c&&latestL.hba1c>=6.5)||(latestL.glucosa&&latestL.glucosa>=126)) { const el=$('pcp-lc-dm2'); if(el) el.checked=true; }
+    if ((latestL.trigliceridos&&latestL.trigliceridos>=150)) { const el=$('pcp-lc-dislip'); if(el) el.checked=true; }
+    if (latestL.insulina&&latestL.glucosa&&(latestL.glucosa*latestL.insulina/405)>2.9) { const el=$('pcp-lc-homa'); if(el) el.checked=true; }
+  }
+  calcPcpLancetPreview();
+  $('modal-pcp-lancet').classList.add('open');
+}
+
+function calcPcpLancetPreview() {
+  const cardio = ['pcp-lc-dm2','pcp-lc-hta','pcp-lc-dislip','pcp-lc-homa'].some(id=>$(id)?.checked);
+  const mec    = ['pcp-lc-saos','pcp-lc-artro'].some(id=>$(id)?.checked);
+  const mental = ['pcp-lc-depresion','pcp-lc-funcional'].some(id=>$(id)?.checked);
+  const prev   = $('pcp-lancet-preview');
+  if (!prev) return;
+  if (cardio||mec||mental) {
+    prev.style.background='rgba(192,57,43,.1)'; prev.style.borderColor='#C0392B'; prev.style.color='#7B241C';
+    const doms=[cardio?'Cardiometab.':null,mec?'Mecánico':null,mental?'Mental':null].filter(Boolean).join(', ');
+    prev.innerHTML=`🔴 <b>OBESIDAD CLÍNICA (OC)</b><br><span style="font-size:11px;font-weight:400">${doms}</span>`;
+  } else {
+    prev.style.background='rgba(29,131,72,.1)'; prev.style.borderColor='#1D8348'; prev.style.color='#145A32';
+    prev.innerHTML='🟢 <b>OBESIDAD PRECLÍNICA (OP)</b><br><span style="font-size:11px;font-weight:400">Sin disfunción orgánica detectada.</span>';
+  }
+}
+
+function savePcpLancet() {
+  if (!currentPatient) return;
+  const keys=[['dm2','pcp-lc-dm2'],['hta','pcp-lc-hta'],['dislip','pcp-lc-dislip'],['homa','pcp-lc-homa'],
+              ['saos','pcp-lc-saos'],['artro','pcp-lc-artro'],['depresion','pcp-lc-depresion'],['funcional','pcp-lc-funcional']];
+  const d={}; keys.forEach(([k,id])=>{ d[k]=!!$(id)?.checked; });
+  const cardio=[d.dm2,d.hta,d.dislip,d.homa].some(Boolean);
+  const mec=[d.saos,d.artro].some(Boolean);
+  const mental=[d.depresion,d.funcional].some(Boolean);
+  d.oc_op = (cardio||mec||mental)?'OC':'OP';
+  d.fecha = new Date().toISOString();
+  pcpData.lancet2025 = d;
+  savePCPData();
+  renderPcpLancet2025();
+  closeModal('modal-pcp-lancet');
+  showToast('Clasificación Lancet 2025 guardada', 'success', 2200);
+}
+
+function renderPcpLancet2025() {
+  const d = pcpData.lancet2025;
+  const badge = $('pcp-lancet-badge');
+  const sub   = $('pcp-lancet-sub');
+  if (!badge) return;
+  if (!d) return;
+  if (d.oc_op==='OC') {
+    badge.style.background='rgba(192,57,43,.12)'; badge.style.borderColor='#C0392B'; badge.style.color='#C0392B';
+    badge.textContent='🔴 Obesidad Clínica (OC)';
+  } else {
+    badge.style.background='rgba(29,131,72,.12)'; badge.style.borderColor='#1D8348'; badge.style.color='#1D8348';
+    badge.textContent='🟢 Obesidad Preclínica (OP)';
+  }
+  if (sub) sub.textContent='Actualizado ' + (d.fecha||'').split('T')[0];
+  const setDom=(id,valId,pos,posLabel)=>{
+    const el=$(id); const vel=$(valId); if(!el||!vel) return;
+    el.style.borderColor=pos?'#C0392B':'#1D8348';
+    el.style.background=pos?'rgba(192,57,43,.05)':'rgba(29,131,72,.05)';
+    vel.textContent=pos?`✅ ${posLabel}`:'✓ Negativo';
+  };
+  setDom('pcp-ld-cardio','pcp-ld-cardio-val',[d.dm2,d.hta,d.dislip,d.homa].some(Boolean),'DM2/HTA/Dislip/RI');
+  setDom('pcp-ld-mec','pcp-ld-mec-val',[d.saos,d.artro].some(Boolean),'SAOS/Artro');
+  setDom('pcp-ld-mental','pcp-ld-mental-val',[d.depresion,d.funcional].some(Boolean),'Depresión/Limitación');
 }
 
 // ─── WEIGHT CHART ─────────────────────────────────────────────────
@@ -3419,23 +3629,6 @@ function saveReferral() {
   ['ref-motivo','ref-previo'].forEach(id=>$(id).value='');
   $('ref-preview').style.display='none';
 }
-
-
-// ─── KEYBOARD SHORTCUTS ───────────────────────────────────────────
-document.addEventListener('keydown', function(e) {
-  // Escape cierra modales
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id || m.getAttribute('id')));
-  }
-  // Ctrl+Enter o Cmd+Enter guarda en modal abierto
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    const openModal = document.querySelector('.modal-overlay.open');
-    if (openModal) {
-      const saveBtn = openModal.querySelector('.btn-save');
-      if (saveBtn && !saveBtn.disabled) saveBtn.click();
-    }
-  }
-});
 
 // ─── INITIAL VIEW ─────────────────────────────────────────────────
 switchView('dashboard');
